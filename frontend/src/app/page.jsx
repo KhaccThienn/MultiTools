@@ -32,11 +32,37 @@ export default function Home() {
     }
   };
 
+  const handleCrop = async () => {
+    const formData = new FormData();
+    formData.append('image', selectedFile);
+    formData.append('left', '100');  // Thay thế bằng giá trị thực tế
+    formData.append('top', '100');   // Thay thế bằng giá trị thực tế
+    formData.append('right', '400'); // Thay thế bằng giá trị thực tế
+    formData.append('bottom', '400');// Thay thế bằng giá trị thực tế
+
+    try {
+        const response = await axios.post(
+            'http://localhost:5000/crop',
+            formData,
+            {
+                responseType: 'blob',
+            }
+        );
+
+        const imageBlob = new Blob([response.data], { type: 'image/jpeg' });
+        const imageUrl = URL.createObjectURL(imageBlob);
+        setProcessedImage(imageUrl);
+    } catch (error) {
+        console.error('Error processing image:', error);
+    }
+};
+
   return (
     <div>
       <h1>Image Processing App</h1>
       <input type="file" onChange={handleFileChange} />
       <button onClick={handleResize}>Resize</button>
+      <button onClick={handleCrop}>Crop</button>
       {processedImage && <img src={processedImage} alt="Processed" />}
     </div>
   );
