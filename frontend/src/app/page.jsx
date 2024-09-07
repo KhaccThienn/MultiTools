@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { ThemeProvider } from "styled-components";
-import { lightTheme, darkTheme } from "@/themes/theme";
-import { GlobalStyles } from "@/themes/globalStyles";
-import HomePage from "@/pages/homePage";
+import { lightTheme, darkTheme } from "@/constants/themes/theme";
+import { GlobalStyles } from "@/constants/themes/globalStyles";
+import HomePage from "@/pages/HomePage";
 
 export default function App() {
   const [theme, setTheme] = useState("light");

@@ -1,21 +1,17 @@
 /* App.css */
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-}
-
+@import url('https://fonts.googleapis.com/css2?family=Tomorrow:wght@400;500;600;700&display=swap');
 .navbar {
-    background-color: #333;
-    padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 10px 100px;
 }
 
-.navbar-logo {
-    color: #fff;
-    font-size: 1.5rem;
+.tommorrow_font {
+    font-family: 'Tomorrow', sans-serif;
+    font-size: 21px;
+    font-weight: bold;
 }
 
 .navbar-links {
@@ -23,19 +19,37 @@ body {
     display: flex;
     gap: 1.5rem;
     margin: 0;
+    margin-left: 65px;
 }
 
 .navbar-links li {
-    margin: 0;
+    margin: 0 45px;
 }
 
 .navbar-links a {
-    color: #fff;
+    color: #333;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 16px;
 }
 
 .navbar-links a:hover {
     color: #ff6347;
     /* Màu khi hover */
+}
+
+.button1 {
+    font-family: 'Tomorrow', sans-serif;
+    padding: 7px 15px;
+    margin: 0 10px;
+    border-radius: 10px;
+    background-color: #FDBA74;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.dark-mode .button1 {
+    background-color: #FA8072;
+    /* Màu tối khi theme tối */
+    color: #ffffff;
 }
