@@ -1,10 +1,15 @@
 'use client'; // Đảm bảo rằng component này chạy trên client side
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import '../css/sign.css'; // Đảm bảo đường dẫn chính xác tới file CSS
 
 const Sign = ({ isSignin, closeModal }) => {
+  const [isLogin, setIsLogin] = useState(isSignin); // State để quản lý giữa Đăng nhập và Đăng ký
+
+  const toggleToSignup = () => setIsLogin(false); // Chuyển sang Đăng ký
+  const toggleToSignin = () => setIsLogin(true); // Chuyển sang Đăng nhập
+
   useEffect(() => {
     const closeSigninBtn = document.getElementById("close-signin-btn");
     const closeSignupBtn = document.getElementById("close-signup-btn");
@@ -30,7 +35,7 @@ const Sign = ({ isSignin, closeModal }) => {
 
   return (
     <>
-      {isSignin ? (
+      {isLogin ? (
         <div id="signin-modal" className="signin-modal active">
           <div className="large-signin-box">
             <button id="close-signin-btn" className="close-btn">X</button>
@@ -46,7 +51,7 @@ const Sign = ({ isSignin, closeModal }) => {
                 <input type="submit" value="Đăng nhập" />
                 <div className="signin-group">
                   <a href="#" id="forgot-pass-link">Quên mật khẩu</a>
-                  <a href="#" id="signup-link">Đăng ký</a>
+                  <a href="#" id="signup-link" onClick={toggleToSignup}>Đăng ký</a> {/* Chuyển sang Đăng ký */}
                 </div>
                 <div className="separator">
                   <span>Hoặc</span>
@@ -81,7 +86,7 @@ const Sign = ({ isSignin, closeModal }) => {
                 <div className="signup-group">
                   <p>
                     <span>Đã có tài khoản? </span>
-                    <a href="#" id="signin-link"> Đăng nhập</a>
+                    <a href="#" id="signin-link" onClick={toggleToSignin}> Đăng nhập</a> {/* Chuyển sang Đăng nhập */}
                   </p>
                 </div>
                 <div className="separator">
