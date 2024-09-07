@@ -1,0 +1,594 @@
+/* homepage.css */
+
+@import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
+@font-face {
+    font-family: 'PoppinsCustom';
+    /* src: url('../fonts/DESIGNERVN-POPPINS-REGULAR.TTF') format('truetype'); */
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* ================================================================
+=================================================================== */
+
+
+/* Signin Modal */
+
+body .signin-modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+@property --a {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+body .signin-modal .large-signin-box {
+    position: relative;
+    width: 500px;
+    height: 600px;
+    background: repeating-conic-gradient(from var(--a), #ff2770 0%, #ff2770 5%, transparent 5%, transparent 40%, #ff2770 50%);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: rotating 4s linear infinite;
+    /* animation-delay: -1s; */
+    /* transition: none; */
+}
+
+@keyframes rotating {
+    0% {
+        --a: 0deg;
+    }
+    100% {
+        --a: 360deg;
+    }
+}
+
+body .signin-modal .large-signin-box::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: repeating-conic-gradient(from var(--a), #45f3ff 0%, #45f3ff 5%, transparent 5%, transparent 40%, #45f3ff 50%);
+    /* filter: drop-shadow(0 15px 50px #ffffff); */
+    border-radius: 20px;
+    animation: rotating 4s linear infinite;
+    animation-delay: -1s;
+}
+
+body .signin-modal .large-signin-box::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    background: #fef2f2;
+    border-radius: 15px;
+    border: 8px solid rgba(0, 0, 0, 0.5);
+}
+
+body .signin-modal .large-signin-box .close-btn {
+    position: absolute;
+    top: -20px;
+    right: -120px;
+    background: none;
+    border: none;
+    color: rgb(255, 255, 255);
+    font-size: 1.7em;
+    cursor: pointer;
+    z-index: 3000;
+}
+
+body .signin-modal .large-signin-box .close-btn:hover {
+    color: #FA8072;
+}
+
+.signin-modal.active {
+    display: flex;
+}
+
+body .signin-modal .large-signin-box .signin {
+    position: absolute;
+    inset: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 10px;
+    background: #fef2f2;
+    z-index: 1000;
+    box-shadow: inset 0 5px 10px #b5b5b5;
+    border-bottom: 5px solid #ffffff80;
+    transition: none;
+    color: #fa8072;
+    overflow: hidden;
+}
+
+body .signin-modal .large-signin-box .signin .signinBox {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    width: 70%;
+    transform: none;
+    transition: none;
+}
+
+body .signin-modal .large-signin-box .signin .signinBox h2 {
+    text-transform: capitalize;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+}
+
+body .signin-modal .large-signin-box .signin .signinBox h2 i {
+    color: #22f0ff;
+    margin: 0 10px;
+}
+
+body .signin-modal .large-signin-box .signin .signinBox input {
+    width: 100%;
+    padding: 10px 20px;
+    outline: none;
+    font-size: 1em;
+    color: #303030;
+    background: #ffffff;
+    border: 2px solid #b8b8b8;
+    border-radius: 30px;
+    transition: 0.15s;
+}
+
+body .signin-modal .large-signin-box .signin .signinBox input:hover {
+    box-shadow: 0 0 5px #b8b8b8, 0 0 10px #b8b8b8;
+    transition: 0.25s;
+}
+
+body .signin-modal .large-signin-box .signin .signinBox input::placeholder {
+    color: #b8b8b8;
+    /* letter-spacing: 0.1em; */
+}
+
+body .signin-modal .large-signin-box .signin .signinBox input[type="submit"] {
+    background: #22f0ff;
+    border: none;
+    font-weight: 600;
+    color: #303030;
+    cursor: pointer;
+    transition: 0.25s;
+    /* letter-spacing: 0.1em; */
+}
+
+body .signin-modal .large-signin-box .signin .signinBox input[type="submit"]:hover {
+    scale: 1.05;
+    transition: 0.25s;
+}
+
+body .signin-modal .large-signin-box .signin .signinBox .signin-group {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+body .signin-modal .large-signin-box .signin .signinBox .signin-group a {
+    color: #303030;
+    text-decoration: none;
+    transition: 0.25s;
+    font-size: 0.8em;
+}
+
+body .signin-modal .large-signin-box .signin .signinBox .signin-group a:hover {
+    transform: scale(1.2);
+}
+
+body .signin-modal .large-signin-box .signin .signinBox .signin-group a:nth-child(2) {
+    color: #FA8072;
+    font-weight: 600;
+    /* font-size: 1em; */
+}
+
+body .homepage {
+    text-align: center;
+    margin-top: 50px;
+}
+
+body .homepage h1 {
+    color: black;
+    font-size: 1.8em;
+}
+
+body .homepage button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 2px solid #ff7b7b;
+    background-color: #ff7b7b;
+    color: white;
+    transition: 0.3s;
+}
+
+body .homepage button:hover {
+    background-color: #ff2770;
+    border-color: #ff2770;
+}
+
+
+/* Separator */
+
+body .signin-modal .large-signin-box .signin .separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin: 0px 0;
+}
+
+body .signin-modal .large-signin-box .signin .separator::before,
+body .signin-modal .large-signin-box .signin .separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #b8b8b8;
+}
+
+body .signin-modal .large-signin-box .signin .separator::before {
+    margin-right: 10px;
+}
+
+body .signin-modal .large-signin-box .signin .separator::after {
+    margin-left: 10px;
+}
+
+body .signin-modal .large-signin-box .signin .separator span {
+    font-size: 0.9em;
+    color: #a3a3a3;
+}
+
+
+/* Social signin buttons */
+
+body .signin-modal .large-signin-box .signin .social-signin {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+}
+
+body .signin-modal .large-signin-box .signin .social-signin button {
+    width: 90%;
+    padding: 5px;
+    font-size: 0.9em;
+    color: white;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    transition: 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+body .signin-modal .large-signin-box .signin .social-signin .google-signin {
+    background-color: #db4437;
+}
+
+body .signin-modal .large-signin-box .signin .social-signin .facebook-signin {
+    background-color: #3b5998;
+}
+
+body .signin-modal .large-signin-box .signin .social-signin button i {
+    font-size: 1.2em;
+}
+
+body .signin-modal .large-signin-box .signin .social-signin button:hover {
+    opacity: 0.8;
+}
+
+
+/* ===========================================================================================================
+============================================================================================================== */
+
+
+/* Signup Modal */
+
+body .signup-modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+@property --a {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+body .signup-modal .large-signup-box {
+    position: relative;
+    width: 500px;
+    height: 600px;
+    background: repeating-conic-gradient(from var(--a), #ff2770 0%, #ff2770 5%, transparent 5%, transparent 40%, #ff2770 50%);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: rotating 4s linear infinite;
+    /* animation-delay: -1s; */
+    /* transition: none; */
+}
+
+
+/* @keyframes rotating {
+    0% {
+        --a: 0deg;
+    }
+
+    100% {
+        --a: 360deg;
+    }
+} */
+
+body .signup-modal .large-signup-box::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: repeating-conic-gradient(from var(--a), #45f3ff 0%, #45f3ff 5%, transparent 5%, transparent 40%, #45f3ff 50%);
+    /* filter: drop-shadow(0 15px 50px #ffffff); */
+    border-radius: 20px;
+    animation: rotating 4s linear infinite;
+    animation-delay: -1s;
+}
+
+body .signup-modal .large-signup-box::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    background: #fef2f2;
+    border-radius: 15px;
+    border: 8px solid rgba(0, 0, 0, 0.5);
+}
+
+body .signup-modal .large-signup-box .close-btn {
+    position: absolute;
+    top: -20px;
+    right: -120px;
+    background: none;
+    border: none;
+    color: rgb(255, 255, 255);
+    font-size: 1.7em;
+    cursor: pointer;
+    z-index: 3000;
+}
+
+body .signup-modal .large-signup-box .close-btn:hover {
+    color: #FA8072;
+}
+
+.signup-modal.active {
+    display: flex;
+}
+
+body .signup-modal .large-signup-box .signup {
+    position: absolute;
+    inset: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 10px;
+    background: #fef2f2;
+    z-index: 1000;
+    box-shadow: inset 0 5px 10px #b5b5b5;
+    border-bottom: 5px solid #ffffff80;
+    transition: none;
+    color: #fa8072;
+    overflow: hidden;
+}
+
+body .signup-modal .large-signup-box .signup .signupBox {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    width: 70%;
+    transform: none;
+    transition: none;
+}
+
+body .signup-modal .large-signup-box .signup .signupBox h2 {
+    text-transform: capitalize;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+}
+
+body .signup-modal .large-signup-box .signup .signupBox h2 i {
+    color: #22f0ff;
+    margin: 0 10px;
+}
+
+body .signup-modal .large-signup-box .signup .signupBox input {
+    width: 100%;
+    padding: 10px 20px;
+    outline: none;
+    font-size: 1em;
+    color: #303030;
+    background: #ffffff;
+    border: 2px solid #b8b8b8;
+    border-radius: 30px;
+    transition: 0.15s;
+}
+
+body .signup-modal .large-signup-box .signup .signupBox input:hover {
+    box-shadow: 0 0 5px #b8b8b8, 0 0 10px #b8b8b8;
+    transition: 0.25s;
+}
+
+body .signup-modal .large-signup-box .signup .signupBox input::placeholder {
+    color: #b8b8b8;
+    /* letter-spacing: 0.1em; */
+}
+
+body .signup-modal .large-signup-box .signup .signupBox input[type="submit"] {
+    background: #22f0ff;
+    border: none;
+    font-weight: 600;
+    color: #303030;
+    cursor: pointer;
+    transition: 0.25s;
+    /* letter-spacing: 0.1em; */
+}
+
+body .signup-modal .large-signup-box .signup .signupBox input[type="submit"]:hover {
+    scale: 1.05;
+    transition: 0.25s;
+}
+
+body .signup-modal .large-signup-box .signup .signupBox .signup-group {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+}
+
+body .signup-modal .large-signup-box .signup .signupBox .signup-group span {
+    color: #303030;
+    text-decoration: none;
+    transition: 0.25s;
+    font-size: 0.8em;
+}
+
+body .signup-modal .large-signup-box .signup .signupBox .signup-group a {
+    color: #303030;
+    text-decoration: none;
+    transition: 0.25s;
+    font-size: 0.8em;
+}
+
+body .signup-modal .large-signup-box .signup .signupBox .signup-group a:hover {
+    /* transform: scale(1.2); */
+    text-decoration: underline;
+}
+
+body .signup-modal .large-signup-box .signup .signupBox .signup-group a:nth-child(2) {
+    color: #FA8072;
+    font-weight: 600;
+    /* font-size: 1em; */
+}
+
+body .homepage {
+    text-align: center;
+    margin-top: 50px;
+}
+
+body .homepage button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 2px solid #ff7b7b;
+    background-color: #ff7b7b;
+    color: white;
+    transition: 0.3s;
+}
+
+body .homepage button:hover {
+    background-color: #ff2770;
+    border-color: #ff2770;
+}
+
+
+/* Separator */
+
+body .signup-modal .large-signup-box .signup .separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin: 0px 0;
+}
+
+body .signup-modal .large-signup-box .signup .separator::before,
+body .signup-modal .large-signup-box .signup .separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #b8b8b8;
+}
+
+body .signup-modal .large-signup-box .signup .separator::before {
+    margin-right: 10px;
+}
+
+body .signup-modal .large-signup-box .signup .separator::after {
+    margin-left: 10px;
+}
+
+body .signup-modal .large-signup-box .signup .separator span {
+    font-size: 0.9em;
+    color: #a3a3a3;
+}
+
+
+/* Social signup buttons */
+
+body .signup-modal .large-signup-box .signup .social-signup {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+}
+
+body .signup-modal .large-signup-box .signup .social-signup button {
+    width: 90%;
+    padding: 5px;
+    font-size: 0.9em;
+    color: white;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    transition: 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+body .signup-modal .large-signup-box .signup .social-signup .google-signup {
+    background-color: #db4437;
+}
+
+body .signup-modal .large-signup-box .signup .social-signup .facebook-signup {
+    background-color: #3b5998;
+}
+
+body .signup-modal .large-signup-box .signup .social-signup button i {
+    font-size: 1.2em;
+}
+
+body .signup-modal .large-signup-box .signup .social-signup button:hover {
+    opacity: 0.8;
+}

@@ -2,10 +2,27 @@ import React from "react";
 import "../css/app.css";
 import images from "@/constants/images";
 import Image from "next/image";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ThemeToggle from "./ThemeToggle";
+import Sign from "./Sign";
 
 function Navbar() {
+  const [showSignPage, setShowSignPage] = React.useState(false); // Trạng thái mở SignPage
+  const [isSignin, setIsSignin] = React.useState(false); // Để phân biệt giữa Đăng nhập và Đăng ký
+
+  const openSigninModal = () => {
+    setIsSignin(true); // Mở modal Đăng nhập
+    setShowSignPage(true);
+  };
+
+  const openSignupModal = () => {
+    setIsSignin(false); // Mở modal Đăng ký
+    setShowSignPage(true);
+  };
+
+  const closeModal = () => {
+    setShowSignPage(false);
+  };
+
   return (
     <nav className="navbar">
       <span className="flex items-center">
@@ -31,14 +48,19 @@ function Navbar() {
       </span>
 
       <div className="flex items-center">
-        <span>
-          <a href="">Đăng nhập</a>
-        </span>
-        <span className="button1">
-          <a href="">Đăng ký</a>
-        </span>
+        <button onClick={openSigninModal} className="signin-button">
+          Đăng nhập
+        </button>
+
+        <button onClick={openSignupModal} className="button1 signup-button">
+          Đăng ký
+        </button>
+
         <ThemeToggle />
       </div>
+
+      {showSignPage && <Sign isSignin={isSignin} closeModal={closeModal} />}{" "}
+      {/* Hiển thị SignPage khi trạng thái showSignPage là true */}
     </nav>
   );
 }
