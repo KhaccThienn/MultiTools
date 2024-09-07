@@ -1,16 +1,23 @@
 "use client";
 
-import React, { useState } from 'react';
-import Navbar from '../components/navbar';
+import React, { useState } from "react";
+import { ThemeProvider } from "styled-components";
+import { lightTheme, darkTheme } from "@/themes/theme";
+import { GlobalStyles } from "@/themes/globalStyles";
+import HomePage from "@/pages/homePage";
 
-export default function ImageProcessor() {
+export default function App() {
+  const [theme, setTheme] = useState("light");
 
-   
-
-    return (
-        <div>
-            <Navbar />
-            <h1>Image Processor</h1>
-        </div>
-    );
+  const toggleTheme = () => {
+    theme === "light" ? setTheme("dark") : setTheme("light");
+  };
+  return (
+    <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
+      <>
+        <GlobalStyles />
+        <HomePage />
+      </>
+    </ThemeProvider>
+  );
 }

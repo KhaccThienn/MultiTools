@@ -15,15 +15,4 @@ function Navbar() {
   );
 }
 
-function App() {
-  return (
-    <div className="App">
-      <Navbar />
-      <header className="App-header">
-        <h2>Welcome to My Website!</h2>
-      </header>
-    </div>
-  );
-}
-
-export default App;
+export default Navbar;
