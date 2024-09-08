@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
 @font-face {
     font-family: 'PoppinsCustom';
-    /* src: url('../fonts/DESIGNERVN-POPPINS-REGULAR.TTF') format('truetype'); */
+    src: url('../../public/fonts/DESIGNERVN-POPPINS-REGULAR.TTF') format('truetype');
     font-weight: normal;
     font-style: normal;
 }

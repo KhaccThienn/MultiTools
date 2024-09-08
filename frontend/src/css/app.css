@@ -1,6 +1,14 @@
 /* App.css */
 
 @import url('https://fonts.googleapis.com/css2?family=Tomorrow:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
+@font-face {
+    font-family: 'PoppinsCustom';
+    src: url('../../public/fonts/DESIGNERVN-POPPINS-REGULAR.TTF') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -16,6 +24,7 @@
 
 .navbar-links {
     list-style: none;
+    list-style-type: none;
     display: flex;
     gap: 1.5rem;
     margin: 0;
@@ -24,6 +33,9 @@
 
 .navbar-links li {
     margin: 0 45px;
+    margin-right: 20px;
+    position: relative;
+    /* Đặt relative cho li để ListMenu định vị dựa trên li */
 }
 
 .navbar-links a {
@@ -52,4 +64,45 @@
     background-color: #FA8072;
     /* Màu tối khi theme tối */
     color: #ffffff;
+}
+
+
+/* ListMenu với position absolute */
+
+.list-menu {
+    list-style-type: none;
+    background-color: #444;
+    padding: 10px;
+    margin-top: 10px;
+    position: absolute;
+    /* Đặt ListMenu ở vị trí tuyệt đối so với li */
+    left: 0;
+    /* Căn chỉnh vị trí theo chiều ngang */
+    top: 100%;
+    /* Đặt nó ngay dưới navbar_item */
+    display: none;
+    /* Ban đầu ẩn */
+    z-index: 1;
+    /* Đảm bảo menu nổi lên trên các phần tử khác */
+}
+
+
+/* Hiển thị ListMenu khi được mở */
+
+.navbar-links li:hover .list-menu {
+    display: block;
+}
+
+.list-menu li {
+    padding: 5px;
+    color: white;
+}
+
+.list-menu li a {
+    color: white;
+    text-decoration: none;
+}
+
+.list-menu li:hover {
+    background-color: #555;
 }
