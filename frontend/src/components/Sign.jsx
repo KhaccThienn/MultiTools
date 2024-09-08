@@ -2,13 +2,30 @@
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useEffect, useState } from 'react';
-import '../css/sign.css'; // Đảm bảo đường dẫn chính xác tới file CSS
+import '../css/sign.css';
 
 const Sign = ({ isSignin, closeModal }) => {
-  const [isLogin, setIsLogin] = useState(isSignin); // State để quản lý giữa Đăng nhập và Đăng ký
+  const [isLogin, setIsLogin] = useState(isSignin); 
+  const [username, setUsername] = useState(""); 
+  const [password, setPassword] = useState(""); 
+  const [email, setEmail] = useState(""); 
 
-  const toggleToSignup = () => setIsLogin(false); // Chuyển sang Đăng ký
-  const toggleToSignin = () => setIsLogin(true); // Chuyển sang Đăng nhập
+  // reset input fields
+  const resetInputs = () => {
+    setUsername("");
+    setPassword("");
+    setEmail("");
+  };
+
+  const toggleToSignup = () => {
+    resetInputs(); // reset input
+    setIsLogin(false); // move to signup
+  };
+
+  const toggleToSignin = () => {
+    resetInputs(); // reset input
+    setIsLogin(true); // move to signin
+  };
 
   useEffect(() => {
     const closeSigninBtn = document.getElementById("close-signin-btn");
@@ -16,13 +33,13 @@ const Sign = ({ isSignin, closeModal }) => {
 
     if (closeSigninBtn) {
       closeSigninBtn.addEventListener("click", () => {
-        closeModal(); // Đóng modal khi nhấn nút đóng
+        closeModal(); 
       });
     }
 
     if (closeSignupBtn) {
       closeSignupBtn.addEventListener("click", () => {
-        closeModal(); // Đóng modal khi nhấn nút đóng
+        closeModal(); 
       });
     }
 
@@ -46,12 +63,22 @@ const Sign = ({ isSignin, closeModal }) => {
                   Đăng nhập
                   <i className="fa-solid fa-heart"></i>
                 </h2>
-                <input type="text" placeholder="Tên đăng nhập/Email" />
-                <input type="password" placeholder="Mật khẩu" />
+                <input
+                  type="text"
+                  placeholder="Tên đăng nhập/Email"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)} // update input value
+                />
+                <input
+                  type="password"
+                  placeholder="Mật khẩu"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)} // update input value
+                />
                 <input type="submit" value="Đăng nhập" />
                 <div className="signin-group">
                   <a href="#" id="forgot-pass-link">Quên mật khẩu</a>
-                  <a href="#" id="signup-link" onClick={toggleToSignup}>Đăng ký</a> {/* Chuyển sang Đăng ký */}
+                  <a href="#" id="signup-link" onClick={toggleToSignup}>Đăng ký</a>
                 </div>
                 <div className="separator">
                   <span>Hoặc</span>
@@ -79,14 +106,29 @@ const Sign = ({ isSignin, closeModal }) => {
                   Đăng ký
                   <i className="fa-solid fa-heart"></i>
                 </h2>
-                <input type="text" placeholder="Tên đăng nhập" />
-                <input type="password" placeholder="Mật khẩu" />
-                <input type="text" placeholder="Email" />
+                <input
+                  type="text"
+                  placeholder="Tên đăng nhập"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)} // update input value
+                />
+                <input
+                  type="password"
+                  placeholder="Mật khẩu"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)} // update input value
+                />
+                <input
+                  type="text"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)} // update input value
+                />
                 <input type="submit" value="Đăng ký" />
                 <div className="signup-group">
                   <p>
                     <span>Đã có tài khoản? </span>
-                    <a href="#" id="signin-link" onClick={toggleToSignin}> Đăng nhập</a> {/* Chuyển sang Đăng nhập */}
+                    <a href="#" id="signin-link" onClick={toggleToSignin}> Đăng nhập</a>
                   </p>
                 </div>
                 <div className="separator">
