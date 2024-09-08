@@ -1,45 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import '../css/app.css'; // Import CSS từ file
 
 const Slideshow = ({ slides }) => {
-  const [currentSlide, setCurrentSlide] = useState(0); // Quản lý trạng thái slide hiện tại
+  const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Chuyển sang slide tiếp theo
   const nextSlide = () => {
     setCurrentSlide((prevSlide) =>
       prevSlide === slides.length - 1 ? 0 : prevSlide + 1
     );
   };
 
-  // Quay về slide trước đó
   const prevSlide = () => {
     setCurrentSlide((prevSlide) =>
       prevSlide === 0 ? slides.length - 1 : prevSlide - 1
     );
   };
 
-  // Tự động chuyển slide sau một khoảng thời gian (optional)
   useEffect(() => {
-    const interval = setInterval(nextSlide, 5000); // Tự động chuyển sau 5 giây
-    return () => clearInterval(interval); // Xóa interval khi component unmount
+    const interval = setInterval(nextSlide, 5000);
+    return () => clearInterval(interval);
   }, [currentSlide]);
 
   return (
     <div className="slideshow-container">
-      <button className="prev" onClick={prevSlide}>
-        ❮
-      </button>
-      
-      {/* Render slide hiện tại */}
+      <button className="prev" onClick={prevSlide}>❮</button>
       <div className="slide">
         <img src={slides[currentSlide].image} alt={slides[currentSlide].title} />
         <div className="caption">{slides[currentSlide].title}</div>
       </div>
-
-      <button className="next" onClick={nextSlide}>
-        ❯
-      </button>
-
-      {/* Hiển thị các chấm chỉ định slide */}
+      <button className="next" onClick={nextSlide}>❯</button>
       <div className="dots">
         {slides.map((_, index) => (
           <span
