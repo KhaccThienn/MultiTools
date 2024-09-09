@@ -178,3 +178,8 @@
 .dot.active {
     background-color: #717171;
 }
+
+.container {
+    width: 1280px;
+    margin: 0 auto;
+}
