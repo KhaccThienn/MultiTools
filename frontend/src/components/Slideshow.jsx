@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../css/app.css'; // Import CSS từ file
+import Link from 'next/link';
 
 const Slideshow = ({ slides }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -22,14 +23,14 @@ const Slideshow = ({ slides }) => {
   }, [currentSlide]);
 
   return (
-    <div className="slideshow-container">
+    <div className="slideshow-container" >
       <button className="prev" onClick={prevSlide}>
         <i className="fas fa-chevron-left"></i>
       </button>
-      <div className="slide">
+      <Link className="slide" href="/EditImage">
         <img src={slides[currentSlide].image} alt={slides[currentSlide].title} />
         <div className="caption">{slides[currentSlide].title}</div>
-      </div>
+      </Link>
       <button className="next" onClick={nextSlide}>
         <i className="fas fa-chevron-right"></i>
       </button>
