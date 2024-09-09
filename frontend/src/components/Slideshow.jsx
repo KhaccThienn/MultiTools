@@ -23,12 +23,16 @@ const Slideshow = ({ slides }) => {
 
   return (
     <div className="slideshow-container">
-      <button className="prev" onClick={prevSlide}>❮</button>
+      <button className="prev" onClick={prevSlide}>
+        <i className="fas fa-chevron-left"></i>
+      </button>
       <div className="slide">
         <img src={slides[currentSlide].image} alt={slides[currentSlide].title} />
         <div className="caption">{slides[currentSlide].title}</div>
       </div>
-      <button className="next" onClick={nextSlide}>❯</button>
+      <button className="next" onClick={nextSlide}>
+        <i className="fas fa-chevron-right"></i>
+      </button>
       <div className="dots">
         {slides.map((_, index) => (
           <span

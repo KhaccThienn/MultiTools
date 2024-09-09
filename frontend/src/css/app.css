@@ -9,11 +9,17 @@
     font-style: normal;
 }
 
+.head {
+    background-color: #FFEDD5;
+}
+
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 100px;
+    padding: 10px 0;
+    max-width: 1280px;
+    margin: 0 auto;
 }
 
 .tommorrow_font {
@@ -32,7 +38,6 @@
 }
 
 .navbar-links li {
-    margin: 0 45px;
     margin-right: 20px;
     position: relative;
     /* Đặt relative cho li để ListMenu định vị dựa trên li */
@@ -71,7 +76,7 @@
 
 .list-menu {
     list-style-type: none;
-    background-color: #444;
+    background-color: #FFF7ED;
     padding: 10px;
     margin-top: 10px;
     position: absolute;
@@ -99,7 +104,7 @@
 }
 
 .list-menu li a {
-    color: white;
+    color: #333;
     text-decoration: none;
 }
 
@@ -138,8 +143,10 @@
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
     border: none;
-    padding: 10px;
+    padding: 20px 26px;
     cursor: pointer;
+    margin: 0 10px;
+    border-radius: 50%;
 }
 
 .prev {
