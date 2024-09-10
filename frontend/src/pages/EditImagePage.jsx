@@ -192,7 +192,7 @@ useEffect(() => {
               width: "20%",
               display: "flex",
               flexDirection: "column",
-              padding: "10px",
+              padding: "20px",
             }}
           >
             {/* Thanh tìm kiếm */}

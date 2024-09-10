@@ -103,7 +103,6 @@ function Navbar() {
         <button onClick={openSignupModal} className="button1 signup-button">
           Đăng ký
         </button>
-
         <ThemeToggle />
       </div>
       {showSignPage && <Sign isSignin={isSignin} closeModal={closeModal} />}{" "}

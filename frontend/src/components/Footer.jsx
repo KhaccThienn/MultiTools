@@ -1,32 +1,38 @@
-import React from 'react';
+import React from "react";
+import Image from "next/image";
 import "../css/app.css";
 import images from "@/constants/images";
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import "@fortawesome/fontawesome-free/css/all.min.css";
 const Footer = () => {
   return (
     <footer className="footer">
-    <div className="footer1">
-      <div className="logo-section">
-        <img className="logo-img" src="path-to-your-image.jpg" alt="Logo"></img>
-      </div>
-      <div className="links-section">
-      </div>
-      <div className="links-section">
-      </div>
-      <div className="contact-section">
-        <div className="contact-info">
-          <p>Liên Hệ với chúng tôi</p>
-          <i className="fab fa-facebook"></i>
-          <i className="fab fa-google-plus"></i>
+      <div className="footer1">
+        <div className="logo-section">
+          <Image
+            src={images.logo}
+            alt="logo"
+            width={60}
+            height={60}
+            className="navbar-logo"
+          />
+          <h1 className="tommorrow_font">MULTITOOLS</h1>
+        </div>
+        <div className="links-section"></div>
+        <div className="links-section"></div>
+        <div className="contact-section">
+          <div className="contact-info">
+            <p>Liên Hệ với chúng tôi</p>
+            <i className="fab fa-facebook"></i>
+            <i className="fab fa-google-plus"></i>
+          </div>
         </div>
       </div>
-    </div>
-    <div className="footer2">
-      <div className="copy-right">
-        <p>Copyright 2024 MultiTools. All rights reserved.</p>
+      <div className="footer2">
+        <div className="copy-right">
+          <p>Copyright 2024 MultiTools. All rights reserved.</p>
+        </div>
       </div>
-    </div>
-  </footer>
+    </footer>
   );
 };
 
@@ -40,15 +46,15 @@ const Footer = () => {
 //     height: '400px',
 //     paddingTop: '10px',
 //     display: 'flex',
-//     justifyContent: 'space-around', 
-    
+//     justifyContent: 'space-around',
+
 //   },
 //   logoSection: {
 //     width:"20%",
 //     display: 'flex',
-//     justifyContent: 'center',   
-//     alignItems: 'flex-start',  
-//     position: 'relative',      
+//     justifyContent: 'center',
+//     alignItems: 'flex-start',
+//     position: 'relative',
 //   },
 //   linksSection: {
 //     width:"250px",
@@ -57,7 +63,7 @@ const Footer = () => {
 //   contactSection: {
 //     width:"310px",
 //     backgroundColor: '#D3D3D3',
-//     height: '175px', 
+//     height: '175px',
 //   },
 //   footer2: {
 //     height: '200px',
@@ -76,7 +82,7 @@ const Footer = () => {
 //     width: '60%',
 //   },
 //   contactInfo: {
-//       margin: '10px', 
+//       margin: '10px',
 //   }
 // };
 

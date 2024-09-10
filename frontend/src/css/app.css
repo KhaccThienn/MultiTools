@@ -2,11 +2,18 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Tomorrow:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
+
 @font-face {
     font-family: 'PoppinsCustom';
     src: url('../../public/fonts/DESIGNERVN-POPPINS-REGULAR.TTF') format('truetype');
     font-weight: normal;
     font-style: normal;
+}
+
+.tommorrow_font {
+    font-family: 'Tomorrow', sans-serif;
+    font-size: 21px;
+    font-weight: bold;
 }
 
 .head {
@@ -22,12 +29,6 @@
     margin: 0 auto;
 }
 
-.tommorrow_font {
-    font-family: 'Tomorrow', sans-serif;
-    font-size: 21px;
-    font-weight: bold;
-}
-
 .navbar-links {
     list-style: none;
     list-style-type: none;
@@ -40,18 +41,16 @@
 .navbar-links li {
     margin-right: 20px;
     position: relative;
-    /* Đặt relative cho li để ListMenu định vị dựa trên li */
 }
 
-.navbar-links a {
+.navbar-links span {
     color: #333;
     text-decoration: none;
     font-size: 16px;
 }
 
-.navbar-links a:hover {
+.navbar-links span:hover {
     color: #ff6347;
-    /* Màu khi hover */
 }
 
 .button1 {
@@ -67,10 +66,8 @@
 
 .dark-mode .button1 {
     background-color: #FA8072;
-    /* Màu tối khi theme tối */
     color: #ffffff;
 }
-
 
 /* ListMenu với position absolute */
 
@@ -80,19 +77,22 @@
     padding: 10px;
     margin-top: 10px;
     position: absolute;
-    /* Đặt ListMenu ở vị trí tuyệt đối so với li */
     left: 0;
-    /* Căn chỉnh vị trí theo chiều ngang */
     top: 100%;
-    /* Đặt nó ngay dưới navbar_item */
     display: none;
-    /* Ban đầu ẩn */
     z-index: 1;
-    /* Đảm bảo menu nổi lên trên các phần tử khác */
 }
 
-
 /* Hiển thị ListMenu khi được mở */
+
+.navbar-links li:hover::after{
+    content: "";
+    width: 130px;
+    height: 30px;
+    display: block;
+    position: absolute;
+    top: 100%;
+}
 
 .navbar-links li:hover .list-menu {
     display: block;
@@ -109,7 +109,11 @@
 }
 
 .list-menu li:hover {
-    background-color: #555;
+    background-color: #9d9c9c;
+}
+
+.list-menu li:hover a{
+    color: #fff;
 }
 
 
@@ -201,10 +205,11 @@
 }
 
 .logo-section {
-    width: 21%;
+    width: 20%;
+    height: fit-content;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    justify-content: start;
+    align-items: center;
     position: relative;
 }
 
