@@ -8,6 +8,11 @@ import ButtonSelection from "@/components/ButtonSelection";
 
 export default function EditImage() {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [top, setTop] = useState(0);
+  const [left, setLeft] = useState(0);
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
+
 
   // Hàm xử lý khi người dùng chọn ảnh
   const handleFileChange = (event) => {
@@ -24,6 +29,20 @@ export default function EditImage() {
       };
     }
   };
+
+// Sử dụng useEffect để lấy tọa độ của ảnh sau khi ảnh đã được render
+useEffect(() => {
+  if (selectedImage) {
+    const imgElement = document.getElementById('myImage');
+    if (imgElement) {
+      const rect = imgElement.getBoundingClientRect();
+      setTop(rect.top);
+      setLeft(rect.left);
+      setWidth(rect.width);
+      setHeight(rect.height);
+    }
+  }
+}, [selectedImage]); // Chạy useEffect khi selectedImage thay đổi
 
   // Sử dụng useEffect để tải ảnh từ localStorage khi trang load lại
   useEffect(() => {
@@ -84,7 +103,7 @@ export default function EditImage() {
   const renderComponent = () => {
     switch (activeComponent) {
       case "crop":
-        return <Crop />;
+        return <Crop top={top} left={left} width={width} height={height}/>;
       case "resize":
         return <Resize />;
       case "removebg":
@@ -148,6 +167,7 @@ export default function EditImage() {
                 src={selectedImage}
                 alt="Selected"
                 style={{ maxWidth: "100%", height: "auto" }}
+                id="myImage" // Thêm id cho hình ảnh
               />
             ) : (
               <div

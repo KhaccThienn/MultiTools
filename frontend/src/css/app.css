@@ -183,3 +183,66 @@
     width: 1280px;
     margin: 0 auto;
 }
+
+
+/*Css cho footer*/
+
+.footer {
+    height: 600px;
+    font-size: 16px;
+}
+
+.footer1 {
+    margin: 20px;
+    height: 400px;
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.logo-section {
+    width: 21%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    position: relative;
+}
+
+.links-section {
+    width: 250px;
+    background-color: #D3D3D3;
+}
+
+.contact-section {
+    width: 310px;
+    background-color: #D3D3D3;
+    height: 175px;
+}
+
+.footer2 {
+    height: 200px;
+    display: flex;
+    margin: 0 auto;
+    background-color: #fff;
+    color: #333;
+    border-top: 3px solid #333;
+}
+
+.copy-right {
+    text-align: center;
+    flex: 1;
+    font-weight: bold;
+}
+
+.logo-img {
+    width: 60%;
+}
+
+.contact-info {
+    margin: 10px;
+}
+
+.contact-info i {
+    margin-right: 10px;
+    font-size: 24px;
+}

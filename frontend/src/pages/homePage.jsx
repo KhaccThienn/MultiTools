@@ -3,6 +3,7 @@ import Slideshow from "@/components/SlideShow";
 import "../css/app.css"; // Import CSS từ file
 import Container from "@/components/Container";
 import Button from "@/components/Button";
+import Footer from "@/components/Footer";
 
 export default function HomePage() {
 
@@ -76,6 +77,7 @@ export default function HomePage() {
         </div>
         <div style={{ height: "20px", backgroundColor: "#D9D9D9" }}></div>
       </div>
+      <Footer />
     </>
   );
 }
