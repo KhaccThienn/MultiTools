@@ -35,7 +35,7 @@ function Navbar() {
       id: 3,
       title: "Chuyển định dạng",
       menuItems: [
-        { item_name: "Web Development", item_link: "/web-dev" },
+        { item_name: "Development", item_link: "/web-dev" },
         { item_name: "Mobile Apps", item_link: "/mobile-apps" },
       ],
     },

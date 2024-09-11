@@ -2,7 +2,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Tomorrow:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
-
 @font-face {
     font-family: 'PoppinsCustom';
     src: url('../../public/fonts/DESIGNERVN-POPPINS-REGULAR.TTF') format('truetype');
@@ -69,6 +68,7 @@
     color: #ffffff;
 }
 
+
 /* ListMenu với position absolute */
 
 .list-menu {
@@ -83,9 +83,10 @@
     z-index: 1;
 }
 
+
 /* Hiển thị ListMenu khi được mở */
 
-.navbar-links li:hover::after{
+.navbar-links li:hover::after {
     content: "";
     width: 130px;
     height: 30px;
@@ -112,7 +113,7 @@
     background-color: #9d9c9c;
 }
 
-.list-menu li:hover a{
+.list-menu li:hover a {
     color: #fff;
 }
 
@@ -192,7 +193,6 @@
 /*Css cho footer*/
 
 .footer {
-    height: 600px;
     font-size: 16px;
 }
 
@@ -225,9 +225,9 @@
 }
 
 .footer2 {
-    height: 200px;
+    height: 30px;
     display: flex;
-    margin: 0 auto;
+    margin: 10px auto;
     background-color: #fff;
     color: #333;
     border-top: 3px solid #333;

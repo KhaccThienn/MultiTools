@@ -13,36 +13,47 @@ export default function EditImage() {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
 
-
-  // Hàm xử lý khi người dùng chọn ảnh
-  const handleFileChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
-
-      // Lưu ảnh vào localStorage
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        localStorage.setItem("selectedImage", reader.result);
-      };
+// Hàm xử lý khi người dùng chọn ảnh
+const handleFileChange = (event) => {
+  if (event.target.files && event.target.files[0]) {
+    const file = event.target.files[0];
+    const imageUrl = URL.createObjectURL(file);
+    
+    // Xóa URL cũ nếu có để tránh rò rỉ bộ nhớ
+    if (selectedImage) {
+      URL.revokeObjectURL(selectedImage);
     }
+
+    setSelectedImage(imageUrl);
+
+    // Lưu ảnh vào localStorage
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      localStorage.setItem("selectedImage", reader.result);
+    };
+  }
+};
+
+  // Hàm để xóa ảnh hiện tại
+  const handleRemoveImage = () => {
+    setSelectedImage(null);
+    localStorage.removeItem("selectedImage");
   };
 
-// Sử dụng useEffect để lấy tọa độ của ảnh sau khi ảnh đã được render
-useEffect(() => {
-  if (selectedImage) {
-    const imgElement = document.getElementById('myImage');
-    if (imgElement) {
-      const rect = imgElement.getBoundingClientRect();
-      setTop(rect.top);
-      setLeft(rect.left);
-      setWidth(rect.width);
-      setHeight(rect.height);
+  // Sử dụng useEffect để lấy tọa độ của ảnh sau khi ảnh đã được render
+  useEffect(() => {
+    if (selectedImage) {
+      const imgElement = document.getElementById("myImage");
+      if (imgElement) {
+        const rect = imgElement.getBoundingClientRect();
+        setTop(rect.top);
+        setLeft(rect.left);
+        setWidth(rect.width);
+        setHeight(rect.height);
+      }
     }
-  }
-}, [selectedImage]); // Chạy useEffect khi selectedImage thay đổi
+  }, [selectedImage]); // Chạy useEffect khi selectedImage thay đổi
 
   // Sử dụng useEffect để tải ảnh từ localStorage khi trang load lại
   useEffect(() => {
@@ -50,10 +61,9 @@ useEffect(() => {
     if (savedImage) {
       setSelectedImage(savedImage);
     }
-  }, []);
+  }, [selectedImage]);
 
   const [activeComponent, setActiveComponent] = useState(null);
-
   const [activeGroup, setActiveGroup] = useState(0); // Quản lý nhóm hiện tại đang hiển thị
   const [searchTerm, setSearchTerm] = useState(""); // Quản lý từ khóa tìm kiếm
 
@@ -91,7 +101,6 @@ useEffect(() => {
       { label: "Add Sticker", onClick: () => setActiveComponent("sticker") },
       { label: "Add Frame", onClick: () => setActiveComponent("frame") },
     ],
-    // Có thể thêm nhóm thứ ba với 8 chức năng khác
   ];
 
   // Lọc các button theo từ khóa tìm kiếm
@@ -103,7 +112,13 @@ useEffect(() => {
   const renderComponent = () => {
     switch (activeComponent) {
       case "crop":
-        return <Crop top={top} left={left} width={width} height={height}/>;
+        return <Crop
+        image={selectedImage} // Truyền ảnh xuống dưới dạng prop
+        top={top}
+        left={left}
+        width={width}
+        height={height}
+      />;
       case "resize":
         return <Resize />;
       case "removebg":
@@ -151,7 +166,51 @@ useEffect(() => {
       <div
         style={{ height: "100vh", display: "flex", flexDirection: "column" }}
       >
-        <div style={{ height: "80px", backgroundColor: "black" }}></div>
+        <div
+          style={{
+            height: "80px",
+            backgroundColor: "black",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "0 20px",
+          }}
+        >
+          <button
+            onClick={handleRemoveImage}
+            style={{
+              padding: "5px 10px",
+              marginRight: "10px",
+              borderRadius: "5px",
+              backgroundColor: "red",
+              color: "white",
+            }}
+          >
+            Xóa ảnh
+          </button>
+
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            style={{
+              padding: "5px 10px",
+              borderRadius: "5px",
+              backgroundColor: "green",
+              color: "white",
+            }}
+            id="fileInput"
+          />
+
+          <span
+            style={{
+              color: "white",
+              marginLeft: "10px",
+            }}
+          >
+            {selectedImage && selectedImage.name ? selectedImage.name : ""}
+          </span>
+        </div>
         <div style={{ flexGrow: 1, display: "flex" }}>
           <div
             style={{
@@ -170,22 +229,14 @@ useEffect(() => {
                 id="myImage" // Thêm id cho hình ảnh
               />
             ) : (
-              <div
-                style={{
-                  height: "100%",
-                }}
-              >
-                {/* Input chọn file */}
-                <input
-                  type="file"
-                  accept="image/*" // Chỉ chấp nhận file ảnh
-                  onChange={handleFileChange}
-                  style={{}} // Ẩn input để thay thế bằng button
-                  id="fileInput"
-                />
+              <div style={{ height: "100%", color:'white', display:'flex', alignItems:'center' }}>
+                
+                
+                Hãy thực hiện việc thêm ảnh
               </div>
             )}
           </div>
+          {selectedImage && ( // Chỉ hiển thị menu chức năng khi có ảnh
           <div
             style={{
               backgroundColor: "#ccc",
@@ -259,6 +310,7 @@ useEffect(() => {
               </>
             )}
           </div>
+          )}
         </div>
       </div>
     </>
