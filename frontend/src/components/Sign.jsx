@@ -27,6 +27,56 @@ const Sign = ({ isSignin, closeModal }) => {
     setIsLogin(true); // move to signin
   };
 
+    // Logic đăng nhập
+    const handleSignin = async () => {
+      console.log("Đã gọi hàm handleSignin");
+      try {
+        const response = await fetch('http://localhost:4000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        });
+  
+        const data = await response.json();
+        if (response.ok) {
+          // Lưu token vào localStorage hoặc sessionStorage
+          localStorage.setItem('token', data.token);
+          alert('Đăng nhập thành công!');
+          closeModal(); // Đóng modal sau khi đăng nhập thành công
+        } else {
+          alert(data.error);
+        }
+      } catch (error) {
+        console.error('Đã xảy ra lỗi khi đăng nhập:', error);
+      }
+    };
+  
+    // Logic đăng ký
+    const handleSignup = async () => {
+      console.log("Đã gọi hàm handleSignup");
+      try {
+        const response = await fetch('http://localhost:4000/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, email, password }),
+        });
+  
+        const data = await response.json();
+        if (response.ok) {
+          alert('Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.');
+          toggleToSignin(); // Chuyển sang trang đăng nhập
+        } else {
+          alert(data.error);
+        }
+      } catch (error) {
+        console.error('Đã xảy ra lỗi khi đăng ký:', error);
+      }
+    };
+
   useEffect(() => {
     const closeSigninBtn = document.getElementById("close-signin-btn");
     const closeSignupBtn = document.getElementById("close-signup-btn");
@@ -75,7 +125,7 @@ const Sign = ({ isSignin, closeModal }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)} // update input value
                 />
-                <input type="submit" value="Đăng nhập" />
+                <input type="submit" value="Đăng nhập" onClick={handleSignin} />
                 <div className="signin-group">
                   <a href="#" id="forgot-pass-link">Quên mật khẩu</a>
                   <a href="#" id="signup-link" onClick={toggleToSignup}>Đăng ký</a>
@@ -124,7 +174,7 @@ const Sign = ({ isSignin, closeModal }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)} // update input value
                 />
-                <input type="submit" value="Đăng ký" />
+                <input type="submit" value="Đăng ký" onClick={handleSignup} />
                 <div className="signup-group">
                   <p>
                     <span>Đã có tài khoản? </span>
