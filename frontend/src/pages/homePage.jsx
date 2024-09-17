@@ -36,7 +36,7 @@ export default function HomePage() {
           rotate={0}
           colorbg="#6EE7B7"
           onClick={() => {
-            window.location.href = "/EditImagePage"; // Điều hướng tới trang editImagePage
+            window.location.href = "/ImageEditorPage"; // Điều hướng tới trang editImagePage
           }}
         />
         <Container
@@ -46,7 +46,7 @@ export default function HomePage() {
           // onClick={onClick}
           // onClick={() => handleContainerClick("testEditImagePage")}
           onClick={() => {
-            window.location.href = "/testCropImgPage"; // Điều hướng tới trang editImagePage
+            window.location.href = "/ImageEditorPage"; // Điều hướng tới trang editImagePage
           }}
         />
         <Container

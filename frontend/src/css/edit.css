@@ -1,0 +1,92 @@
+/* app/globals.css */
+
+.editor-container {
+    display: flex;
+    height: 100vh;
+}
+
+
+/* Sidebar styles */
+
+.sidebar {
+    width: 250px;
+    background-color: #2d2d2d;
+    padding: 20px;
+    color: white;
+    overflow-y: auto;
+}
+
+.sidebar h2 {
+    margin-top: 0;
+    font-size: 20px;
+}
+
+.sidebar-section {
+    margin-bottom: 20px;
+}
+
+.sidebar-section label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.sidebar-section input {
+    width: 100%;
+    padding: 5px;
+    border-radius: 4px;
+    border: none;
+}
+
+.rotate-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.rotate-buttons button {
+    width: 45px;
+    height: 45px;
+    border-radius: 4px;
+    background-color: #444;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.rotate-buttons button:hover {
+    background-color: #555;
+}
+
+
+/* Main editor styles */
+
+.main-editor {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #333;
+}
+
+.image-container {
+    max-width: 80%;
+    max-height: 80%;
+}
+
+.image-container img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.placeholder {
+    text-align: center;
+    color: white;
+}
+
+.placeholder input {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: green;
+    color: white;
+    cursor: pointer;
+}

@@ -1,73 +1,76 @@
-// export default function Crop() {
-//     return (
-//         <div>
-//             <h1>Crop</h1>
-//         </div>
-//     )
-// }
+import React, { useRef, useEffect } from 'react';
+import Cropper from 'react-cropper';
+import 'cropperjs/dist/cropper.css';
 
-import React, { useState, useRef } from 'react';
+const Crop = ({ image, onCrop, onUndo, onRedo, onSave, left, top, width, height }) => {
+  const cropperRef = useRef(null); // Sử dụng ref để truy cập Cropper instance
 
-export default function Crop({ image, onCrop, onUndo, onRedo, onSave }) {
-  const [cropData, setCropData] = useState(null);
-  const [history, setHistory] = useState([]);
-  const [historyIndex, setHistoryIndex] = useState(-1);
-
-  const cropRef = useRef(null);
-
+  // Hàm xử lý crop ảnh
   const handleCrop = () => {
-    
-    setCropData(croppedData);
-
-    const newHistory = history.slice(0, historyIndex + 1);
-    setHistory([...newHistory, croppedData]);
-    setHistoryIndex(historyIndex + 1);
-
-    if (onCrop) {
-      onCrop(croppedData);
-    }
+    const cropper = cropperRef.current.cropper;
+    const croppedImageDataUrl = cropper.getCroppedCanvas().toDataURL(); // Lấy ảnh sau khi crop
+    onCrop(croppedImageDataUrl); // Gọi callback để truyền dữ liệu ảnh đã crop lên component cha
   };
 
-  const handleUndo = () => {
-    if (historyIndex > 0) {
-      setHistoryIndex(historyIndex - 1);
-      setCropData(history[historyIndex - 1]);
+  // Hàm xử lý sự kiện 'ready' khi ảnh đã sẵn sàng trong Cropper
+  const handleCropperReady = () => {
+    const cropper = cropperRef.current.cropper;
+    if (cropper) {
+      // Thiết lập crop box để phù hợp với ảnh
+      cropper.setCropBoxData({
+        left: left, // Sử dụng giá trị được truyền từ component cha
+        top: top, // Sử dụng giá trị được truyền từ component cha
+        width: width || cropper.getImageData().naturalWidth / 2, // Nếu width không được truyền, sử dụng kích thước mặc định
+        height: height || cropper.getImageData().naturalHeight / 2, // Nếu height không được truyền, sử dụng kích thước mặc định
+      });
 
-      if (onUndo) {
-        onUndo(history[historyIndex - 1]);
-      }
-    }
-  };
-
-  const handleRedo = () => {
-    if (historyIndex < history.length - 1) {
-      setHistoryIndex(historyIndex + 1);
-      setCropData(history[historyIndex + 1]);
-
-      if (onRedo) {
-        onRedo(history[historyIndex + 1]);
-      }
-    }
-  };
-
-  const handleSave = () => {
-    if (onSave) {
-      onSave(cropData);
+      // Thiết lập canvas data để focus vào trung tâm của ảnh
+      cropper.setCanvasData({
+        left: 0, // Thiết lập vị trí canvas theo nhu cầu
+        top: 0, // Thiết lập vị trí canvas theo nhu cầu
+      });
     }
   };
 
   return (
     <div>
-      <div>
-        {/* <img ref={cropRef} src={image} alt="Selected" style={{ maxWidth: '100%' }} /> */}
-        <div>
-          {/* Nút chức năng */}
-          <button onClick={handleCrop}>Crop</button>
-          <button onClick={handleUndo} disabled={historyIndex <= 0}>Undo</button>
-          <button onClick={handleRedo} disabled={historyIndex >= history.length - 1}>Redo</button>
-          <button onClick={handleSave}>Save</button>
-        </div>
+      <Cropper
+        src={image} // Dữ liệu ảnh được truyền từ editImagePage
+        style={{ height: 400, width: '100%' }}
+        // Cropper.js options
+        initialAspectRatio={16 / 9}
+        guides={true}
+        ref={cropperRef} // Gán ref vào Cropper để truy cập các phương thức
+        viewMode={1} // Chế độ view để crop chỉ nằm trong khu vực của canvas
+        autoCropArea={1} // Thiết lập vùng crop mặc định
+        ready={handleCropperReady} // Sự kiện 'ready' được gọi khi ảnh đã sẵn sàng
+      />
+
+      <div style={{ marginTop: '20px' }}>
+        <button onClick={handleCrop} style={buttonStyle}>
+          Crop
+        </button>
+        <button onClick={onUndo} style={buttonStyle}>
+          Undo
+        </button>
+        <button onClick={onRedo} style={buttonStyle}>
+          Redo
+        </button>
+        <button onClick={() => onSave(cropperRef.current.cropper.getCroppedCanvas().toDataURL())} style={buttonStyle}>
+          Save
+        </button>
       </div>
     </div>
   );
-}
+};
+
+const buttonStyle = {
+  padding: '10px 15px',
+  marginRight: '10px',
+  borderRadius: '5px',
+  backgroundColor: 'blue',
+  color: 'white',
+  border: 'none',
+};
+
+export default Crop;
