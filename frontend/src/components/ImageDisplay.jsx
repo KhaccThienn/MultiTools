@@ -1,7 +1,8 @@
-// components/ImageDisplay.js
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useContext } from 'react';
+import { ImageContext } from '@/context/ImageContext';
+import react from 'react';
 
-function ImageDisplay({ image }) {
+function ImageDisplay({ image, onImageLoad }) {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
   const [scale, setScale] = useState(1);
@@ -9,9 +10,33 @@ function ImageDisplay({ image }) {
   const [isPanning, setIsPanning] = useState(false);
   const [startCoords, setStartCoords] = useState({ x: 0, y: 0 });
   const [initialScale, setInitialScale] = useState(1);
+  const [imgDimensions, setImgDimensions] = useState({ width: 0, height: 0 }); // Kích thước gốc của hình ảnh
 
+  const { setImageData } = useContext(ImageContext);
 
-  
+  const updateImageData = () => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+
+    // Tính toán lại width và height dựa trên scale
+    const updatedWidth = imgDimensions.width * scale;
+    const updatedHeight = imgDimensions.height * scale;
+
+    // Cập nhật kích thước và vị trí ảnh dựa trên scale và position
+    const updatedData = {
+      width: updatedWidth,
+      height: updatedHeight,
+      top: rect.top + position.y,
+      left: rect.left + position.x,
+    };
+
+    setImageData(updatedData);
+    console.log('Updated Image Data:', updatedData);
+  };
+
+  const handleImageLoad = () => {
+    updateImageData();
+  };
 
   useEffect(() => {
     if (image) {
@@ -22,64 +47,49 @@ function ImageDisplay({ image }) {
         const container = containerRef.current;
         const ctx = canvas.getContext('2d');
 
-        // Lấy kích thước của container
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
 
-        // Tính toán tỷ lệ để hình ảnh vừa với container
+        // Lưu kích thước ban đầu của hình ảnh
+        setImgDimensions({ width: img.width, height: img.height });
+
         const hRatio = containerWidth / img.width;
         const vRatio = containerHeight / img.height;
         const ratio = Math.min(hRatio, vRatio);
 
-        // Lưu tỷ lệ ban đầu
         setInitialScale(ratio);
         setScale(ratio);
 
-        // Đặt kích thước canvas bằng kích thước container
         canvas.width = containerWidth;
         canvas.height = containerHeight;
 
-        // Vẽ hình ảnh với tỷ lệ phù hợp
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.save();
+        drawImage(img, { x: 0, y: 0 }, ratio);
 
-        // Dịch chuyển đến vị trí trung tâm
-        ctx.translate(position.x, position.y);
-        ctx.scale(ratio, ratio);
-
-        // Vẽ hình ảnh
-        ctx.drawImage(img, 0, 0);
-
-        ctx.restore();
+        handleImageLoad();
       };
     }
-  }, [image, position]);
+  }, [image]);
 
   useEffect(() => {
     if (image) {
-      drawImage();
+      const img = new Image();
+      img.src = image;
+      img.onload = () => {
+        drawImage(img, position, scale);
+        updateImageData();  // Cập nhật khi vị trí hoặc kích thước thay đổi
+      };
     }
   }, [scale, position]);
 
-  const drawImage = () => {
+  const drawImage = (img, position, scale) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-
-    const img = new Image();
-    img.src = image;
-    img.onload = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.save();
-
-      // Áp dụng các phép biến đổi
-      ctx.translate(position.x, position.y);
-      ctx.scale(scale, scale);
-
-      // Vẽ hình ảnh
-      ctx.drawImage(img, 0, 0);
-
-      ctx.restore();
-    };
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(position.x, position.y); // Áp dụng vị trí
+    ctx.scale(scale, scale); // Áp dụng tỷ lệ
+    ctx.drawImage(img, 0, 0); // Vẽ hình ảnh từ góc (0,0)
+    ctx.restore();
   };
 
   const handleWheel = (e) => {
@@ -88,14 +98,11 @@ function ImageDisplay({ image }) {
     let newScale = scale;
 
     if (delta < 0) {
-      // Zoom in
       newScale = scale * 1.1;
     } else {
-      // Zoom out
       newScale = scale / 1.1;
     }
 
-    // Giới hạn scale
     newScale = Math.min(Math.max(newScale, initialScale * 0.5), initialScale * 5);
     setScale(newScale);
   };
@@ -107,7 +114,6 @@ function ImageDisplay({ image }) {
 
   const handleMouseMove = (e) => {
     if (!isPanning) return;
-
     const x = e.clientX - startCoords.x;
     const y = e.clientY - startCoords.y;
     setPosition({ x, y });
@@ -117,23 +123,26 @@ function ImageDisplay({ image }) {
     setIsPanning(false);
   };
 
+  const handleMouseLeave = () => {
+    setIsPanning(false);
+  };
+
   return (
     <div
       ref={containerRef}
       style={{
         width: '100%',
-        height: '100%', // Bạn có thể điều chỉnh chiều cao phù hợp
+        height: '100%',
         border: '1px solid black',
         overflow: 'hidden',
         position: 'relative',
         cursor: isPanning ? 'grabbing' : 'grab',
-        textAlign:'center',
       }}
       onWheel={handleWheel}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
     >
       {image ? (
         <canvas
@@ -145,7 +154,7 @@ function ImageDisplay({ image }) {
           }}
         />
       ) : (
-        <div style={{}}>Không có hình ảnh để hiển thị</div>
+        <div>Không có hình ảnh để hiển thị</div>
       )}
     </div>
   );
