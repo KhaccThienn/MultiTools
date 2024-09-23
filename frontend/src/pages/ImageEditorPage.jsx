@@ -7,10 +7,6 @@ import ImageDisplay from '@/components/ImageDisplay';
 import Crop from '@/functions/Crop';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-
-
-
-
 export default function ImageEditorPage() {
   const [image, setImage] = useState(null);
 
@@ -35,8 +31,9 @@ export default function ImageEditorPage() {
       <div style={{ display: 'flex', flex: 1 }}>
         {/* Phần bên trái */}
         <div style={{ width: '400px', borderWidth: '1px', borderColor:'black'}}>
-          {/* <MenuEditor /> */}
-          <Crop image={image} onImageUpdate={handleImageUpdate} />
+          <MenuEditor />
+          {/* <Crop image={image} onImageUpdate={handleImageUpdate} /> */}
+          
         </div>
         {/* Phần còn lại */}
         <div style={{ flex: 1}}>

@@ -145,7 +145,7 @@ function ImageDisplay({ image }) {
           }}
         />
       ) : (
-        <div>Không có hình ảnh để hiển thị</div>
+        <div style={{}}>Không có hình ảnh để hiển thị</div>
       )}
     </div>
   );
