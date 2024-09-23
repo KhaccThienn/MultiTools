@@ -4,6 +4,8 @@ from PIL import Image
 import io
 import cv2
 import numpy as np
+import base64
+from io import BytesIO
 
 def resize_image(file, width=300, height=300):
     img = Image.open(file.stream)
@@ -24,6 +26,23 @@ def crop_image(file, left, top, right, bottom):
     img_io.seek(0)
 
     return img_io
+
+def process_crop(image_data, left, top, width, height):
+    # Loại bỏ tiền tố 'data:image/png;base64,' nếu có
+    if ',' in image_data:
+        image_data = image_data.split(',')[1]
+
+    decoded_image = base64.b64decode(image_data)
+    image = Image.open(BytesIO(decoded_image))
+
+    # Crop hình ảnh
+    cropped_image = image.crop((left, top, left + width, top + height))
+
+    buffered = BytesIO()
+    cropped_image.save(buffered, format="PNG")
+    cropped_image_str = base64.b64encode(buffered.getvalue()).decode()
+
+    return cropped_image_str
 
 def remove_object(file, x1, y1, x2, y2, method='telea'):
     """

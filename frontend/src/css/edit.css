@@ -91,71 +91,86 @@
     cursor: pointer;
 }
 
+
 /*FooterEditor CSS*/
+
 .toolbar {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #292c31;
     padding: 10px;
-  }
-  .toolbar span{
+}
+
+.toolbar span {
     color: #63666b;
     font-weight: 800;
-  }
-  .toolbar i {
+}
+
+.toolbar i {
     color: #63666b;
-  }
-  .ajust-size-section{
+}
+
+.ajust-size-section {
     border-left: 2px solid #4b5862;
     border-right: 2px solid #4b5862;
-  }
-  .undo-redo-section{
+}
+
+.undo-redo-section {
     border-right: 2px solid #4b5862;
     margin-right: 20px;
-  }
-  .icon-button {
+}
+
+.icon-button {
     padding: 0 5px;
     background: none;
     border: none;
     font-size: 18px;
     cursor: pointer;
     margin: 0 10px;
-  }
-  
-  .zoom-text {
+}
+
+.zoom-text {
     margin: 0 10px;
-  }
-  
-  .toolbar-button {
+}
+
+.toolbar-button {
     background-color: #292c31;
     border: none;
     padding: 5px 10px;
     margin: 0 5px;
     transition: color 0.3s ease;
     cursor: pointer;
-  }
-  .close {
+}
+
+.close {
     border: #63666b solid 2px;
     border-radius: 10px;
     width: 120px;
-  }
-  .save-button {
+}
+
+.save-button {
     background-color: #007bff;
     border-radius: 10px;
     width: 120px;
-  }
-  .save-button i, .save-button span {
+}
+
+.save-button i,
+.save-button span {
     color: white !important;
-  }
-  
-  .icon-button:hover i, .toolbar-button:hover span, .toolbar-button:hover i {
-    color: white ;
-  }
-  .close:hover{
+}
+
+.icon-button:hover i,
+.toolbar-button:hover span,
+.toolbar-button:hover i {
+    color: white;
+}
+
+.close:hover {
     background-color: #3a3d45;
-  }
-  .save-button:hover {
+}
+
+.save-button:hover {
     background-color: #0056b3;
-  }
-  
+}

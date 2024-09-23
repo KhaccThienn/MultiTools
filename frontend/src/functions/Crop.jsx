@@ -1,76 +1,52 @@
-import React, { useRef, useEffect } from 'react';
-import Cropper from 'react-cropper';
-import 'cropperjs/dist/cropper.css';
+// components/Crop.js
+import React, { useState } from 'react';
 
-const Crop = ({ image, onCrop, onUndo, onRedo, onSave, left, top, width, height }) => {
-  const cropperRef = useRef(null); // Sử dụng ref để truy cập Cropper instance
+function Crop({ image, onImageUpdate }) {
+  const [top, setTop] = useState(0);
+  const [left, setLeft] = useState(0);
+  const [width, setWidth] = useState(100);
+  const [height, setHeight] = useState(100);
 
-  // Hàm xử lý crop ảnh
-  const handleCrop = () => {
-    const cropper = cropperRef.current.cropper;
-    const croppedImageDataUrl = cropper.getCroppedCanvas().toDataURL(); // Lấy ảnh sau khi crop
-    onCrop(croppedImageDataUrl); // Gọi callback để truyền dữ liệu ảnh đã crop lên component cha
-  };
-
-  // Hàm xử lý sự kiện 'ready' khi ảnh đã sẵn sàng trong Cropper
-  const handleCropperReady = () => {
-    const cropper = cropperRef.current.cropper;
-    if (cropper) {
-      // Thiết lập crop box để phù hợp với ảnh
-      cropper.setCropBoxData({
-        left: left, // Sử dụng giá trị được truyền từ component cha
-        top: top, // Sử dụng giá trị được truyền từ component cha
-        width: width || cropper.getImageData().naturalWidth / 2, // Nếu width không được truyền, sử dụng kích thước mặc định
-        height: height || cropper.getImageData().naturalHeight / 2, // Nếu height không được truyền, sử dụng kích thước mặc định
-      });
-
-      // Thiết lập canvas data để focus vào trung tâm của ảnh
-      cropper.setCanvasData({
-        left: 0, // Thiết lập vị trí canvas theo nhu cầu
-        top: 0, // Thiết lập vị trí canvas theo nhu cầu
-      });
+  const handleCrop = async () => {
+    if (!image) {
+      alert('Vui lòng tải lên hình ảnh trước.');
+      return;
     }
+
+    const response = await fetch('http://localhost:5000/crop', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ top, left, width, height, image }),
+    });
+
+    const data = await response.json();
+    onImageUpdate(data.cropped_image);
   };
 
   return (
     <div>
-      <Cropper
-        src={image} // Dữ liệu ảnh được truyền từ editImagePage
-        style={{ height: 400, width: '100%' }}
-        // Cropper.js options
-        initialAspectRatio={16 / 9}
-        guides={true}
-        ref={cropperRef} // Gán ref vào Cropper để truy cập các phương thức
-        viewMode={1} // Chế độ view để crop chỉ nằm trong khu vực của canvas
-        autoCropArea={1} // Thiết lập vùng crop mặc định
-        ready={handleCropperReady} // Sự kiện 'ready' được gọi khi ảnh đã sẵn sàng
-      />
-
-      <div style={{ marginTop: '20px' }}>
-        <button onClick={handleCrop} style={buttonStyle}>
-          Crop
-        </button>
-        <button onClick={onUndo} style={buttonStyle}>
-          Undo
-        </button>
-        <button onClick={onRedo} style={buttonStyle}>
-          Redo
-        </button>
-        <button onClick={() => onSave(cropperRef.current.cropper.getCroppedCanvas().toDataURL())} style={buttonStyle}>
-          Save
-        </button>
-      </div>
+      <h2>Crop</h2>
+      <label>
+        Top:
+        <input type="number" value={top} onChange={(e) => setTop(e.target.value)} />
+      </label>
+      <label>
+        Left:
+        <input type="number" value={left} onChange={(e) => setLeft(e.target.value)} />
+      </label>
+      <label>
+        Width:
+        <input type="number" value={width} onChange={(e) => setWidth(e.target.value)} />
+      </label>
+      <label>
+        Height:
+        <input type="number" value={height} onChange={(e) => setHeight(e.target.value)} />
+      </label>
+      <button onClick={handleCrop}>Crop</button>
     </div>
   );
-};
-
-const buttonStyle = {
-  padding: '10px 15px',
-  marginRight: '10px',
-  borderRadius: '5px',
-  backgroundColor: 'blue',
-  color: 'white',
-  border: 'none',
-};
+}
 
 export default Crop;

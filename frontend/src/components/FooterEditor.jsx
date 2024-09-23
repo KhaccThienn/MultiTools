@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import '../css/edit.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 function App() {

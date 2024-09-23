@@ -1,46 +1,43 @@
 # app/routes.py
 
-from flask import Blueprint, request, send_file
-from .utils import resize_image, crop_image, remove_object
+from flask import Blueprint, request, send_file, jsonify
+from .utils import resize_image, crop_image, remove_object, process_crop
 
 # Sử dụng Blueprint để tổ chức các route
 bp = Blueprint('main', __name__)
 
 @bp.route('/resize', methods=['POST'])
-def resize():
+def resize_route():
     file = request.files['image']
     img_io = resize_image(file)
     return send_file(img_io, mimetype='image/jpeg')
 
 @bp.route('/crop', methods=['POST'])
-def crop():
-    file = request.files['image']
-    left = int(request.form['left'])
-    top = int(request.form['top'])
-    right = int(request.form['right'])
-    bottom = int(request.form['bottom'])
+def crop_image_route():
+    data = request.get_json()
+    top = int(data['top'])
+    left = int(data['left'])
+    width = int(data['width'])
+    height = int(data['height'])
+    image_data = data['image']
 
-    img_io = crop_image(file, left, top, right, bottom)
-    return send_file(img_io, mimetype='image/jpeg')
+    # Sử dụng hàm tiện ích để xử lý crop hình ảnh
+    cropped_image_str = process_crop(image_data, left, top, width, height)
+
+    # Trả về hình ảnh đã crop dưới dạng base64
+    return jsonify({'cropped_image': 'data:image/png;base64,' + cropped_image_str})
 
 @bp.route('/remove-object', methods=['POST'])
 def remove_object_route():
     """
     API route để xóa một chi tiết trong ảnh.
-    
-    Yêu cầu:
-    - POST request với file ảnh và các thông số tọa độ x1, y1, x2, y2.
-    - Phương pháp inpainting (telea hoặc ns) có thể được cung cấp trong form data (mặc định là 'telea').
-    
-    Trả về:
-    - Ảnh đã được xóa chi tiết.
     """
     file = request.files['image']
     x1 = int(request.form['x1'])
     y1 = int(request.form['y1'])
     x2 = int(request.form['x2'])
     y2 = int(request.form['y2'])
-    method = request.form.get('method', 'telea')  # Mặc định là 'telea' nếu không cung cấp
+    method = request.form.get('method', 'telea')
 
     # Gọi hàm remove_object từ utils.py
     result_io = remove_object(file, x1, y1, x2, y2, method)
