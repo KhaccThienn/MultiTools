@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState, useRef } from "react";
 import { AiOutlineRotateLeft, AiOutlineRotateRight } from "react-icons/ai";
 import { PiFlipHorizontalBold, PiFlipVerticalBold } from "react-icons/pi";
 import { ImageContext } from "@/context/ImageContext";
+import { CropContext } from "@/context/CropContext";
 
 const styles = {
   menuDetail: {
@@ -96,78 +97,30 @@ const styles = {
   },
 };
 
-function Crop({ image, onImageUpdate }) {
+function Crop() {
   const { imageData } = useContext(ImageContext);
-  const [borderBox, setBorderBox] = useState({
-    width: imageData?.width || 100,
-    height: imageData?.height || 100,
-    top: imageData?.top || 50,
-    left: imageData?.left || 50,
-  });
-  const [isDragging, setIsDragging] = useState(false);
-  const [isResizing, setIsResizing] = useState(false);
-  const [currentHandle, setCurrentHandle] = useState(null);
-  const startPosition = useRef({ x: 0, y: 0 });
+  const {cropBoxData, updateCropBoxData, resetCropBoxData, handleCrop  } = useContext(CropContext);
 
-  const getClientPos = (e) => {
-    if (e.touches) {
-      return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    }
-    return { x: e.clientX, y: e.clientY };
-  };
-
-  const handleStart = (e, type, handle = null) => {
-    e.preventDefault();
-    const { x, y } = getClientPos(e);
-    if (type === "drag") {
-      setIsDragging(true);
-      startPosition.current = {
-        x: x - borderBox.left,
-        y: y - borderBox.top,
-      };
-    } else if (type === "resize") {
-      setIsResizing(true);
-      setCurrentHandle(handle);
-      startPosition.current = { x, y };
-    }
-    window.addEventListener("mousemove", handleMove);
-    window.addEventListener("mouseup", handleEnd);
-    window.addEventListener("touchmove", handleMove);
-    window.addEventListener("touchend", handleEnd);
-  };
-
-  const handleMove = (e) => {
-    const { x, y } = getClientPos(e);
-    if (isDragging) {
-      const newX = x - startPosition.current.x;
-      const newY = y - startPosition.current.y;
-      setBorderBox((prev) => ({
-        ...prev,
-        left: newX,
-        top: newY,
-      }));
-    } else if (isResizing && currentHandle) {
-      if (currentHandle === "bottom-right") {
-        const newWidth = x - startPosition.current.x;
-        const newHeight = y - startPosition.current.y;
-        setBorderBox((prev) => ({
-          ...prev,
-          width: Math.max(newWidth, 20),
-          height: Math.max(newHeight, 20),
-        }));
-      }
-    }
-  };
-
-  const handleEnd = () => {
-    setIsDragging(false);
-    setIsResizing(false);
-    setCurrentHandle(null);
-    window.removeEventListener("mousemove", handleMove);
-    window.removeEventListener("mouseup", handleEnd);
-    window.removeEventListener("touchmove", handleMove);
-    window.removeEventListener("touchend", handleEnd);
-  };
+    // Hàm xử lý xoay trái
+    const handleRotateLeft = () => {
+      updateCropBoxData('rotate', cropBoxData.rotate - 90);
+    };
+  
+    // Hàm xử lý xoay phải
+    const handleRotateRight = () => {
+      updateCropBoxData('rotate', cropBoxData.rotate + 90);
+    };
+  
+    // Hàm xử lý lật ngang
+    const handleFlipHorizontal = () => {
+      updateCropBoxData('flipHorizontal', !cropBoxData.flipHorizontal);
+    };
+  
+    // Hàm xử lý lật dọc
+    const handleFlipVertical = () => {
+      updateCropBoxData('flipVertical', !cropBoxData.flipVertical);
+    };
+ 
 
   return (
     <>
@@ -179,21 +132,17 @@ function Crop({ image, onImageUpdate }) {
             <div style={styles.inputLabel}>Chiều rộng</div>
             <input
               type="number"
-              value={borderBox.width}
-              onChange={(e) =>
-                setBorderBox((prev) => ({ ...prev, width: +e.target.value }))
-              }
+              value={cropBoxData.width}
               style={styles.input}
+              onChange={(e) => updateCropBoxData('width', Number(e.target.value))}
             />
           </div>
           <div style={styles.inputGroup}>
             <div style={styles.inputLabel}>Chiều cao</div>
             <input
               type="number"
-              value={borderBox.height}
-              onChange={(e) =>
-                setBorderBox((prev) => ({ ...prev, height: +e.target.value }))
-              }
+              value={cropBoxData.height}
+              onChange={(e) => updateCropBoxData('height', Number(e.target.value))}
               style={styles.input}
             />
           </div>
@@ -204,10 +153,10 @@ function Crop({ image, onImageUpdate }) {
           </div>
 
           <div style={styles.iconGroup}>
-            <AiOutlineRotateLeft style={{ fontSize: "24px", cursor: "pointer" }} />
-            <AiOutlineRotateRight style={{ fontSize: "24px", cursor: "pointer" }} />
-            <PiFlipHorizontalBold style={{ fontSize: "24px", cursor: "pointer" }} />
-            <PiFlipVerticalBold style={{ fontSize: "24px", cursor: "pointer" }} />
+            <AiOutlineRotateLeft style={{ fontSize: "24px", cursor: "pointer" }}   onClick={handleRotateLeft}/>
+            <AiOutlineRotateRight style={{ fontSize: "24px", cursor: "pointer" }}  onClick={handleRotateRight}/>
+            <PiFlipHorizontalBold style={{ fontSize: "24px", cursor: "pointer" }} onClick={handleFlipHorizontal}/>
+            <PiFlipVerticalBold style={{ fontSize: "24px", cursor: "pointer" }}  onClick={handleFlipVertical}/>
           </div>
 
           <div style={styles.resizeButtons}>
@@ -218,35 +167,11 @@ function Crop({ image, onImageUpdate }) {
         </div>
 
         <div style={styles.buttonGroup}>
-          <button style={styles.cancelButton}>Hủy</button>
-          <button style={styles.applyButton}>Áp dụng</button>
+          <button style={styles.cancelButton} onClick={resetCropBoxData}>Hủy</button>
+          <button style={styles.applyButton} onClick={handleCrop}>Áp dụng</button>
         </div>
       </div>
 
-      {imageData && (
-        <div
-          style={{
-            ...styles.borderBox,
-            width: `${borderBox.width}px`,
-            height: `${borderBox.height}px`,
-            top: `${borderBox.top}px`,
-            left: `${borderBox.left}px`,
-          }}
-          onMouseDown={(e) => handleStart(e, "drag")}
-          onTouchStart={(e) => handleStart(e, "drag")}
-        >
-          <div
-            style={{
-              ...styles.resizeHandle,
-              bottom: "0px",
-              right: "0px",
-              cursor: "nwse-resize",
-            }}
-            onMouseDown={(e) => handleStart(e, "resize", "bottom-right")}
-            onTouchStart={(e) => handleStart(e, "resize", "bottom-right")}
-          />
-        </div>
-      )}
     </>
   );
 }

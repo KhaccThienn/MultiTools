@@ -1,163 +1,70 @@
-import React, { useRef, useEffect, useState, useContext } from 'react';
-import { ImageContext } from '@/context/ImageContext';
-import react from 'react';
+import React, { useRef, useState, useContext, useEffect } from 'react';
+import { Cropper } from 'react-cropper';
+import 'cropperjs/dist/cropper.css'; // Import CSS của cropperjs
+import { CropContext } from '@/context/CropContext';
 
-function ImageDisplay({ image, onImageLoad }) {
-  const canvasRef = useRef(null);
-  const containerRef = useRef(null);
-  const [scale, setScale] = useState(1);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isPanning, setIsPanning] = useState(false);
-  const [startCoords, setStartCoords] = useState({ x: 0, y: 0 });
-  const [initialScale, setInitialScale] = useState(1);
-  const [imgDimensions, setImgDimensions] = useState({ width: 0, height: 0 }); // Kích thước gốc của hình ảnh
+const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
 
-  const { setImageData } = useContext(ImageContext);
-
-  const updateImageData = () => {
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-
-    // Tính toán lại width và height dựa trên scale
-    const updatedWidth = imgDimensions.width * scale;
-    const updatedHeight = imgDimensions.height * scale;
-
-    // Cập nhật kích thước và vị trí ảnh dựa trên scale và position
-    const updatedData = {
-      width: updatedWidth,
-      height: updatedHeight,
-      top: rect.top + position.y,
-      left: rect.left + position.x,
-    };
-
-    setImageData(updatedData);
-    console.log('Updated Image Data:', updatedData);
-  };
-
-  const handleImageLoad = () => {
-    updateImageData();
-  };
+  const {cropBoxData, cropperRef, croppedImage } = useContext(CropContext);
 
   useEffect(() => {
-    if (image) {
-      const img = new Image();
-      img.src = image;
-      img.onload = () => {
-        const canvas = canvasRef.current;
-        const container = containerRef.current;
-        const ctx = canvas.getContext('2d');
+    const cropper = cropperRef.current?.cropper;
+    if (cropper) {
+      // Cập nhật kích thước vùng crop mỗi khi cropBoxData thay đổi
+      cropper.setCropBoxData({
+        width: cropBoxData.width,
+        height: cropBoxData.height,
+      });
 
-        const containerWidth = container.clientWidth;
-        const containerHeight = container.clientHeight;
+       // Áp dụng xoay cho hình ảnh
+       cropper.rotateTo(cropBoxData.rotate);
+         // Áp dụng lật ngang
+      cropper.scaleX(cropBoxData.flipHorizontal ? -1 : 1);
 
-        // Lưu kích thước ban đầu của hình ảnh
-        setImgDimensions({ width: img.width, height: img.height });
-
-        const hRatio = containerWidth / img.width;
-        const vRatio = containerHeight / img.height;
-        const ratio = Math.min(hRatio, vRatio);
-
-        setInitialScale(ratio);
-        setScale(ratio);
-
-        canvas.width = containerWidth;
-        canvas.height = containerHeight;
-
-        drawImage(img, { x: 0, y: 0 }, ratio);
-
-        handleImageLoad();
-      };
+      // Áp dụng lật dọc
+      cropper.scaleY(cropBoxData.flipVertical ? -1 : 1);
     }
-  }, [image]);
+  }, [cropBoxData]); // Theo dõi sự thay đổi của cropBoxData
 
-  useEffect(() => {
-    if (image) {
-      const img = new Image();
-      img.src = image;
-      img.onload = () => {
-        drawImage(img, position, scale);
-        updateImageData();  // Cập nhật khi vị trí hoặc kích thước thay đổi
-      };
-    }
-  }, [scale, position]);
-
-  const drawImage = (img, position, scale) => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.save();
-    ctx.translate(position.x, position.y); // Áp dụng vị trí
-    ctx.scale(scale, scale); // Áp dụng tỷ lệ
-    ctx.drawImage(img, 0, 0); // Vẽ hình ảnh từ góc (0,0)
-    ctx.restore();
-  };
-
-  const handleWheel = (e) => {
-    e.preventDefault();
-    const delta = e.deltaY;
-    let newScale = scale;
-
-    if (delta < 0) {
-      newScale = scale * 1.1;
-    } else {
-      newScale = scale / 1.1;
-    }
-
-    newScale = Math.min(Math.max(newScale, initialScale * 0.5), initialScale * 5);
-    setScale(newScale);
-  };
-
-  const handleMouseDown = (e) => {
-    setIsPanning(true);
-    setStartCoords({ x: e.clientX - position.x, y: e.clientY - position.y });
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isPanning) return;
-    const x = e.clientX - startCoords.x;
-    const y = e.clientY - startCoords.y;
-    setPosition({ x, y });
-  };
-
-  const handleMouseUp = () => {
-    setIsPanning(false);
-  };
-
-  const handleMouseLeave = () => {
-    setIsPanning(false);
-  };
+  
 
   return (
     <div
-      ref={containerRef}
       style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         width: '100%',
         height: '100%',
-        border: '1px solid black',
-        overflow: 'hidden',
-        position: 'relative',
-        cursor: isPanning ? 'grabbing' : 'grab',
+        border: '1px solid #ddd',
+        padding: '10px',
+        margin: 'auto',
       }}
-      onWheel={handleWheel}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
     >
-      {image ? (
-        <canvas
-          ref={canvasRef}
+      {mode === 'crop' ? (
+        <div style={{ width: '100%', height: '100%' }}>
+          <Cropper
+            src={croppedImage || imageSrc}
+            style={{ maxHeight: '100%', maxWidth: '100%' }} // Kích thước cropper
+            initialAspectRatio={16 / 9} // Tỷ lệ khung hình mặc định
+            guides={false}
+            ref={cropperRef} // Tham chiếu đến cropper
+            background={false} 
+          />
+        </div>
+      ) : (
+        <img
+          src={croppedImage || imageSrc}  // Hiển thị ảnh đã crop hoặc ảnh gốc nếu chưa crop
+          alt={altText}
           style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
+            maxWidth: '100%',
+            maxHeight: '100%',
+            objectFit: 'contain',
           }}
         />
-      ) : (
-        <div>Không có hình ảnh để hiển thị</div>
       )}
     </div>
   );
-}
+};
 
 export default ImageDisplay;
