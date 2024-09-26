@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState, useRef } from "react";
 import { AiOutlineRotateLeft, AiOutlineRotateRight } from "react-icons/ai";
 import { PiFlipHorizontalBold, PiFlipVerticalBold } from "react-icons/pi";
 import { ImageContext } from "@/context/ImageContext";
-import { CropContext } from "@/context/CropContext";
 
 const styles = {
   menuDetail: {
@@ -98,8 +97,7 @@ const styles = {
 };
 
 function Crop() {
-  const { imageData } = useContext(ImageContext);
-  const {cropBoxData, updateCropBoxData, resetCropBoxData, handleCrop  } = useContext(CropContext);
+  const {cropBoxData, updateCropBoxData, resetCropBoxData, handleCrop  } = useContext(ImageContext);
 
     // Hàm xử lý xoay trái
     const handleRotateLeft = () => {
