@@ -9,8 +9,8 @@
         "lint": "next lint",
         "frontend": "npm run dev",
         "python-backend": "python ../backend/run.py",
-        "node-backend": "nodemon ../backend/nodejs/server.js",
-        "all": "concurrently \"npm run frontend\" \"npm run python-backend\" \"npm run node-backend\""
+        "nodejs-backend": "nodemon ../frontend/nodejs/server.js",
+        "all": "concurrently \"npm run frontend\" \"npm run python-backend\" \"npm run nodejs-backend\""
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^6.6.0",
@@ -19,11 +19,14 @@
         "@fortawesome/react-fontawesome": "^0.2.2",
         "@react-icons/all-files": "^4.1.0",
         "axios": "^1.7.4",
+        "bcryptjs": "^2.4.3",
         "cors": "^2.8.5",
         "cropperjs": "^1.6.2",
         "express": "^4.21.0",
         "frontend": "file:",
+        "jsonwebtoken": "^9.0.2",
         "mongodb": "^6.8.0",
+        "mongoose": "^8.6.3",
         "next": "14.2.6",
         "react": "^18",
         "react-cropper": "^2.3.3",
