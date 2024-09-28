@@ -6,8 +6,8 @@ import FooterEditor from "@/components/FooterEditor";
 import ImageDisplay from "@/components/ImageDisplay";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { ImageProvider } from "@/context/ImageContext";
-import { CropProvider } from "@/context/CropContext";
 import ImageUploader from "@/components/ImageUploader";
+import { ZoomProvider } from "@/context/ZoomContext";
 
 export default function ImageEditorPage() {
   const [image, setImage] = useState(null);
@@ -40,8 +40,8 @@ export default function ImageEditorPage() {
   };
 
   return (
-    <ImageProvider>
-      <CropProvider>
+    <ZoomProvider>
+      <ImageProvider>
       <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
         {/* Phần header */}
         <div style={{ display: "flex", flex: 1 }}>
@@ -65,7 +65,7 @@ export default function ImageEditorPage() {
           <FooterEditor />
         </div>
       </div>
-      </CropProvider>
-    </ImageProvider>
+      </ImageProvider>
+      </ZoomProvider>
   );
 }

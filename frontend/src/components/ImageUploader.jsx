@@ -1,5 +1,4 @@
 import React from 'react';
-import { ImageContext } from '@/context/ImageContext';
 
 const ImageUploader = ({ handleImageUpload }) => {
 
