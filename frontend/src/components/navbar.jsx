@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../css/app.css";
 import images from "@/constants/images";
 import Image from "next/image";
@@ -12,6 +12,14 @@ function Navbar() {
   const [isSignin, setIsSignin] = React.useState(false); // Để phân biệt giữa Đăng nhập và Đăng ký
   // Trạng thái để quản lý mục navbar nào đang được nhấn
   const [activeMenu, setActiveMenu] = React.useState(null);
+  // Phân biệt đã đăng nhập hay chưa
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [username, setUsername] = React.useState(""); // Lưu tên người dùng
+  
+  // Kiểm tra token đăng nhập
+   useEffect(() => {
+    checkLoginStatus();
+  }, []);
 
   // Dữ liệu cho các navbar_item và các menuItem tương ứng
   const navbarItems = [
@@ -52,6 +60,31 @@ function Navbar() {
   };
 
   const closeModal = () => {
+    setShowSignPage(false);
+  };
+
+  // Đăng xuất 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    setIsLoggedIn(false);
+    setUsername("");
+  };
+
+  const checkLoginStatus = () => {
+    const token = localStorage.getItem("token");
+    const storedUsername = localStorage.getItem("username");
+    if (token && storedUsername) {
+      setIsLoggedIn(true); // Cập nhật trạng thái đã đăng nhập
+      setUsername(storedUsername); // Lưu username từ localStorage vào state
+      console.log("Đã đăng nhập");
+    }
+  };
+  
+
+  //Hàm xử lý sau khi đăng nhập thành công
+  const handleLoginSuccess = () => {
+    checkLoginStatus();
     setShowSignPage(false);
   };
 
@@ -96,16 +129,30 @@ function Navbar() {
         </ul>
       </span>
       <div className="flex items-center">
-        <button onClick={openSigninModal} className="signin-button">
-          Đăng nhập
-        </button>
+      {isLoggedIn ? (
+          <>
+            <div className="navbar-user-section">
+              <i class="fa-solid fa-circle-user"></i>
+              <span className="mr-4">{username}</span>
+              <button onClick={handleLogout}>
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <button onClick={openSigninModal} className="button1 signin-button">
+              Đăng nhập
+            </button>
 
-        <button onClick={openSignupModal} className="button1 signup-button">
-          Đăng ký
-        </button>
+            <button onClick={openSignupModal} className="button1 signup-button">
+              Đăng ký
+            </button>
+            </>
+           )}
         <ThemeToggle />
       </div>
-      {showSignPage && <Sign isSignin={isSignin} closeModal={closeModal} />}{" "}
+      {showSignPage && <Sign isSignin={isSignin} closeModal={closeModal} onLoginSuccess={handleLoginSuccess}/>}{" "}
       {/* Hiển thị SignPage khi trạng thái showSignPage là true */}
     </nav>
   );

@@ -4,7 +4,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useEffect, useState } from 'react';
 import '../css/sign.css';
 
-const Sign = ({ isSignin, closeModal }) => {
+const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
   const [isLogin, setIsLogin] = useState(isSignin); 
   const [username, setUsername] = useState(""); 
   const [password, setPassword] = useState(""); 
@@ -29,7 +29,7 @@ const Sign = ({ isSignin, closeModal }) => {
 
     // Logic đăng nhập
     const handleSignin = async () => {
-      console.log("Đã gọi hàm handleSignin");
+
       try {
         const response = await fetch('http://localhost:4000/login', {
           method: 'POST',
@@ -41,10 +41,11 @@ const Sign = ({ isSignin, closeModal }) => {
   
         const data = await response.json();
         if (response.ok) {
-          // Lưu token vào localStorage hoặc sessionStorage
+          // Lưu token và username vào localStorage 
           localStorage.setItem('token', data.token);
+          localStorage.setItem('username', username);
           alert('Đăng nhập thành công!');
-          closeModal(); // Đóng modal sau khi đăng nhập thành công
+          onLoginSuccess(); 
         } else {
           alert(data.error);
         }
