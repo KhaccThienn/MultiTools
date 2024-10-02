@@ -41,7 +41,7 @@ const menuItems = [
   { id: "add-element", name: "Thành phần", icon: <FaSmile /> },
 ];
 
-export default function MenuEditor() {
+export default function MenuEditor({ image, onImageUpdate, imageData, onMode }) {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [rotationAngle, setRotationAngle] = useState(0);
@@ -76,7 +76,7 @@ export default function MenuEditor() {
             onMouseEnter={() => setHoveredItem("home")}
             onMouseLeave={() => setHoveredItem(null)}
             onClick={() => {
-              // window.location.href = "/";
+              window.location.href = "/";
             }}
           >
             <FaHome id="home-icon" className="home-icon" />

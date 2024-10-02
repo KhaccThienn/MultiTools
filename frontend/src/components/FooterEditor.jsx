@@ -4,7 +4,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { ImageContext } from '@/context/ImageContext';
 import { useZoom } from '@/context/ZoomContext';
 
-function App() {
+function FooterEditor() {
   const {undo, redo, canUndo, canRedo, applyEdit} = useContext(ImageContext);
   const {zoomIn, zoomOut,resetTransform, scale, positionX, positionY} = useZoom();
   

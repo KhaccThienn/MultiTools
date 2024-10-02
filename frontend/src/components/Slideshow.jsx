@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import '../css/app.css';
 import Link from 'next/link';
+import images from '@/constants/images';
+import Image from 'next/image';
 
-const Slideshow = ({ slides }) => {
+const Slideshow = () => {
+  const slides = [
+    { image: images.banner1, title: "Slide 1" },
+    { image: images.banner1, title: "Slide 2" },
+    { image: images.banner1, title: "Slide 3" },
+    { image: images.banner1, title: "Slide 4" },
+  ];
+
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const nextSlide = () => {
@@ -27,8 +36,8 @@ const Slideshow = ({ slides }) => {
       <button className="prev" onClick={prevSlide}>
         <i className="fas fa-chevron-left"></i>
       </button>
-      <Link className="slide" href="/EditImage">
-        <img src={slides[currentSlide].image} alt={slides[currentSlide].title} />
+      <Link className="slide" href="/">
+        <Image src={slides[currentSlide].image} alt={slides[currentSlide].title}    style={{ width: '100%', height: '360px', objectFit: 'cover' }}/>
         <div className="caption">{slides[currentSlide].title}</div>
       </Link>
       <button className="next" onClick={nextSlide}>
