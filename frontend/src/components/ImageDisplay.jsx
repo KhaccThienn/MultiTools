@@ -69,3 +69,4 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
 };
 
 export default ImageDisplay;
+

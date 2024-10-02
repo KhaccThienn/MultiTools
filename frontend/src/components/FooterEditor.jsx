@@ -33,11 +33,12 @@ function App() {
        <span>Đóng</span>
       </button>  
       <button className="toolbar-button save-button">
-        <i class="fa-solid fa-download"></i>
+        <i className="fa-solid fa-download"></i>
        <span>Lưu</span> 
       </button>
     </div>
   );
 }
 
-export default App;
+export default FooterEditor;
+

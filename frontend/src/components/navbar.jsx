@@ -8,9 +8,8 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import ListMenu from "./ListMenu";
 
 function Navbar() {
-  const [showSignPage, setShowSignPage] = React.useState(false); // Trạng thái mở SignPage
-  const [isSignin, setIsSignin] = React.useState(false); // Để phân biệt giữa Đăng nhập và Đăng ký
-  // Trạng thái để quản lý mục navbar nào đang được nhấn
+  const [showSignPage, setShowSignPage] = React.useState(false); 
+  const [isSignin, setIsSignin] = React.useState(false);
   const [activeMenu, setActiveMenu] = React.useState(null);
   // Phân biệt đã đăng nhập hay chưa
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -21,7 +20,6 @@ function Navbar() {
     checkLoginStatus();
   }, []);
 
-  // Dữ liệu cho các navbar_item và các menuItem tương ứng
   const navbarItems = [
     {
       id: 1,
@@ -50,12 +48,12 @@ function Navbar() {
   ];
 
   const openSigninModal = () => {
-    setIsSignin(true); // Mở modal Đăng nhập
+    setIsSignin(true); 
     setShowSignPage(true);
   };
 
   const openSignupModal = () => {
-    setIsSignin(false); // Mở modal Đăng ký
+    setIsSignin(false); 
     setShowSignPage(true);
   };
 
@@ -88,14 +86,14 @@ function Navbar() {
     setShowSignPage(false);
   };
 
-  // Hàm để mở menu khi hover
+
   const handleMouseEnter = (id) => {
-    setActiveMenu(id); // Kích hoạt menu khi di chuột vào
+    setActiveMenu(id);
   };
 
-  // Hàm để đóng menu khi rời chuột
+
   const handleMouseLeave = () => {
-    setActiveMenu(null); // Đóng menu khi rời chuột
+    setActiveMenu(null); 
   };
 
   return (
@@ -112,8 +110,8 @@ function Navbar() {
         <ul className="navbar-links">
           {navbarItems.map((navbarItem) => (
             <li key={navbarItem.id} className="flex items-start cursor-pointer"
-            onMouseEnter={() => handleMouseEnter(navbarItem.id)} // Kích hoạt khi hover
-            onMouseLeave={handleMouseLeave} // Đóng menu khi rời chuột
+            onMouseEnter={() => handleMouseEnter(navbarItem.id)} 
+            onMouseLeave={handleMouseLeave} 
             >
               <span
                 className="mr-2"
