@@ -18,11 +18,11 @@ export default function ImageEditorPage() {
     left: 0,
   });
 
-  const [mode, setMode] = useState('');  // State để quản lý mode
+  const [mode, setMode] = useState(""); // State để quản lý mode
 
   const handleMode = (mode) => {
-    setMode(mode);  // Nhận giá trị mode từ MenuEditor
-    console.log("Mode selected:", mode);  // Kiểm tra xem mode có được cập nhật chính xác không
+    setMode(mode); // Nhận giá trị mode từ MenuEditor
+    console.log("Mode selected:", mode); // Kiểm tra xem mode có được cập nhật chính xác không
   };
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -42,30 +42,57 @@ export default function ImageEditorPage() {
   return (
     <ZoomProvider>
       <ImageProvider>
-      <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-        {/* Phần header */}
-        <div style={{ display: "flex", flex: 1 }}>
-          {/* Phần bên trái */}
-          <div style={{ width: "400px", borderWidth: "1px", borderColor: "black" }}>
-            <MenuEditor
-              image={image}
-              onImageUpdate={handleImageUpdate}
-              imageData={imageData}
-              onMode={handleMode}  // Truyền hàm handleMode xuống MenuEditor
-            />
+        <div
+          style={{ display: "flex", flexDirection: "column", height: "100%" }}
+        >
+          {/* Phần header */}
+          <div style={{ display: "flex", flex: 1 }}>
+            {/* Phần bên trái */}
+            <div
+              style={{
+                width: "360px",
+                borderWidth: "1px",
+                borderColor: "black",
+              }}
+            >
+              <MenuEditor
+                image={image}
+                onImageUpdate={handleImageUpdate}
+                imageData={imageData}
+                onMode={handleMode} // Truyền hàm handleMode xuống MenuEditor
+              />
+            </div>
+            {/* Phần còn lại */}
+            <div
+              style={{
+                flex: 1,
+                backgroundColor: "#2e2e2e",
+                position: "relative",
+                overflow: "hidden",
+                width: "40em", // Đặt chiều rộng cố định
+                height: "40em", // Đặt chiều cao cố định
+              }}
+            >
+              <ImageDisplay
+                imageSrc={selectedImage}
+                mode={mode}
+                altText="Selected Image"
+              />
+            </div>
           </div>
-          {/* Phần còn lại */}
-          <div style={{ flex: 1, backgroundColor: '#2e2e2e' }}>
-            <ImageDisplay imageSrc={selectedImage} mode={mode} altText="Selected Image"/>
+          {/* Phần dưới cùng */}
+          <div
+            style={{
+              height: "50px",
+              display: "flex",
+              backgroundColor: "#292c31",
+            }}
+          >
+            <ImageUploader handleImageUpload={handleImageUpload} />
+            <FooterEditor />
           </div>
         </div>
-        {/* Phần dưới cùng */}
-        <div style={{ height: "50px", display: "flex", backgroundColor: "#292c31" }}>
-          <ImageUploader handleImageUpload={handleImageUpload} />
-          <FooterEditor />
-        </div>
-      </div>
       </ImageProvider>
-      </ZoomProvider>
+    </ZoomProvider>
   );
 }

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useRef } from "react";
+import React, { createContext, useState, useRef, useEffect  } from "react";
 
 export const ImageContext = createContext();
 
@@ -25,6 +25,27 @@ export const ImageProvider = ({ children }) => {
       ...prevData,
       [name]: value,
     }));
+  };
+
+    // Hàm cập nhật cropBoxData từ cropper khi người dùng thay đổi vùng crop
+    const updateCropBoxDataFromCropper = (data) => {
+      setCropBoxData((prevData) => ({
+        ...prevData,
+        width: data.width,
+        height: data.height,
+        rotate: data.rotate || 0,
+        flipHorizontal: data.scaleX < 0,
+        flipVertical: data.scaleY < 0,
+      }));
+    };
+
+  // Hàm xử lý sự kiện cropend
+  const handleCropEnd = () => {
+    const cropper = cropperRef.current?.cropper;
+    if (cropper) {
+      const data = cropper.getData();
+      updateCropBoxDataFromCropper(data);
+    }
   };
 
   // Hàm reset để đưa trạng thái về mặc định
@@ -80,6 +101,7 @@ export const ImageProvider = ({ children }) => {
         handleCrop,
         currentImage, // Ảnh đã cắt để hiển thị
         cropperRef, // Tham chiếu đến cropper
+        handleCropEnd, // Hàm xử lý sự kiện cropend
         undo, redo, applyEdit, canUndo: currentIndex > 0, canRedo: currentIndex < history.length - 1,
       }}
     >

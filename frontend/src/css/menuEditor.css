@@ -1,4 +1,5 @@
 /* Cau truc chung cho menu */
+
 #menu-bar {
     display: flex;
     align-items: center;
@@ -27,7 +28,10 @@
     z-index: 10;
 }
 
+
 /* custom scroll bar*/
+
+
 /* .menu-right::-webkit-scrollbar {
     width: 0.5em;
 }
@@ -46,7 +50,9 @@
     background-color: #555;
 } */
 
+
 /* splitter Phan cach giua cac muc menu */
+
 .splitter {
     width: 100%;
     border-bottom: 10px ridge #454545;
@@ -54,7 +60,10 @@
 
 
 /* menu left*/
+
+
 /* menu left: toggle home */
+
 #toggle-home {
     display: flex;
     cursor: pointer;
@@ -91,8 +100,8 @@
 }
 
 
-
 /* menu left: list menu item*/
+
 #tool-menu {
     list-style: none;
     display: flex;
@@ -149,10 +158,11 @@
 }
 
 
-
-
 /* menu right */
+
+
 /* menu right: tool drawer */
+
 .tool-drawer {
     display: flex;
     flex-direction: column;
@@ -169,16 +179,17 @@
     padding: 0.5em;
 }
 
-.tool-name .icon-cancel{
+.tool-name .icon-cancel {
     opacity: 0.5;
 }
 
-.tool-name .icon-cancel:hover{
+.tool-name .icon-cancel:hover {
     opacity: 1;
 }
 
 
 /* menu item content */
+
 .tool-drawer .tool-content {
     display: flex;
     padding: 0.8em;
@@ -204,7 +215,6 @@
     background-color: #555;
 }
 
-
 .tool-content .tool-detail {
     display: flex;
     flex-direction: column;
@@ -223,6 +233,7 @@
 
 
 /* crop content group 1 */
+
 .group .split {
     display: flex;
     flex-direction: row;
@@ -230,6 +241,7 @@
     justify-content: space-between;
     margin-bottom: 1em;
 }
+
 
 /* .select-crop-frame {
     display: flex;
@@ -296,7 +308,6 @@
 }
  */
 
-
 .toggle-select-frame {
     width: 100%;
 }
@@ -331,6 +342,7 @@ select:focus {
 
 
 /* crop content group 2 */
+
 .rotation-slider-container {
     display: flex;
     flex-direction: column;
@@ -338,12 +350,12 @@ select:focus {
     gap: 10px;
 }
 
-.rotation-slider-box span{
+.rotation-slider-box span {
     font-size: 0.9em;
 }
 
 .rotation-slider {
-    width: 12em;
+    width: 10em;
     appearance: none;
     height: 0.4em;
     background-color: #d9d9d9;
@@ -416,7 +428,10 @@ select:focus {
     display: block;
 }
 
+
 /* crop bottom content */
+
+
 /* Nút hành động */
 
 .bottom-content .action-btn {
@@ -436,7 +451,7 @@ select:focus {
     border-radius: 0.5em;
 }
 
-.action-btn button:nth-child(1){
+.action-btn button:nth-child(1) {
     border: 2px solid rgb(186, 186, 186);
     opacity: 0.5;
 }

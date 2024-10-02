@@ -5,7 +5,7 @@ import { ImageContext } from '@/context/ImageContext';
 import { TransformComponent } from 'react-zoom-pan-pinch'; // Sử dụng TransformComponent cho zoom
 
 const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
-  const { cropBoxData, cropperRef, currentImage } = useContext(ImageContext);
+  const { cropBoxData, cropperRef, currentImage, handleCropEnd } = useContext(ImageContext);
 
   useEffect(() => {
     const cropper = cropperRef.current?.cropper;
@@ -38,17 +38,20 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
         border: '1px solid #ddd',
         padding: '10px',
         margin: 'auto',
+        overflow:'hidden'
       }}
     >
       {mode === 'crop' ? (
-        <div style={{ width: '100%', height: '100%' }}>
+        <div>
           <Cropper
             src={currentImage || imageSrc}
             style={{ maxHeight: '100%', maxWidth: '100%' }} // Kích thước cropper
-            initialAspectRatio={16 / 9} // Tỷ lệ khung hình mặc định
+            initialAspectRatio={1/1} // Tỷ lệ khung hình mặc định
             guides={false}
             ref={cropperRef} // Tham chiếu đến cropper
             background={false}
+            onCropEnd={handleCropEnd} // Thêm sự kiện onCropEnd
+            viewMode={1}
           />
         </div>
       ) : (
