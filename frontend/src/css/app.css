@@ -57,10 +57,13 @@
     padding: 7px 15px;
     margin: 0 10px;
     border-radius: 10px;
-    background-color: #FDBA74;
-    font-size: 18px;
-    font-weight: bold;
+    background-color: #FA7D75;
+    font-size: 12px;
+    min-width: 100px;
+    color: #FFEDD5;
     text-transform: uppercase;
+    margin-right: 40px;
+    transition: opacity 0.3s ease;
 }
 
 .dark-mode .button1 {
@@ -68,7 +71,26 @@
     color: #ffffff;
 }
 
+.button1:hover {
+    transform: translateY(-3px); 
+}
 
+.signin-button{
+    font-family: 'Tomorrow', sans-serif;
+    min-width: 100px;
+    padding: 7px 15px;
+    margin: 0 10px;
+    border: 1px solid;
+    border-radius: 10px;
+    border-color: #333;
+    font-size: 12px;
+    text-transform: uppercase;
+    transition: opacity 0.3s ease;
+}
+
+.signin-button:hover {
+    transform: translateY(-3px); 
+}
 /* ListMenu với position absolute */
 
 .list-menu {
@@ -116,6 +138,8 @@
 .list-menu li:hover a {
     color: #fff;
 }
+
+
 
 .navbar-user-section{
     margin-right: 40px;
