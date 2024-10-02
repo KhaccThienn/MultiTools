@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../css/app.css'; // Import CSS từ file
+import '../css/app.css';
 import Link from 'next/link';
 
 const Slideshow = ({ slides }) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import '../css/edit.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-function App() {
+function FooterEditor() {
   return (
     <div className="toolbar">
       <div className='ajust-size-section'>
@@ -28,11 +28,12 @@ function App() {
        <span>Đóng</span>
       </button>  
       <button className="toolbar-button save-button">
-        <i class="fa-solid fa-download"></i>
+        <i className="fa-solid fa-download"></i>
        <span>Lưu</span> 
       </button>
     </div>
   );
 }
 
-export default App;
+export default FooterEditor;
+

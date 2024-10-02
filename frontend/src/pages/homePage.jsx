@@ -5,10 +5,7 @@ import Container from "@/components/Container";
 import Button from "@/components/Button";
 import Footer from "@/components/Footer";
 
-
 export default function HomePage() {
-
-  // Dữ liệu của các slide (có thể là hình ảnh và tiêu đề)
   const slides = [
     { image: "https://via.placeholder.com/500x160", title: "Slide 1" },
     { image: "https://via.placeholder.com/500x160", title: "Slide 2" },
@@ -21,7 +18,7 @@ export default function HomePage() {
   };
 
   const handleContainerClick = (page) => {
-    window.location.href = `/${page}`; // Điều hướng đến trang
+    window.location.href = `/${page}`;
   };
 
   return (
@@ -36,7 +33,7 @@ export default function HomePage() {
           rotate={0}
           colorbg="#6EE7B7"
           onClick={() => {
-            window.location.href = "/ImageEditorPage"; // Điều hướng tới trang editImagePage
+            window.location.href = "/ImageEditorPage";
           }}
         />
         <Container
@@ -46,7 +43,7 @@ export default function HomePage() {
           // onClick={onClick}
           // onClick={() => handleContainerClick("testEditImagePage")}
           onClick={() => {
-            window.location.href = "/ImageEditorPage"; // Điều hướng tới trang editImagePage
+            window.location.href = "/ImageEditorPage";
           }}
         />
         <Container

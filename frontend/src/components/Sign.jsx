@@ -1,4 +1,4 @@
-'use client'; // Đảm bảo rằng component này chạy trên client side
+'use client'; 
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useEffect, useState } from 'react';
@@ -10,7 +10,6 @@ const Sign = ({ isSignin, closeModal }) => {
   const [password, setPassword] = useState(""); 
   const [email, setEmail] = useState(""); 
 
-  // reset input fields
   const resetInputs = () => {
     setUsername("");
     setPassword("");
@@ -18,16 +17,15 @@ const Sign = ({ isSignin, closeModal }) => {
   };
 
   const toggleToSignup = () => {
-    resetInputs(); // reset input
-    setIsLogin(false); // move to signup
+    resetInputs(); 
+    setIsLogin(false); 
   };
 
   const toggleToSignin = () => {
-    resetInputs(); // reset input
-    setIsLogin(true); // move to signin
+    resetInputs(); 
+    setIsLogin(true); 
   };
 
-    // Logic đăng nhập
     const handleSignin = async () => {
       console.log("Đã gọi hàm handleSignin");
       try {
@@ -41,10 +39,9 @@ const Sign = ({ isSignin, closeModal }) => {
   
         const data = await response.json();
         if (response.ok) {
-          // Lưu token vào localStorage hoặc sessionStorage
           localStorage.setItem('token', data.token);
           alert('Đăng nhập thành công!');
-          closeModal(); // Đóng modal sau khi đăng nhập thành công
+          closeModal(); 
         } else {
           alert(data.error);
         }
@@ -53,7 +50,6 @@ const Sign = ({ isSignin, closeModal }) => {
       }
     };
   
-    // Logic đăng ký
     const handleSignup = async () => {
       console.log("Đã gọi hàm handleSignup");
       try {
@@ -68,7 +64,7 @@ const Sign = ({ isSignin, closeModal }) => {
         const data = await response.json();
         if (response.ok) {
           alert('Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.');
-          toggleToSignin(); // Chuyển sang trang đăng nhập
+          toggleToSignin(); 
         } else {
           alert(data.error);
         }
@@ -93,7 +89,6 @@ const Sign = ({ isSignin, closeModal }) => {
       });
     }
 
-    // Cleanup event listeners on component unmount
     return () => {
       if (closeSigninBtn) closeSigninBtn.removeEventListener("click", () => {});
       if (closeSignupBtn) closeSignupBtn.removeEventListener("click", () => {});
@@ -117,13 +112,13 @@ const Sign = ({ isSignin, closeModal }) => {
                   type="text"
                   placeholder="Tên đăng nhập/Email"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)} // update input value
+                  onChange={(e) => setUsername(e.target.value)} 
                 />
                 <input
                   type="password"
                   placeholder="Mật khẩu"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)} // update input value
+                  onChange={(e) => setPassword(e.target.value)} 
                 />
                 <input type="submit" value="Đăng nhập" onClick={handleSignin} />
                 <div className="signin-group">
@@ -160,19 +155,19 @@ const Sign = ({ isSignin, closeModal }) => {
                   type="text"
                   placeholder="Tên đăng nhập"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)} // update input value
+                  onChange={(e) => setUsername(e.target.value)} 
                 />
                 <input
                   type="password"
                   placeholder="Mật khẩu"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)} // update input value
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <input
                   type="text"
                   placeholder="Email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)} // update input value
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <input type="submit" value="Đăng ký" onClick={handleSignup} />
                 <div className="signup-group">

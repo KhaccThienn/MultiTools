@@ -22,32 +22,25 @@ function ImageDisplay({ image }) {
         const container = containerRef.current;
         const ctx = canvas.getContext('2d');
 
-        // Lấy kích thước của container
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
 
-        // Tính toán tỷ lệ để hình ảnh vừa với container
         const hRatio = containerWidth / img.width;
         const vRatio = containerHeight / img.height;
         const ratio = Math.min(hRatio, vRatio);
 
-        // Lưu tỷ lệ ban đầu
         setInitialScale(ratio);
         setScale(ratio);
 
-        // Đặt kích thước canvas bằng kích thước container
         canvas.width = containerWidth;
         canvas.height = containerHeight;
 
-        // Vẽ hình ảnh với tỷ lệ phù hợp
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.save();
 
-        // Dịch chuyển đến vị trí trung tâm
         ctx.translate(position.x, position.y);
         ctx.scale(ratio, ratio);
 
-        // Vẽ hình ảnh
         ctx.drawImage(img, 0, 0);
 
         ctx.restore();
@@ -71,11 +64,9 @@ function ImageDisplay({ image }) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
 
-      // Áp dụng các phép biến đổi
       ctx.translate(position.x, position.y);
       ctx.scale(scale, scale);
 
-      // Vẽ hình ảnh
       ctx.drawImage(img, 0, 0);
 
       ctx.restore();
@@ -88,14 +79,11 @@ function ImageDisplay({ image }) {
     let newScale = scale;
 
     if (delta < 0) {
-      // Zoom in
       newScale = scale * 1.1;
     } else {
-      // Zoom out
       newScale = scale / 1.1;
     }
 
-    // Giới hạn scale
     newScale = Math.min(Math.max(newScale, initialScale * 0.5), initialScale * 5);
     setScale(newScale);
   };
@@ -122,7 +110,7 @@ function ImageDisplay({ image }) {
       ref={containerRef}
       style={{
         width: '100%',
-        height: '100%', // Bạn có thể điều chỉnh chiều cao phù hợp
+        height: '100%',
         border: '1px solid black',
         overflow: 'hidden',
         position: 'relative',
@@ -152,3 +140,4 @@ function ImageDisplay({ image }) {
 }
 
 export default ImageDisplay;
+
