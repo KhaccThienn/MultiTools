@@ -27,6 +27,7 @@ import {
 import "../css/menuEditor.css";
 import Crop from "@/functions/Crop";
 import RemoveBackground from "@/functions/RemoveBackground";
+import ColorAdjustment from "@/functions/ColorAdjustment";
 
 const menuItems = [
   { id: "merge", name: "Ghép ảnh", icon: <FaObjectGroup /> },
@@ -104,6 +105,10 @@ export default function MenuEditor({ image, onImageUpdate, imageData, onMode }) 
         {selectedMenu === "removebg" && (
           <RemoveBackground/>
           )}
+
+        {selectedMenu === "adjust" && (
+          <ColorAdjustment/>
+        )}
       </div>
     </section>
   );

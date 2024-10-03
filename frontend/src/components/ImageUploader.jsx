@@ -16,7 +16,10 @@ const ImageUploader = () => {
   };
 
   return (
-    <div>
+    <div
+    style={{
+      margin:'auto'
+    }}>
       <label
         htmlFor="image"
         style={{

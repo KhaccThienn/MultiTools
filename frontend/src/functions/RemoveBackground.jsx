@@ -28,7 +28,7 @@ export default function RemoveBackground() {
       </button>
     </div>
     <div className="splitter"></div>
-    <div className="box__remove--basic" onClick={handleClick}>
+    <div className="box--basic" onClick={handleClick}>
       {loading ? (
         <>
           <FaSpinner className="removebg-icon spinner" /> Đang xóa nền...
