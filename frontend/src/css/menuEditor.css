@@ -494,7 +494,7 @@ select:focus {
     font-size: 1.2em;
 }
 
-.box__remove--basic:hover {
+.box--basic:hover {
     color: white;
     border-color: white;
 }

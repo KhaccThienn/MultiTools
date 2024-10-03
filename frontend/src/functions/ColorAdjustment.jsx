@@ -17,6 +17,41 @@ const ColorAdjustment = () => {
   const setHue = (value) => updateAdjustmentData("hue", value);
   const setGreyScale = (value) => updateAdjustmentData("grey_scale", value);
 
+  const autoAdjust = () => {
+    // Ví dụ các giá trị tự động có thể là những giá trị đã được thử nghiệm
+    const autoBrightness = 120; // Tăng độ sáng lên một mức
+    const autoContrast = 110; // Tăng độ tương phản nhẹ
+    const autoSaturation = 115; // Tăng độ bão hòa màu nhẹ
+    const grayscale = 0; // Không chuyển sang màu xám
+
+    // Cập nhật các giá trị điều chỉnh vào adjustmentData
+    updateAdjustmentData("brightness", autoBrightness);
+    updateAdjustmentData("contrast", autoContrast);
+    updateAdjustmentData("saturation", autoSaturation);
+    updateAdjustmentData("grey_scale", grayscale);
+  };
+
+  const toggleGrayscale = () => {
+    const newGrayscale = adjustmentData.grey_scale >= 50 ? 0 : 100;
+
+    // Cập nhật giá trị grayscale trong adjustmentData
+    updateAdjustmentData("grey_scale", newGrayscale);
+  };
+
+  const popImage = () => {
+    // Tăng cường các giá trị để làm nổi bật hình ảnh
+    const popBrightness = 150; // Tăng độ sáng lên
+    const popContrast = 120; // Tăng độ tương phản lên
+    const popSaturation = 125; // Tăng độ bão hòa màu
+    const grey_scale = 0; // Không chuyển sang màu xám
+
+    // Cập nhật các giá trị đã tăng cường
+    updateAdjustmentData("brightness", popBrightness);
+    updateAdjustmentData("contrast", popContrast);
+    updateAdjustmentData("saturation", popSaturation);
+    updateAdjustmentData("grey_scale", grey_scale);
+  };
+
   return (
     <div className="tool-drawer">
       <div className="tool-name">
@@ -28,13 +63,13 @@ const ColorAdjustment = () => {
       </div>
       <div className="splitter"></div>
       <div className="box--basic">
-        <button className="btn">
+        <button className="btn" onClick={() => autoAdjust()}>
           <FaMagic /> Tự động
         </button>
-        <button className="btn">
+        <button className="btn" onClick={() => toggleGrayscale()}>
           <FaMoon /> Trắng Đen
         </button>
-        <button className="btn">
+        <button className="btn" onClick={() => popImage()}>
           <FaSun /> Bật ra
         </button>
       </div>
@@ -86,7 +121,7 @@ const ColorAdjustment = () => {
         </div>
 
         <div className="slider-group">
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <label>Sắc độ</label>
             <label>{adjustmentData.hue}</label>
           </div>
@@ -100,7 +135,7 @@ const ColorAdjustment = () => {
         </div>
 
         <div className="slider-group">
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <label>Thang màu xám</label>
             <label>{adjustmentData.grey_scale}</label>
           </div>
@@ -115,11 +150,15 @@ const ColorAdjustment = () => {
       </div>
 
       <div className="bottom-content">
-            <div className="action-btn">
-              <button id="crop-action-cancel" onClick={resetAdjustmentData}>Hủy</button>
-              <button id="crop-action-apply" onClick={handleAdjustment}>Áp dụng</button>
-            </div>
-          </div>
+        <div className="action-btn">
+          <button id="crop-action-cancel" onClick={resetAdjustmentData}>
+            Hủy
+          </button>
+          <button id="crop-action-apply" onClick={handleAdjustment}>
+            Áp dụng
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
