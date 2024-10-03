@@ -43,34 +43,35 @@ export default function ImageEditorPage() {
     <ZoomProvider>
       <ImageProvider>
         <div
-          style={{ display: "flex", flexDirection: "column", height: "100%" }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100vh",
+            flex: 1,
+          }}
         >
-          {/* Phần header */}
-          <div style={{ display: "flex", flex: 1 }}>
-            {/* Phần bên trái */}
+          {/* Menu + Display */}
+          <div style={{ display: "flex", height: "90vh" }}>
+            {/* Menu */}
             <div
               style={{
-                width: "360px",
-                borderWidth: "1px",
-                borderColor: "black",
+                width: "22em",
               }}
             >
               <MenuEditor
                 image={image}
                 onImageUpdate={handleImageUpdate}
                 imageData={imageData}
-                onMode={handleMode} // Truyền hàm handleMode xuống MenuEditor
+                onMode={handleMode}
               />
             </div>
-            {/* Phần còn lại */}
+            {/* Display */}
             <div
               style={{
                 flex: 1,
                 backgroundColor: "#2e2e2e",
                 position: "relative",
                 overflow: "hidden",
-                width: "40em", // Đặt chiều rộng cố định
-                height: "40em", // Đặt chiều cao cố định
               }}
             >
               <ImageDisplay
@@ -80,11 +81,11 @@ export default function ImageEditorPage() {
               />
             </div>
           </div>
-          {/* Phần dưới cùng */}
+          {/* Footer */}
           <div
             style={{
-              height: "50px",
               display: "flex",
+              flex: 1,
               backgroundColor: "#292c31",
             }}
           >
