@@ -81,3 +81,38 @@ def remove_object(file, x1, y1, x2, y2, method='telea'):
     img_io = io.BytesIO(img_encoded.tobytes())
 
     return img_io
+
+
+from rembg import remove
+
+def remove_background(image_data):
+    try:
+        # Loại bỏ tiền tố 'data:image/png;base64,' nếu có
+        if ',' in image_data:
+            image_data = image_data.split(',')[1]
+
+        # Giải mã chuỗi base64 thành dữ liệu nhị phân
+        decoded_image = base64.b64decode(image_data)
+
+        # Sử dụng BytesIO để chuyển đổi dữ liệu nhị phân thành đối tượng hình ảnh
+        input_image = Image.open(BytesIO(decoded_image)).convert("RGBA")
+
+        # Chuyển đổi hình ảnh thành mảng numpy
+        input_np = np.array(input_image)
+
+        # Xóa nền bằng rembg
+        output_np = remove(input_np)
+
+        # Chuyển đổi mảng numpy kết quả thành hình ảnh PIL
+        output_image = Image.fromarray(output_np).convert("RGBA")
+
+        # Chuyển hình ảnh kết quả thành chuỗi base64
+        buffered = BytesIO()
+        output_image.save(buffered, format="PNG")
+        output_image_str = base64.b64encode(buffered.getvalue()).decode()
+
+        return output_image_str
+
+    except Exception as e:
+        print(f"Lỗi khi xử lý xóa nền: {e}")
+        return None

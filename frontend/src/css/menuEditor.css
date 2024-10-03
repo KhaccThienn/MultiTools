@@ -468,3 +468,28 @@ select:focus {
 .action-btn button:nth-child(2):hover {
     background-color: #0067ac;
 }
+
+.box__remove--basic {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2e2e2e;
+    color: #636363;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 0.5em;
+    border: 1px solid #454545;
+    margin: 0.5em 1em;
+    padding: 0.5em;
+    font-weight: bold;
+}
+
+.removebg-icon {
+    margin-right: 5px;
+    font-size: 1.2em;
+}
+
+.box__remove--basic:hover {
+    color: white;
+    border-color: white;
+}

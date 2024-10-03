@@ -31,13 +31,6 @@ export default function ImageEditorPage() {
     setImage(newImage);
   };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
-    }
-  };
 
   return (
     <ZoomProvider>
@@ -88,7 +81,7 @@ export default function ImageEditorPage() {
               backgroundColor: "#292c31",
             }}
           >
-            <ImageUploader handleImageUpload={handleImageUpload} />
+            <ImageUploader/>
             <FooterEditor />
           </div>
         </div>

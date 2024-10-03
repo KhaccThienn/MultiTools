@@ -26,12 +26,14 @@ import {
 } from "react-icons/md";
 import "../css/menuEditor.css";
 import Crop from "@/functions/Crop";
+import RemoveBackground from "@/functions/RemoveBackground";
 
 const menuItems = [
   { id: "merge", name: "Ghép ảnh", icon: <FaObjectGroup /> },
   { id: "crop", name: "Cắt ảnh", icon: <FaCrop /> },
   { id: "cutout", name: "Cắt một phần", icon: <FaCut /> },
   { id: "adjust", name: "Điều chỉnh màu", icon: <HiAdjustmentsHorizontal /> },
+  { id: "removebg", name: "Xóa nền", icon: <RiPictureInPictureLine /> },
   // { id: "effect", name: "Hiệu ứng", icon: <FaMagic /> },
   { id: "filter", name: "Bộ lọc", icon: <RiColorFilterLine /> },
   // { id: "ai", name: "AI Tools", icon: <FaMagic /> },
@@ -40,6 +42,7 @@ const menuItems = [
   { id: "paint", name: "Vẽ", icon: <FaPaintBrush /> },
   { id: "add-text", name: "Văn bản", icon: <FaFont /> },
   { id: "add-element", name: "Thành phần", icon: <FaSmile /> },
+
 ];
 
 export default function MenuEditor({ image, onImageUpdate, imageData, onMode }) {
@@ -97,8 +100,10 @@ export default function MenuEditor({ image, onImageUpdate, imageData, onMode }) 
       <div className="menu-right">
         {selectedMenu === "crop" && (
           <Crop/>
-
         )}
+        {selectedMenu === "removebg" && (
+          <RemoveBackground/>
+          )}
       </div>
     </section>
   );
