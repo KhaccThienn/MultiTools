@@ -35,7 +35,6 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
         alignItems: 'center',
         width: '100%',
         height: '100%',
-        border: '1px solid #ddd',
         padding: '10px',
         margin: 'auto',
         overflow:'hidden'

@@ -6,12 +6,13 @@
     background-color: #2e2e2e;
     font-size: 100%;
     color: white;
+    height: 100%;
 }
 
 .menu-left,
 .menu-right {
     display: flex;
-    height: 92.6vh;
+    height: 100%;
     flex-direction: column;
     position: relative;
 }
@@ -91,7 +92,7 @@
 .toggle-home-box:hover .home-icon {
     opacity: 1;
     background-color: #2490d9;
-    border-radius: 0.2em 0 0.2em 0;
+    border-radius: 0.2em 0 0 0;
 }
 
 .toggle-home-box:hover .home-span {
@@ -107,6 +108,8 @@
     display: flex;
     flex-direction: column;
     cursor: pointer;
+    height: 100%;
+    overflow: hidden;
 }
 
 #tool-menu .menu-item-box {
@@ -168,6 +171,8 @@
     flex-direction: column;
     background-color: #2e2e2e;
     position: relative;
+    height: 100%;
+    border-right: 1px solid black;
 }
 
 .tool-drawer .tool-name {
@@ -193,8 +198,7 @@
 .tool-drawer .tool-content {
     display: flex;
     padding: 0.8em;
-    overflow-y: auto;
-    height: 84.5vh;
+    overflow-y: auto;;
 }
 
 .tool-content::-webkit-scrollbar {
@@ -202,13 +206,13 @@
 }
 
 .tool-content::-webkit-scrollbar-track {
-    background: #f0f0f0;
+    background: #2e2e2e;
 }
 
 .tool-content::-webkit-scrollbar-thumb {
     background-color: #888;
     border-radius: 5px;
-    border: 2px solid #f0f0f0;
+    border: 2px solid #888;
 }
 
 .tool-content::-webkit-scrollbar-thumb:hover {
