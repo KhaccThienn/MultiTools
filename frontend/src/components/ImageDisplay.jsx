@@ -21,7 +21,6 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
         width: cropBoxData.width,
         height: cropBoxData.height,
       });
-
       // Áp dụng xoay cho hình ảnh
       cropper.rotateTo(cropBoxData.rotate);
 
@@ -44,8 +43,24 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
         padding: "10px",
         margin: "auto",
         overflow: "hidden",
+        position: "relative", // Thêm position relative để đặt nền caro
       }}
     >
+      {/* Lớp nền caro hiển thị vùng trong suốt */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundSize: "20px 20px",
+          backgroundImage:
+            "linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)",
+          backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",
+        }}
+      />
+
       {mode === "crop" ? (
         <div>
           <Cropper
@@ -55,7 +70,7 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
             guides={false}
             ref={cropperRef} // Tham chiếu đến cropper
             background={false}
-            onCropEnd={handleCropEnd} // Thêm sự kiện onCropEnd
+            cropend={handleCropEnd} // Thêm sự kiện onCropEnd
             viewMode={1}
           />
         </div>

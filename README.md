@@ -27,7 +27,7 @@
 3. mở terminal và vào thư mục frontend, cài đặt node-modules bằng cách chạy lệnh: `npm install`
 4. bước này có thể sẽ chạy ra kết quả là tìm thấy 1 lỗ hổng bảo mật, làm theo hướng dẫn để fix hoặc chạy `npm audit fix` để sửa 1 phần, hoặc `npm audit fix --force` để sửa all (recommend).
 
-5. vẫn ở thư mục frontend, chạy lệnh `npm run dev` để khởi động localhost.
+5. vẫn ở thư mục frontend, chạy lệnh `npm run all` để khởi động localhost.
   => truy cập http://localhost:3000 để xem kết quả trên trình duyệt
 
 

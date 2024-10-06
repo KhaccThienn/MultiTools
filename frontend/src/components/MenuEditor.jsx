@@ -28,11 +28,11 @@ import "../css/menuEditor.css";
 import Crop from "@/functions/Crop";
 import RemoveBackground from "@/functions/RemoveBackground";
 import ColorAdjustment from "@/functions/ColorAdjustment";
+import Cutout from "@/functions/Cutout";
 
 const menuItems = [
   { id: "merge", name: "Ghép ảnh", icon: <FaObjectGroup /> },
   { id: "crop", name: "Cắt ảnh", icon: <FaCrop /> },
-  { id: "cutout", name: "Cắt một phần", icon: <FaCut /> },
   { id: "adjust", name: "Điều chỉnh màu", icon: <HiAdjustmentsHorizontal /> },
   { id: "removebg", name: "Xóa nền", icon: <RiPictureInPictureLine /> },
   // { id: "effect", name: "Hiệu ứng", icon: <FaMagic /> },

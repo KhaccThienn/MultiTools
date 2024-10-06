@@ -15,6 +15,7 @@ export const ImageProvider = ({ children }) => {
     rotate: 0,
     flipHorizontal: false,
     flipVertical: false,
+    aspectRatio: 3/4,
   };
 
   const [cropBoxData, setCropBoxData] = useState(defaultCropBoxData);
@@ -48,6 +49,36 @@ export const ImageProvider = ({ children }) => {
       [name]: value,
     }));
   };
+
+  const handleAspectRatioChange = () => {
+    const cropper = cropperRef.current?.cropper;
+    const value = cropBoxData.aspectRatio;
+    console.log("Tỷ lệ cố định:", value);
+  
+    if (cropper) {
+      let aspectRatio;
+  
+      // Nếu giá trị là "NaN" thì bỏ qua tỷ lệ cố định
+      if (value === "NaN") {
+        aspectRatio = NaN;
+      } else if (typeof value === "string" && value.includes(":")) {
+        // Chia tách chuỗi tỷ lệ, ví dụ "3:4"
+        const ratioParts = value.split(":");
+  
+        // Tính tỷ lệ aspect ratio
+        aspectRatio = parseFloat(ratioParts[0]) / parseFloat(ratioParts[1]);
+      } else if (typeof value === "number") {
+        aspectRatio = value;
+      } else {
+        console.error("Giá trị tỷ lệ không hợp lệ:", value);
+        return;
+      }
+  
+      // Đặt aspect ratio cho Cropper
+      cropper.setAspectRatio(aspectRatio);
+    }
+  };
+  
 
   const handleAdjustment = () => {
     if (!currentImage) {
@@ -162,8 +193,15 @@ export const ImageProvider = ({ children }) => {
   const handleCropEnd = () => {
     const cropper = cropperRef.current?.cropper;
     if (cropper) {
-      const data = cropper.getData();
-      updateCropBoxDataFromCropper(data);
+      // Lấy giá trị vùng crop sau khi thả chuột
+      const cropBoxData = cropper.getCropBoxData();
+  
+      // Bạn có thể sử dụng cropBoxData hoặc lưu vào state để xử lý sau này
+      const { width, height, left, top } = cropBoxData;
+      updateCropBoxData('width', width);
+      updateCropBoxData('height', height);
+    } else {
+      console.error("Không tìm thấy cropper");
     }
   };
 
@@ -225,6 +263,7 @@ export const ImageProvider = ({ children }) => {
         updateCropBoxData,
         resetCropBoxData,
         handleCrop,
+        handleAspectRatioChange,
         currentImage, // Ảnh đã cắt để hiển thị
         cropperRef, // Tham chiếu đến cropper
         handleCropEnd, // Hàm xử lý sự kiện cropend

@@ -6,7 +6,7 @@ import { ImageContext } from "@/context/ImageContext";
 import "../css/menuEditor.css";
 
 function Crop() {
-  const { cropBoxData, updateCropBoxData, resetCropBoxData, handleCrop } =
+  const { cropBoxData, updateCropBoxData, resetCropBoxData, handleCrop, handleAspectRatioChange } =
     useContext(ImageContext);
 
   const handleResizeCropBox = (e) => {
@@ -41,6 +41,17 @@ function Crop() {
     }
   };
 
+  const handleAspectRatio = (value) => {
+    updateCropBoxData("aspectRatio", value);
+  }
+
+  useEffect(() => {
+    if (cropBoxData.aspectRatio !== undefined) {
+      handleAspectRatioChange();
+    }
+  }, [cropBoxData.aspectRatio]);
+
+  
 
   return (
     <section id="crop" className="tool-drawer">
@@ -61,11 +72,11 @@ function Crop() {
           <div className="group group1">
             <div className="split">
               <label htmlFor="crop-width">Chiều rộng</label>
-              <input type="number" id="crop-width" value={cropBoxData.width} onChange={(e) => updateCropBoxData('width', Number(e.target.value))} />
+              <input type="number" id="crop-width" value={cropBoxData.width.toFixed(2)} onChange={(e) => updateCropBoxData('width', Number(e.target.value))} />
             </div>
             <div className="split">
               <label htmlFor="crop-heigh">Chiều cao</label>
-              <input type="number" id="crop-height" value={cropBoxData.height}  onChange={(e) => updateCropBoxData('height', Number(e.target.value))} />
+              <input type="number" id="crop-height" value={cropBoxData.height.toFixed(2)}  onChange={(e) => updateCropBoxData('height', Number(e.target.value))} />
             </div>
 
             {/* <div className="select-crop-frame">
@@ -121,7 +132,9 @@ function Crop() {
                     </div> */}
               <label className="select-label">Tỉ lệ mẫu</label>
               <div className="select">
-                <select id="select-frame-menu">
+                <select id="select-frame-menu" 
+                onChange={(e) => handleAspectRatio(e.target.value)} // Gọi hàm khi thay đổi option
+                >
                   <option value="0:0" selected>
                     Không
                   </option>
