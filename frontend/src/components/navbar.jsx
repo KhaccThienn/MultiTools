@@ -15,9 +15,10 @@ function Navbar() {
   // Phân biệt đã đăng nhập hay chưa
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [username, setUsername] = React.useState(""); // Lưu tên người dùng
+  const [avatar, setAvatar] = React.useState("");
   
   // Kiểm tra token đăng nhập
-   useEffect(() => {
+  useEffect(() => {
     checkLoginStatus();
   }, []);
 
@@ -67,16 +68,20 @@ function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+    localStorage.removeItem("avatar");
     setIsLoggedIn(false);
     setUsername("");
+    setAvatar("");
   };
 
   const checkLoginStatus = () => {
     const token = localStorage.getItem("token");
     const storedUsername = localStorage.getItem("username");
+    const storedAvatar = localStorage.getItem("avatar");
     if (token && storedUsername) {
       setIsLoggedIn(true); // Cập nhật trạng thái đã đăng nhập
       setUsername(storedUsername); // Lưu username từ localStorage vào state
+      setAvatar(storedAvatar); 
       console.log("Đã đăng nhập");
     }
   };
@@ -132,11 +137,18 @@ function Navbar() {
       {isLoggedIn ? (
           <>
             <div className="navbar-user-section">
-              <i class="fa-solid fa-circle-user"></i>
+             <Image
+                src={avatar || "/images/default-avatar.png"}  // Sử dụng avatar từ localStorage hoặc avatar mặc định
+                alt="User Avatar"
+                width={40}
+                height={40}
+                className="navbar-avatar"
+                onClick={() => {
+                  window.location.href = "/Profile";
+                }}
+             />
               <span className="mr-4">{username}</span>
-              <button onClick={handleLogout}>
-                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-              </button>
+              <i class="fa-solid fa-arrow-right-from-bracket"  onClick={handleLogout}></i>
             </div>
           </>
         ) : (
