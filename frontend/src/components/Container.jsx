@@ -2,7 +2,6 @@ import "../css/app.css";
 import Button from "./Button";
 
 export default function Container({ image, rotate, colorbg, onClick }) {
-  // Xác định hướng của hình ảnh và tiêu đề dựa trên rotate
   const flexDirection = rotate === 0 ? "row" : "row-reverse";
 
   return (
@@ -18,8 +17,8 @@ export default function Container({ image, rotate, colorbg, onClick }) {
         style={{
           display: "flex",
           flexDirection: flexDirection,
-          alignItems: "flex-end", // Căn bắt đầu để margin hoạt động
-          justifyContent: "flex-start", // Căn bắt đầu để margin hoạt động
+          alignItems: "flex-end", 
+          justifyContent: "flex-start",
         }}
       >
         <img

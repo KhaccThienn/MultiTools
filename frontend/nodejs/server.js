@@ -10,11 +10,7 @@ const port = 4000;
 app.use(express.json());
 app.use(cors());
 
-// Kết nối tới MongoDB
-mongoose.connect('mongodb://localhost:27017/auth-demo', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+mongoose.connect('mongodb://localhost:27017/mydatabase');
 
 // Khởi tạo User Schema
 const userSchema = new mongoose.Schema({
@@ -41,7 +37,7 @@ app.post('/register', async (req, res) => {
 });
 
 // Đăng nhập người dùng
-app.post('/login', async (req, res) => {
+app.post('/login', async(req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
     if (!user) {
@@ -135,7 +131,7 @@ app.get('/getUserInfo', async (req, res) => {
       // Giải mã token để lấy userId
       const decodedToken = jwt.verify(token, 'secretKey'); 
       const userId = decodedToken.userId;
-  
+      console.log(token);
       // Tìm người dùng trong database theo userId
       const user = await User.findById(userId, 'email username avatar'); // Chỉ lấy email, tên, avt
       if (!user) {

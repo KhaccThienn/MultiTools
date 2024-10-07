@@ -8,9 +8,8 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import ListMenu from "./ListMenu";
 
 function Navbar() {
-  const [showSignPage, setShowSignPage] = React.useState(false); // Trạng thái mở SignPage
-  const [isSignin, setIsSignin] = React.useState(false); // Để phân biệt giữa Đăng nhập và Đăng ký
-  // Trạng thái để quản lý mục navbar nào đang được nhấn
+  const [showSignPage, setShowSignPage] = React.useState(false);
+  const [isSignin, setIsSignin] = React.useState(false);
   const [activeMenu, setActiveMenu] = React.useState(null);
   // Phân biệt đã đăng nhập hay chưa
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -22,7 +21,6 @@ function Navbar() {
     checkLoginStatus();
   }, []);
 
-  // Dữ liệu cho các navbar_item và các menuItem tương ứng
   const navbarItems = [
     {
       id: 1,
@@ -51,12 +49,12 @@ function Navbar() {
   ];
 
   const openSigninModal = () => {
-    setIsSignin(true); // Mở modal Đăng nhập
+    setIsSignin(true);
     setShowSignPage(true);
   };
 
   const openSignupModal = () => {
-    setIsSignin(false); // Mở modal Đăng ký
+    setIsSignin(false);
     setShowSignPage(true);
   };
 
@@ -64,7 +62,7 @@ function Navbar() {
     setShowSignPage(false);
   };
 
-  // Đăng xuất 
+  // Đăng xuất
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
@@ -85,7 +83,6 @@ function Navbar() {
       console.log("Đã đăng nhập");
     }
   };
-  
 
   //Hàm xử lý sau khi đăng nhập thành công
   const handleLoginSuccess = () => {
@@ -93,38 +90,36 @@ function Navbar() {
     setShowSignPage(false);
   };
 
-  // Hàm để mở menu khi hover
   const handleMouseEnter = (id) => {
-    setActiveMenu(id); // Kích hoạt menu khi di chuột vào
+    setActiveMenu(id);
   };
 
-  // Hàm để đóng menu khi rời chuột
   const handleMouseLeave = () => {
-    setActiveMenu(null); // Đóng menu khi rời chuột
+    setActiveMenu(null);
   };
 
   return (
     <nav className="navbar">
       <span className="flex items-center">
-        <Image
-          src={images.logo}
-          alt="logo"
-          width={60}
-          height={60}
-          className="navbar-logo"
-        />
-        <h1 className="tommorrow_font">MULTITOOLS</h1>
+        <div className="flex flex-row items-center" onClick={() => (window.location.href = "/")}>
+          <Image
+            src={images.logo}
+            alt="logo"
+            width={60}
+            height={60}
+            className="navbar-logo cursor-pointer"
+          />
+          <h1 className="tommorrow_font cursor-pointer">MULTITOOLS</h1>
+        </div>
         <ul className="navbar-links">
           {navbarItems.map((navbarItem) => (
-            <li key={navbarItem.id} className="flex items-start cursor-pointer"
-            onMouseEnter={() => handleMouseEnter(navbarItem.id)} // Kích hoạt khi hover
-            onMouseLeave={handleMouseLeave} // Đóng menu khi rời chuột
+            <li
+              key={navbarItem.id}
+              className="flex items-start cursor-pointer"
+              onMouseEnter={() => handleMouseEnter(navbarItem.id)}
+              onMouseLeave={handleMouseLeave}
             >
-              <span
-                className="mr-2"
-              >
-                {navbarItem.title}
-              </span>
+              <span className="mr-2">{navbarItem.title}</span>
               <i className="fa-solid fa-sort-down"></i>
               {activeMenu === navbarItem.id && (
                 <ListMenu items={navbarItem.menuItems} />
@@ -134,7 +129,7 @@ function Navbar() {
         </ul>
       </span>
       <div className="flex items-center">
-      {isLoggedIn ? (
+        {isLoggedIn ? (
           <>
             <div className="navbar-user-section">
              <Image
@@ -160,11 +155,17 @@ function Navbar() {
             <button onClick={openSignupModal} className="button1 signup-button">
               Đăng ký
             </button>
-            </>
-           )}
+          </>
+        )}
         <ThemeToggle />
       </div>
-      {showSignPage && <Sign isSignin={isSignin} closeModal={closeModal} onLoginSuccess={handleLoginSuccess}/>}{" "}
+      {showSignPage && (
+        <Sign
+          isSignin={isSignin}
+          closeModal={closeModal}
+          onLoginSuccess={handleLoginSuccess}
+        />
+      )}{" "}
       {/* Hiển thị SignPage khi trạng thái showSignPage là true */}
     </nav>
   );

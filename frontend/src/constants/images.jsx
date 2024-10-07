@@ -1,6 +1,8 @@
 import logo from '../../public/images/logo-removebg.png';
 import header_light from '../../public/images/header-light.png';
 import header_dark from '../../public/images/header-dark.png';
+import banner1 from '../../public/images/banner1.png';
+
 import dog from '../../public/images/defaultAvatars/dog.png';
 import lion from '../../public/images/defaultAvatars/lion.png';
 import fox from '../../public/images/defaultAvatars/fox.png';
@@ -13,5 +15,6 @@ export default{
     logo,
     header_light,
     header_dark,
+    banner1,
     dog, lion, fox, gorrila, koala, rabbit, tiger, otter
     };

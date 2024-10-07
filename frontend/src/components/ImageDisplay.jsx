@@ -1,11 +1,17 @@
-import React, { useRef, useContext, useEffect } from 'react';
-import { Cropper } from 'react-cropper';
-import 'cropperjs/dist/cropper.css'; // Import CSS của cropperjs
-import { ImageContext } from '@/context/ImageContext';
-import { TransformComponent } from 'react-zoom-pan-pinch'; // Sử dụng TransformComponent cho zoom
+import React, { useRef, useContext, useEffect } from "react";
+import { Cropper } from "react-cropper";
+import "cropperjs/dist/cropper.css"; // Import CSS của cropperjs
+import { ImageContext } from "@/context/ImageContext";
+import { TransformComponent } from "react-zoom-pan-pinch"; // Sử dụng TransformComponent cho zoom
 
 const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
-  const { cropBoxData, cropperRef, currentImage } = useContext(ImageContext);
+  const {
+    cropBoxData,
+    cropperRef,
+    currentImage,
+    handleCropEnd,
+    adjustmentData,
+  } = useContext(ImageContext);
 
   useEffect(() => {
     const cropper = cropperRef.current?.cropper;
@@ -15,7 +21,6 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
         width: cropBoxData.width,
         height: cropBoxData.height,
       });
-
       // Áp dụng xoay cho hình ảnh
       cropper.rotateTo(cropBoxData.rotate);
 
@@ -30,38 +35,60 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
   return (
     <div
       style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        height: '100%',
-        border: '1px solid #ddd',
-        padding: '10px',
-        margin: 'auto',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+        padding: "10px",
+        margin: "auto",
+        overflow: "hidden",
+        position: "relative", // Thêm position relative để đặt nền caro
       }}
     >
-      {mode === 'crop' ? (
-        <div style={{ width: '100%', height: '100%' }}>
+      {/* Lớp nền caro hiển thị vùng trong suốt */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundSize: "20px 20px",
+          backgroundImage:
+            "linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)",
+          backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",
+        }}
+      />
+
+      {mode === "crop" ? (
+        <div>
           <Cropper
             src={currentImage || imageSrc}
-            style={{ maxHeight: '100%', maxWidth: '100%' }} // Kích thước cropper
-            initialAspectRatio={16 / 9} // Tỷ lệ khung hình mặc định
+            style={{ maxHeight: "100%", maxWidth: "100%" }} // Kích thước cropper
+            initialAspectRatio={1 / 1} // Tỷ lệ khung hình mặc định
             guides={false}
             ref={cropperRef} // Tham chiếu đến cropper
             background={false}
+            cropend={handleCropEnd} // Thêm sự kiện onCropEnd
+            viewMode={1}
           />
         </div>
       ) : (
         <TransformComponent>
-          <img
-            src={currentImage || imageSrc}  // Hiển thị ảnh đã crop hoặc ảnh gốc nếu chưa crop
-            alt={altText}
-            style={{
-              maxWidth: '100%',
-              maxHeight: '100%',
-              objectFit: 'contain',
-            }}
-          />
+          {currentImage && (
+            <img
+              src={currentImage || imageSrc} // Hiển thị ảnh đã crop hoặc ảnh gốc nếu chưa crop
+              alt={altText}
+              style={{
+                maxWidth: "100%",
+                maxHeight: "100%",
+                objectFit: "contain",
+                filter: `brightness(${adjustmentData.brightness}%) saturate(${adjustmentData.saturation}%) contrast(${adjustmentData.contrast}%) hue-rotate(${adjustmentData.hue}deg) grayscale(${adjustmentData.grey_scale}%)`,
+                // change tone
+              }}
+            />
+          )}
         </TransformComponent>
       )}
     </div>

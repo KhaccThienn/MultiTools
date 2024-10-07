@@ -1,10 +1,11 @@
-import React, { createContext, useState, useRef } from "react";
+import React, { createContext, useState, useRef, useEffect } from "react";
+import axios from "axios"; // Import axios
 
 export const ImageContext = createContext();
 
 export const ImageProvider = ({ children }) => {
   const cropperRef = useRef(null);
-  
+
   const [history, setHistory] = useState([]); // Lưu trữ lịch sử các trạng thái ảnh
   const [currentIndex, setCurrentIndex] = useState(0); // Chỉ mục trạng thái hiện tại
 
@@ -14,10 +15,32 @@ export const ImageProvider = ({ children }) => {
     rotate: 0,
     flipHorizontal: false,
     flipVertical: false,
+    aspectRatio: 3/4,
   };
 
   const [cropBoxData, setCropBoxData] = useState(defaultCropBoxData);
   const [croppedImage, setCroppedImage] = useState(null); // Lưu trữ ảnh đã crop
+
+  const defaultAdjustmentData = {
+    brightness: 100,
+    contrast: 100,
+    saturation: 100,
+    hue: 0,
+    grey_scale: 0,
+  };
+
+  const [adjustmentData, setAdjustmentData] = useState(defaultAdjustmentData);
+
+  const updateAdjustmentData = (name, value) => {
+    setAdjustmentData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const resetAdjustmentData = () => {
+    setAdjustmentData(defaultAdjustmentData);
+  };
 
   // Hàm cập nhật giá trị vùng crop
   const updateCropBoxData = (name, value) => {
@@ -25,6 +48,161 @@ export const ImageProvider = ({ children }) => {
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const handleAspectRatioChange = () => {
+    const cropper = cropperRef.current?.cropper;
+    const value = cropBoxData.aspectRatio;
+    console.log("Tỷ lệ cố định:", value);
+  
+    if (cropper) {
+      let aspectRatio;
+  
+      // Nếu giá trị là "NaN" thì bỏ qua tỷ lệ cố định
+      if (value === "NaN") {
+        aspectRatio = NaN;
+      } else if (typeof value === "string" && value.includes(":")) {
+        // Chia tách chuỗi tỷ lệ, ví dụ "3:4"
+        const ratioParts = value.split(":");
+  
+        // Tính tỷ lệ aspect ratio
+        aspectRatio = parseFloat(ratioParts[0]) / parseFloat(ratioParts[1]);
+      } else if (typeof value === "number") {
+        aspectRatio = value;
+      } else {
+        console.error("Giá trị tỷ lệ không hợp lệ:", value);
+        return;
+      }
+  
+      // Đặt aspect ratio cho Cropper
+      cropper.setAspectRatio(aspectRatio);
+    }
+  };
+  
+
+  const handleAdjustment = () => {
+    if (!currentImage) {
+      console.error("Không có hình ảnh để chỉnh sửa");
+      return;
+    }
+  
+    // Log giá trị của bộ lọc để kiểm tra trước khi áp dụng
+    console.log("Giá trị bộ lọc hiện tại:", adjustmentData);
+  
+    const img = new Image();
+    img.src = currentImage; // Đảm bảo sử dụng ảnh hiện tại
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+  
+      const ctx = canvas.getContext("2d");
+  
+      // Kiểm tra giá trị của bộ lọc trước khi áp dụng
+      ctx.filter = `
+        brightness(${adjustmentData.brightness}%)
+        contrast(${adjustmentData.contrast}%)
+        saturate(${adjustmentData.saturation}%)
+        hue-rotate(${adjustmentData.hue}deg)
+        grayscale(${adjustmentData.grey_scale}%)
+      `;
+      console.log("Đang áp dụng bộ lọc:", ctx.filter);
+  
+      // Vẽ lại hình ảnh với bộ lọc đã áp dụng
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  
+      const updatedImageURL = canvas.toDataURL("image/jpeg");
+  
+      // Cập nhật lại hình ảnh mới
+      const updatedHistory = [...history.slice(0, currentIndex + 1), updatedImageURL];
+      setHistory(updatedHistory);
+      setCurrentIndex(updatedHistory.length - 1);
+      setAdjustmentData(defaultAdjustmentData);
+    };
+  };
+  
+  const handleRemoveBackground = async () => {
+    const imageDataUrl = currentImage;
+    if (!imageDataUrl) {
+      console.error("Không có hình ảnh để xử lý");
+      return;
+    }
+
+    // Hàm chuyển đổi Blob URL thành chuỗi base64
+    const getBase64FromUrl = async (blobUrl) => {
+      const response = await fetch(blobUrl);
+      const blob = await response.blob();
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    };
+
+    try {
+      const imageBase64 = await getBase64FromUrl(imageDataUrl);
+      const imageBase64WithoutPrefix = imageBase64.replace(
+        /^data:image\/[a-z]+;base64,/,
+        ""
+      );
+
+      // Gửi yêu cầu tới server để xóa nền
+      const response = await axios.post(
+        "http://localhost:5000/remove-background",
+        {
+          image: imageBase64WithoutPrefix,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const { output_image } = response.data;
+
+      // Cập nhật hình ảnh trong state
+      const updatedHistory = [
+        ...history.slice(0, currentIndex + 1),
+        output_image,
+      ];
+      setHistory(updatedHistory);
+      setCurrentIndex(updatedHistory.length - 1);
+    } catch (error) {
+      console.error(
+        "Lỗi khi xóa nền hình ảnh:",
+        error.response?.data?.error || error.message
+      );
+    }
+  };
+
+  // Hàm cập nhật cropBoxData từ cropper khi người dùng thay đổi vùng crop
+  const updateCropBoxDataFromCropper = (data) => {
+    setCropBoxData((prevData) => ({
+      ...prevData,
+      width: data.width,
+      height: data.height,
+      rotate: data.rotate || 0,
+      flipHorizontal: data.scaleX < 0,
+      flipVertical: data.scaleY < 0,
+    }));
+  };
+
+  // Hàm xử lý sự kiện cropend
+  const handleCropEnd = () => {
+    const cropper = cropperRef.current?.cropper;
+    if (cropper) {
+      // Lấy giá trị vùng crop sau khi thả chuột
+      const cropBoxData = cropper.getCropBoxData();
+  
+      // Bạn có thể sử dụng cropBoxData hoặc lưu vào state để xử lý sau này
+      const { width, height, left, top } = cropBoxData;
+      updateCropBoxData('width', width);
+      updateCropBoxData('height', height);
+    } else {
+      console.error("Không tìm thấy cropper");
+    }
   };
 
   // Hàm reset để đưa trạng thái về mặc định
@@ -59,7 +237,10 @@ export const ImageProvider = ({ children }) => {
       if (croppedCanvas) {
         const croppedImageURL = croppedCanvas.toDataURL("image/jpeg"); // Lấy URL của ảnh
         setCroppedImage(croppedImageURL); // Lưu URL của ảnh đã cắt vào state
-        const updatedHistory = [...history.slice(0, currentIndex + 1), croppedImageURL];
+        const updatedHistory = [
+          ...history.slice(0, currentIndex + 1),
+          croppedImageURL,
+        ];
         setHistory(updatedHistory);
         setCurrentIndex(updatedHistory.length - 1);
       }
@@ -67,9 +248,13 @@ export const ImageProvider = ({ children }) => {
   };
 
   // Lấy currentImage từ history hoặc null nếu không có ảnh nào
-  const currentImage = history.length > 0 && currentIndex !== -1 ? history[currentIndex] : null;
-
-  
+  const currentImage =
+    history.length > 0 && currentIndex !== -1 ? history[currentIndex] : null;
+  // Hàm để thiết lập hình ảnh ban đầu
+  const setInitialImage = (imageUrl) => {
+    setHistory([imageUrl]); // Khởi tạo history với hình ảnh mới
+    setCurrentIndex(0); // Đặt currentIndex về 0
+  };
 
   return (
     <ImageContext.Provider
@@ -78,9 +263,21 @@ export const ImageProvider = ({ children }) => {
         updateCropBoxData,
         resetCropBoxData,
         handleCrop,
+        handleAspectRatioChange,
         currentImage, // Ảnh đã cắt để hiển thị
         cropperRef, // Tham chiếu đến cropper
-        undo, redo, applyEdit, canUndo: currentIndex > 0, canRedo: currentIndex < history.length - 1,
+        handleCropEnd, // Hàm xử lý sự kiện cropend
+        undo,
+        redo,
+        applyEdit,
+        canUndo: currentIndex > 0,
+        canRedo: currentIndex < history.length - 1,
+        handleRemoveBackground,
+        setInitialImage, // Thêm hàm này vào context
+        adjustmentData,
+        updateAdjustmentData,
+        resetAdjustmentData,
+        handleAdjustment,
       }}
     >
       {children}

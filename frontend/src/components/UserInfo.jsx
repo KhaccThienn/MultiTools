@@ -24,7 +24,7 @@ const UserInfo = () => {
   // Lấy thông tin từ server
   const getUserInfo = async () => {
     const token = localStorage.getItem('token'); // Lấy token từ localStorage
-
+    console.log(token);
     const response = await fetch('http://localhost:4000/getUserInfo', {
       method: 'GET',
       headers: {

@@ -1,7 +1,10 @@
 # app/routes.py
 
+import base64
+from io import BytesIO
+from tkinter import Image
 from flask import Blueprint, request, send_file, jsonify
-from .utils import resize_image, crop_image, remove_object, process_crop
+from .utils import resize_image, crop_image, remove_object, process_crop, remove_background
 
 # Sử dụng Blueprint để tổ chức các route
 bp = Blueprint('main', __name__)
@@ -44,3 +47,25 @@ def remove_object_route():
 
     # Trả về ảnh đã xử lý
     return send_file(result_io, mimetype='image/jpeg')
+
+@bp.route('/remove-background', methods=['POST'])
+
+@bp.route('/remove-background', methods=['POST'])
+def remove_background_route():
+    try:
+        data = request.get_json()
+        if 'image' not in data:
+            return jsonify({'error': 'Trường image không tồn tại trong dữ liệu gửi đến'}), 400
+
+        image_data = data['image']
+
+        # Gọi hàm remove_background từ utils.py
+        output_image_str = remove_background(image_data)
+
+        if output_image_str:
+            # Trả về hình ảnh đã xóa nền dưới dạng base64
+            return jsonify({'output_image': 'data:image/png;base64,' + output_image_str})
+        else:
+            return jsonify({'error': 'Lỗi khi xử lý xóa nền.'}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
