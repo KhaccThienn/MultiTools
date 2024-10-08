@@ -15,7 +15,7 @@ mongoose.connect('mongodb://localhost:27017/mydatabase');
 // Khởi tạo User Schema
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
-    avatar: {type: String, default: 'd'},
+    avatar: {type: String, default: ''},
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     photoCollection: { type: [String], default: [] }, // Mảng lưu trữ các URL ảnh
