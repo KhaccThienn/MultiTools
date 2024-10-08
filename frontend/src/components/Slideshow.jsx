@@ -7,9 +7,10 @@ import Image from 'next/image';
 const Slideshow = () => {
   const slides = [
     { image: images.banner1, title: "Slide 1" },
-    { image: images.banner1, title: "Slide 2" },
-    { image: images.banner1, title: "Slide 3" },
-    { image: images.banner1, title: "Slide 4" },
+    { image: images.banner2, title: "Slide 2" },
+    { image: images.banner3, title: "Slide 3" },
+    { image: images.banner4, title: "Slide 4" },
+    { image: images.banner5, title: "Slide 5" },
   ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
