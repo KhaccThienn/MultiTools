@@ -27,6 +27,9 @@ import {
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import "../css/menuEditor.css";
 import Crop from "@/functions/Crop";
+import RemoveBackground from "@/functions/RemoveBackground";
+import ColorAdjustment from "@/functions/ColorAdjustment";
+import Cutout from "@/functions/Cutout";
 
 const menuItems = [
   { id: "merge", name: "Ghép ảnh", icon: <FaObjectGroup />, link: "/ImageEditorPage/merge" },
@@ -96,6 +99,15 @@ export default function MenuEditor({ image, onImageUpdate, imageData, onMode }) 
       <div className="menu-right">
         {selectedMenu === "crop" && (
           <Crop/>
+        )}
+        {selectedMenu === "removebg" && (
+          <RemoveBackground/>
+          )}
+        {selectedMenu === "cutout" && (
+          <Cutout/>
+        )}
+        {selectedMenu === "adjust" && (
+          <ColorAdjustment/>
         )}
       </div>
     </section>

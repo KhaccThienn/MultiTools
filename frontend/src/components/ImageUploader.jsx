@@ -1,10 +1,25 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { ImageContext } from '@/context/ImageContext';
 
-const ImageUploader = ({ handleImageUpload }) => {
+const ImageUploader = () => {
 
+  const { setInitialImage } = useContext(ImageContext);
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+
+      // Cập nhật hình ảnh trong ImageContext
+      setInitialImage(imageUrl);
+    }
+  };
 
   return (
-    <div>
+    <div
+    style={{
+      margin:'auto'
+    }}>
       <label
         htmlFor="image"
         style={{

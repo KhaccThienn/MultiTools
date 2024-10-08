@@ -198,7 +198,8 @@
 .tool-drawer .tool-content {
     display: flex;
     padding: 0.8em;
-    overflow-y: auto;;
+    overflow-y: auto;
+    ;
 }
 
 .tool-content::-webkit-scrollbar {
@@ -351,7 +352,14 @@ select:focus {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+}
+
+.rotation-slider-box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
 }
 
 .rotation-slider-box span {
@@ -359,13 +367,13 @@ select:focus {
 }
 
 .rotation-slider {
-    width: 10em;
+    width: 5em;
     appearance: none;
     height: 0.4em;
     background-color: #d9d9d9;
     border-radius: 5px;
     outline: none;
-    transition: background 0.3s;
+    /* transition: background 0.3s; */
 }
 
 .rotation-slider::-webkit-slider-thumb {
@@ -471,4 +479,118 @@ select:focus {
 
 .action-btn button:nth-child(2):hover {
     background-color: #0067ac;
+}
+
+.box--basic {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2e2e2e;
+    color: #636363;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 0.5em;
+    border: 1px solid #454545;
+    margin: 0.5em 1em;
+    padding: 0.5em;
+    font-weight: bold;
+}
+
+.removebg-icon {
+    margin-right: 5px;
+    font-size: 1.2em;
+}
+
+.box--basic:hover {
+    color: white;
+    border-color: white;
+}
+
+
+/* adjust */
+
+.color-adjustment-menu {
+    width: 300px;
+    padding: 20px;
+    background-color: #2e2e2e;
+    color: #ffffff;
+    border-radius: 8px;
+    font-family: 'Arial', sans-serif;
+}
+
+.btn {
+    border: none;
+    color: #636363;
+    padding: 10px;
+    font-size: 0.9em;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.btn:hover {
+    background-color: #5a5a5a;
+    color: #ffffff;
+}
+
+.box__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.slider-section {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    color: #ffffff;
+    font-weight: normal;
+}
+
+.slider-group {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.slider-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+input[type="range"] {
+    width: 100%;
+    cursor: pointer;
+}
+
+.cancel-btn,
+.apply-btn {
+    width: 45%;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.cancel-btn {
+    background-color: #555555;
+    color: white;
+}
+
+.apply-btn {
+    background-color: #008cba;
+    color: white;
+}
+
+.cancel-btn:hover,
+.apply-btn:hover {
+    opacity: 0.8;
+}
+
+.slider__balance {
+    background: linear-gradient(to right, #000000 0%, #ffffff 100%);
 }

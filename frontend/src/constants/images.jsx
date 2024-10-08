@@ -6,14 +6,22 @@ import banner2 from "../../public/images/banner2.png";
 import banner3 from "../../public/images/banner3.png";
 import banner4 from "../../public/images/banner4.png";
 import banner5 from "../../public/images/banner5.png";
-
-export default {
-  logo,
-  header_light,
-  header_dark,
-  banner1,
-  banner2,
-  banner3,
-  banner4,
-  banner5,
+import dog from '../../public/images/defaultAvatars/dog.png';
+import lion from '../../public/images/defaultAvatars/lion.png';
+import fox from '../../public/images/defaultAvatars/fox.png';
+import gorrila from '../../public/images/defaultAvatars/gorrila.png';
+import koala from '../../public/images/defaultAvatars/koala.png';
+import rabbit from '../../public/images/defaultAvatars/rabbit.png';
+import tiger from '../../public/images/defaultAvatars/tiger.png';
+import otter from '../../public/images/defaultAvatars/whatisthis.png';
+export default{
+    logo,
+    header_light,
+    header_dark,
+    banner1,
+    banner2,
+    banner3,
+    banner4,
+    banner5,
+    dog, lion, fox, gorrila, koala, rabbit, tiger, otter
 };
