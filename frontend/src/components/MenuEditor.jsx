@@ -35,6 +35,7 @@ const menuItems = [
   { id: "crop", name: "Cắt ảnh", icon: <FaCrop /> },
   { id: "adjust", name: "Điều chỉnh màu", icon: <HiAdjustmentsHorizontal /> },
   { id: "removebg", name: "Xóa nền", icon: <RiPictureInPictureLine /> },
+  {id: "cutout", name: "Tạo ảnh cắt", icon: <FaCut />},
   // { id: "effect", name: "Hiệu ứng", icon: <FaMagic /> },
   { id: "filter", name: "Bộ lọc", icon: <RiColorFilterLine /> },
   // { id: "ai", name: "AI Tools", icon: <FaMagic /> },
@@ -105,7 +106,9 @@ export default function MenuEditor({ image, onImageUpdate, imageData, onMode }) 
         {selectedMenu === "removebg" && (
           <RemoveBackground/>
           )}
-
+        {selectedMenu === "cutout" && (
+          <Cutout/>
+        )}
         {selectedMenu === "adjust" && (
           <ColorAdjustment/>
         )}
