@@ -164,7 +164,11 @@
 }
 
 .navbar-user-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-right: 40px;
+    gap: 5px;
 }
 
 .navbar-user-section i {
