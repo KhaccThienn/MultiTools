@@ -6,6 +6,8 @@ import Container from "@/components/Container";
 import Button from "@/components/Button";
 import Footer from "@/components/Footer";
 import { RxDoubleArrowUp, RxDoubleArrowDown } from "react-icons/rx";
+import images from '@/constants/images';
+// import containerImg1 from "../images/container1.png";
 
 export default function HomePage() {
   const [showNavbar, setShowNavbar] = useState(true);
@@ -82,7 +84,7 @@ export default function HomePage() {
         /> */}
         <Container
           ref={addToRefs}
-          image="https://via.placeholder.com/500x500"
+          image={images.container1}
           rotate={0}
           colorbg="#6EE7B7"
           onClick={() => {
@@ -93,41 +95,41 @@ export default function HomePage() {
 
         <Container
           ref={addToRefs}
-          image="https://via.placeholder.com/500x500"
+          image={images.container2}
           rotate={1}
-          colorbg="#fff"
+          colorbg="#FCA5A5"
           onClick={() => {
             window.location.href = "/ImageEditorPage";
           }}
         />
         <Container
           ref={addToRefs}
-          image="https://via.placeholder.com/500x500"
-          rotate={0}
-          colorbg="#FCA5A5"
-          onClick={() => {}}
-        />
-        <Container
-          ref={addToRefs}
-          image="https://via.placeholder.com/500x500"
-          rotate={1}
-          colorbg="#fff"
-          onClick={() => {}}
-        />
-        <Container
-          ref={addToRefs}
-          image="https://via.placeholder.com/500x500"
+          image={images.container3}
           rotate={0}
           colorbg="#67E8F9"
           onClick={() => {}}
         />
         <Container
           ref={addToRefs}
-          image="https://via.placeholder.com/500x500"
+          image={images.container4}
+          rotate={1}
+          colorbg="#6EE7B7"
+          onClick={() => {}}
+        />
+        <Container
+          ref={addToRefs}
+          image={images.container5}
+          rotate={0}
+          colorbg="#ffc59c"
+          onClick={() => {}}
+        />
+        {/* <Container
+          ref={addToRefs}
+          image={images.container1}
           rotate={1}
           colorbg="#fff"
           onClick={() => {}}
-        />
+        /> */}
         <div
           style={{
             height: "200px",

@@ -180,12 +180,13 @@
 .slideshow-container {
     position: relative;
     margin: auto;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .slide img {
     width: 100%;
-    height: auto;
+    height: fit-content;
+    /* height: auto; */
 }
 
 .caption {

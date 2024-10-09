@@ -24,7 +24,7 @@ import {
   MdPhotoSizeSelectLarge,
   MdKeyboardArrowRight,
 } from "react-icons/md";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { TbBackground } from "react-icons/tb";
 import "../css/menuEditor.css";
 import Crop from "@/functions/Crop";
 import RemoveBackground from "@/functions/RemoveBackground";
@@ -32,19 +32,25 @@ import ColorAdjustment from "@/functions/ColorAdjustment";
 import Cutout from "@/functions/Cutout";
 
 const menuItems = [
-  { id: "merge", name: "Ghép ảnh", icon: <FaObjectGroup />, link: "/ImageEditorPage/merge" },
-  { id: "crop", name: "Cắt ảnh", icon: <FaCrop />, link: "/ImageEditorPage/crop" },
-  { id: "cutout", name: "Cắt một phần", icon: <FaCut />, link: "ImageEditorPage/cutout" },
-  { id: "adjust", name: "Điều chỉnh màu", icon: <HiAdjustmentsHorizontal />, link: "/ImageEditorPage/adjust" },
-  { id: "filter", name: "Bộ lọc", icon: <RiColorFilterLine />, link: "/ImageEditorPage/filter" },
-  { id: "liquify", name: "Biến dạng hình ảnh", icon: <PiSpiralFill />, link: "/ImageEditorPage/liquify" },
-  { id: "retouch", name: "Tinh chỉnh", icon: <MdFaceRetouchingNatural />, link: "/ImageEditorPage/retouch" },
-  { id: "paint", name: "Vẽ", icon: <FaPaintBrush />, link: "/ImageEditorPage/paint" },
-  { id: "add-text", name: "Văn bản", icon: <FaFont />, link: "/ImageEditorPage/add-text" },
-  { id: "add-element", name: "Thành phần", icon: <FaSmile />, link: "/ImageEditorPage/add-element" },
+  { id: "merge", name: "Ghép ảnh", icon: <FaObjectGroup /> },
+  { id: "crop", name: "Cắt ảnh", icon: <FaCrop /> },
+  { id: "removebg", name: "Xóa nền", icon: <TbBackground /> },
+  { id: "cutout", name: "Tạo ảnh cắt", icon: <FaCut /> },
+  { id: "adjust", name: "Điều chỉnh màu", icon: <HiAdjustmentsHorizontal /> },
+  { id: "filter", name: "Bộ lọc", icon: <RiColorFilterLine /> },
+  { id: "liquify", name: "Biến dạng hình ảnh", icon: <PiSpiralFill /> },
+  { id: "retouch", name: "Tinh chỉnh", icon: <MdFaceRetouchingNatural /> },
+  { id: "paint", name: "Vẽ", icon: <FaPaintBrush /> },
+  { id: "add-text", name: "Văn bản", icon: <FaFont /> },
+  { id: "add-element", name: "Thành phần", icon: <FaSmile /> },
 ];
 
-export default function MenuEditor({ image, onImageUpdate, imageData, onMode }) {
+export default function MenuEditor({
+  image,
+  onImageUpdate,
+  imageData,
+  onMode,
+}) {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [hoveredItem, setHoveredItem] = useState(null);
 
@@ -52,8 +58,6 @@ export default function MenuEditor({ image, onImageUpdate, imageData, onMode }) 
     setSelectedMenu(menuId);
     onMode(menuId);
   };
-
-
 
   return (
     <section id="menu-bar">
@@ -97,18 +101,10 @@ export default function MenuEditor({ image, onImageUpdate, imageData, onMode }) 
       </div>
 
       <div className="menu-right">
-        {selectedMenu === "crop" && (
-          <Crop/>
-        )}
-        {selectedMenu === "removebg" && (
-          <RemoveBackground/>
-          )}
-        {selectedMenu === "cutout" && (
-          <Cutout/>
-        )}
-        {selectedMenu === "adjust" && (
-          <ColorAdjustment/>
-        )}
+        {selectedMenu === "crop" && <Crop />}
+        {selectedMenu === "removebg" && <RemoveBackground />}
+        {selectedMenu === "cutout" && <Cutout />}
+        {selectedMenu === "adjust" && <ColorAdjustment />}
       </div>
     </section>
   );
