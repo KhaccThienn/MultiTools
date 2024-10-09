@@ -89,7 +89,7 @@
   }
   
   .menu li:hover, .menu li.active{
-    background-color: #282c34;
+    background-color: #2F2F2F;
   }
   
   /* Phần bên phải sidebar */
@@ -194,7 +194,6 @@
   button:hover {
     background-color: #0056b3;
   }
-  
   
   .avatar-edit-options {
     margin-top: 10px;

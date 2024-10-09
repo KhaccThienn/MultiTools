@@ -21,12 +21,13 @@ const ChangeAvatar = ({onAvatarChange}) => {
   // Hàm xử lý khi người dùng chọn ảnh mới
   const handleAvatarChange = (imageUrl) => {
     setAvatar(imageUrl); // Cập nhật ảnh mới
+    console.log(avatar);
   };
 
   //Lưu ảnh khi bấm confirm
   const handleConfirm = async () => {
-    localStorage.setItem('avatar', avatar.src);
-    onAvatarChange(avatar.src);
+    localStorage.setItem('avatar', avatar);
+    onAvatarChange(avatar);
     
     const token = localStorage.getItem('token'); // Lấy token xác thực từ localStorage
     try {
@@ -38,7 +39,7 @@ const ChangeAvatar = ({onAvatarChange}) => {
         },
         body: JSON.stringify({
           action: 'changeAvatar',
-          newAvatar: avatar.src,
+          newAvatar: avatar,
         }),
       });
 
@@ -82,7 +83,7 @@ const ChangeAvatar = ({onAvatarChange}) => {
                 height={80}
                 className="default-avatar"
                 style={{ cursor: 'pointer', borderRadius: '50%' }}
-                onClick={() => handleAvatarChange(src)} // Khi click vào ảnh sẽ thay đổi ảnh đại diện
+                onClick={() => handleAvatarChange(src.src)} // Khi click vào ảnh sẽ thay đổi ảnh đại diện
               />
             </div>
           ))}

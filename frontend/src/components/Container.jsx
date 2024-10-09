@@ -1,5 +1,6 @@
 import "../css/app.css";
 import Button from "./Button";
+import Image from "next/image";
 
 export default function Container({ image, rotate, colorbg, onClick }) {
   const flexDirection = rotate === 0 ? "row" : "row-reverse";
@@ -17,17 +18,19 @@ export default function Container({ image, rotate, colorbg, onClick }) {
         style={{
           display: "flex",
           flexDirection: flexDirection,
-          alignItems: "flex-end", 
+          alignItems: "flex-end",
           justifyContent: "flex-start",
         }}
       >
-        <img
+        <Image
           src={image}
-          alt=""
+          alt="Hình ảnh"
+          width={450} 
+          height={450}
           style={{
             marginRight: rotate === 0 ? "450px" : "0",
             marginLeft: rotate === 1 ? "450px" : "0",
-            borderRadius: "10px",
+            borderRadius: "2em",
           }}
         />
         <Button label="TRẢI NGHIỆM NGAY" onClick={onClick} />

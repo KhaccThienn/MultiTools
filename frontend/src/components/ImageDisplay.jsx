@@ -75,7 +75,7 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
         height: "100%",
         padding: "10px",
         margin: "auto",
-        overflow: "hidden",
+        // overflow: "hidden",
         position: "relative", // Thêm position relative để đặt nền caro
       }}
     >
@@ -87,7 +87,7 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
           left: 0,
           width: "100%",
           height: "100%",
-          backgroundSize: "20px 20px",
+          backgroundSize: "5px 5px",
           backgroundImage:
             "linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)",
           backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",

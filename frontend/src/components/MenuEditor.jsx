@@ -24,6 +24,7 @@ import {
   MdPhotoSizeSelectLarge,
   MdKeyboardArrowRight,
 } from "react-icons/md";
+import { TbBackground } from "react-icons/tb";
 import "../css/menuEditor.css";
 import Crop from "@/functions/Crop";
 import RemoveBackground from "@/functions/RemoveBackground";
@@ -33,30 +34,30 @@ import Cutout from "@/functions/Cutout";
 const menuItems = [
   { id: "merge", name: "Ghép ảnh", icon: <FaObjectGroup /> },
   { id: "crop", name: "Cắt ảnh", icon: <FaCrop /> },
+  { id: "removebg", name: "Xóa nền", icon: <TbBackground /> },
+  { id: "cutout", name: "Tạo ảnh cắt", icon: <FaCut /> },
   { id: "adjust", name: "Điều chỉnh màu", icon: <HiAdjustmentsHorizontal /> },
-  { id: "removebg", name: "Xóa nền", icon: <RiPictureInPictureLine /> },
-  {id: "cutout", name: "Tạo ảnh cắt", icon: <FaCut />},
-  // { id: "effect", name: "Hiệu ứng", icon: <FaMagic /> },
   { id: "filter", name: "Bộ lọc", icon: <RiColorFilterLine /> },
-  // { id: "ai", name: "AI Tools", icon: <FaMagic /> },
   { id: "liquify", name: "Biến dạng hình ảnh", icon: <PiSpiralFill /> },
   { id: "retouch", name: "Tinh chỉnh", icon: <MdFaceRetouchingNatural /> },
   { id: "paint", name: "Vẽ", icon: <FaPaintBrush /> },
   { id: "add-text", name: "Văn bản", icon: <FaFont /> },
   { id: "add-element", name: "Thành phần", icon: <FaSmile /> },
-
 ];
 
-export default function MenuEditor({ image, onImageUpdate, imageData, onMode }) {
+export default function MenuEditor({
+  image,
+  onImageUpdate,
+  imageData,
+  onMode,
+}) {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [hoveredItem, setHoveredItem] = useState(null);
 
   const handleMenuClick = (menuId) => {
     setSelectedMenu(menuId);
-    onMode(menuId);  // Gọi trực tiếp hàm onMode khi một menu được chọn
+    onMode(menuId);
   };
-
-
 
   return (
     <section id="menu-bar">
@@ -100,18 +101,10 @@ export default function MenuEditor({ image, onImageUpdate, imageData, onMode }) 
       </div>
 
       <div className="menu-right">
-        {selectedMenu === "crop" && (
-          <Crop/>
-        )}
-        {selectedMenu === "removebg" && (
-          <RemoveBackground/>
-          )}
-        {selectedMenu === "cutout" && (
-          <Cutout/>
-        )}
-        {selectedMenu === "adjust" && (
-          <ColorAdjustment/>
-        )}
+        {selectedMenu === "crop" && <Crop />}
+        {selectedMenu === "removebg" && <RemoveBackground />}
+        {selectedMenu === "cutout" && <Cutout />}
+        {selectedMenu === "adjust" && <ColorAdjustment />}
       </div>
     </section>
   );

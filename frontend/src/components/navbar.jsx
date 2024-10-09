@@ -11,7 +11,6 @@ function Navbar() {
   const [showSignPage, setShowSignPage] = React.useState(false);
   const [isSignin, setIsSignin] = React.useState(false);
   const [activeMenu, setActiveMenu] = React.useState(null);
-  // Phân biệt đã đăng nhập hay chưa
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [username, setUsername] = React.useState(""); // Lưu tên người dùng
   const [avatar, setAvatar] = React.useState("");
@@ -26,24 +25,29 @@ function Navbar() {
       id: 1,
       title: "Chỉnh sửa ảnh",
       menuItems: [
-        { item_name: "Dashboard", item_link: "/dashboard" },
-        { item_name: "Profile", item_link: "/profile" },
+        { item_name: "Chỉnh sửa ảnh", containerIndex: 0 },
+        { item_name: "Tách nền ảnh", containerIndex: 1 },
+        { item_name: "Làm nét/mờ ảnh", containerIndex: 0 },
+        { item_name: "Điều chỉnh màu sắc", containerIndex: 1 },
+        { item_name: "Ghép ảnh", containerIndex: 1 },
       ],
     },
     {
       id: 2,
       title: "Chỉnh sửa video",
       menuItems: [
-        { item_name: "Company", item_link: "/company" },
-        { item_name: "Team", item_link: "/team" },
+        { item_name: "Chỉnh sửa video", containerIndex: 2 },
+        { item_name: "Cắt video", containerIndex: 3 },
+        { item_name: "Ghép video", containerIndex: 2 },
+        // { item_name: "Cắt video", containerIndex: 3 },
       ],
     },
     {
       id: 3,
       title: "Chuyển định dạng",
       menuItems: [
-        { item_name: "Development", item_link: "/web-dev" },
-        { item_name: "Mobile Apps", item_link: "/mobile-apps" },
+        { item_name: "Hình ảnh", containerIndex: 4 },
+        { item_name: "Tài liệu", containerIndex: 5 },
       ],
     },
   ];
@@ -57,7 +61,7 @@ function Navbar() {
     setIsSignin(false);
     setShowSignPage(true);
   };
-
+ 
   const closeModal = () => {
     setShowSignPage(false);
   };
@@ -85,7 +89,6 @@ function Navbar() {
     }
   };
 
-  //Hàm xử lý sau khi đăng nhập thành công
   const handleLoginSuccess = () => {
     checkLoginStatus();
     setShowSignPage(false);
@@ -99,36 +102,54 @@ function Navbar() {
     setActiveMenu(null);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <nav className="navbar">
-      <span className="flex items-center">
-        <div className="flex flex-row items-center" onClick={() => (window.location.href = "/")}>
-          <Image
-            src={images.logo}
-            alt="logo"
-            width={60}
-            height={60}
-            className="navbar-logo cursor-pointer"
-          />
-          <h1 className="tommorrow_font cursor-pointer">MULTITOOLS</h1>
-        </div>
-        <ul className="navbar-links">
-          {navbarItems.map((navbarItem) => (
-            <li
-              key={navbarItem.id}
-              className="flex items-start cursor-pointer"
-              onMouseEnter={() => handleMouseEnter(navbarItem.id)}
-              onMouseLeave={handleMouseLeave}
-            >
-              <span className="mr-2">{navbarItem.title}</span>
-              <i className="fa-solid fa-sort-down"></i>
-              {activeMenu === navbarItem.id && (
-                <ListMenu items={navbarItem.menuItems} />
-              )}
-            </li>
-          ))}
-        </ul>
+      <span
+        className="flex items-center"
+        onClick={scrollToTop}
+        style={{ cursor: "pointer" }}
+      >
+        <Image
+          src={images.logo}
+          alt="logo"
+          width={60}
+          height={60}
+          className="navbar-logo"
+        />
+        <h1 className="tommorrow_font">MULTITOOLS</h1>
       </span>
+      <ul className="navbar-links">
+        {navbarItems.map((navbarItem) => (
+          <li
+            key={navbarItem.id}
+            className="flex items-start cursor-pointer"
+            onMouseEnter={() => handleMouseEnter(navbarItem.id)}
+            onMouseLeave={handleMouseLeave}
+          >
+            <span className="mr-2">{navbarItem.title}</span>
+            <i className="fa-solid fa-sort-down"></i>
+            {activeMenu === navbarItem.id && (
+              <ListMenu
+                items={navbarItem.menuItems.map((item) => ({
+                  ...item,
+                  onClick: () => {
+                    console.log("Clicked on item:", item.item_name);
+                    if (item.containerIndex === null) {
+                      scrollToTop();
+                    } else {
+                      scrollToContainer(item.containerIndex);
+                    }
+                  },
+                }))}
+              />
+            )}
+          </li>
+        ))}
+      </ul>
       <div className="flex items-center">
         {isLoggedIn ? (
           <>
@@ -166,8 +187,7 @@ function Navbar() {
           closeModal={closeModal}
           onLoginSuccess={handleLoginSuccess}
         />
-      )}{" "}
-      {/* Hiển thị SignPage khi trạng thái showSignPage là true */}
+      )}
     </nav>
   );
 }
