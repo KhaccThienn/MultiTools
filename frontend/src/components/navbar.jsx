@@ -15,7 +15,7 @@ function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [username, setUsername] = React.useState(""); // Lưu tên người dùng
   const [avatar, setAvatar] = React.useState("");
-  
+
   // Kiểm tra token đăng nhập
   useEffect(() => {
     checkLoginStatus();
@@ -71,6 +71,7 @@ function Navbar() {
     setUsername("");
     setAvatar("");
   };
+
 
   const checkLoginStatus = () => {
     const token = localStorage.getItem("token");

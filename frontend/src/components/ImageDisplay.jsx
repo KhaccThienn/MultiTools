@@ -11,7 +11,40 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
     currentImage,
     handleCropEnd,
     adjustmentData,
+    setImageParameters,
   } = useContext(ImageContext);
+  const imageRef = useRef(null);
+  useEffect(() => {
+    const updateImageParameters = () => {
+      if (imageRef.current) {
+        const rect = imageRef.current.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+        const left = rect.left + window.scrollX;
+        const top = rect.top + window.scrollY;
+
+        setImageParameters({ width, height, left, top });
+        console.log('Image Parameters:', { width, height, left, top });
+      }
+    };
+
+    if (imageRef.current) {
+      if (imageRef.current.complete) {
+        updateImageParameters();
+      } else {
+        imageRef.current.onload = updateImageParameters;
+      }
+    }
+
+    // Cập nhật vị trí khi cuộn hoặc thay đổi kích thước
+    window.addEventListener('scroll', updateImageParameters);
+    window.addEventListener('resize', updateImageParameters);
+
+    return () => {
+      window.removeEventListener('scroll', updateImageParameters);
+      window.removeEventListener('resize', updateImageParameters);
+    };
+  }, [currentImage]);
 
   useEffect(() => {
     const cropper = cropperRef.current?.cropper;
@@ -72,6 +105,7 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
             background={false}
             cropend={handleCropEnd} // Thêm sự kiện onCropEnd
             viewMode={1}
+
           />
         </div>
       ) : (
@@ -85,8 +119,9 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
                 maxHeight: "100%",
                 objectFit: "contain",
                 filter: `brightness(${adjustmentData.brightness}%) saturate(${adjustmentData.saturation}%) contrast(${adjustmentData.contrast}%) hue-rotate(${adjustmentData.hue}deg) grayscale(${adjustmentData.grey_scale}%)`,
-                // change tone
+                
               }}
+              ref={imageRef}
             />
           )}
         </TransformComponent>

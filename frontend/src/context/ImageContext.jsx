@@ -201,59 +201,6 @@ export const ImageProvider = ({ children }) => {
     }
   };
 
-  const drawArea = (params, drawCallback) => {
-    const { width, height } = params;
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext("2d");
-  
-    // Optionally, draw something on this area using the callback
-    if (drawCallback && typeof drawCallback === "function") {
-      drawCallback(ctx);
-    }
-  
-    return canvas;
-  };
-
-  const mergeDrawnAreaWithImage = (drawnCanvas) => {
-    if (currentImage && imageParameters) {
-      const { width, height } = imageParameters;
-  
-      // Create a canvas for the final image
-      const finalCanvas = document.createElement("canvas");
-      finalCanvas.width = width;
-      finalCanvas.height = height;
-      const ctx = finalCanvas.getContext("2d");
-  
-      // Load the current image
-      const img = new Image();
-      img.src = currentImage;
-      img.onload = () => {
-        // Draw the original image onto the canvas
-        ctx.drawImage(img, 0, 0, width, height);
-  
-        // Draw the drawnCanvas onto the finalCanvas at the correct position
-        ctx.drawImage(drawnCanvas, 0, 0);
-  
-        // Get the merged image data
-        const mergedImageURL = finalCanvas.toDataURL("image/jpeg");
-  
-        // Update the history with the new image
-        const updatedHistory = [
-          ...history.slice(0, currentIndex + 1),
-          mergedImageURL,
-        ];
-        setHistory(updatedHistory);
-        setCurrentIndex(updatedHistory.length - 1);
-      };
-      img.onerror = (err) => {
-        console.error("Error loading image:", err);
-      };
-    } else {
-      console.error("No current image or image parameters available");
-    }
-  };
   
 
   // Hàm xử lý sự kiện cropend
@@ -323,23 +270,7 @@ export const ImageProvider = ({ children }) => {
     setCurrentIndex(0); // Đặt currentIndex về 0
   };
 
-  useEffect(() => {
-    if (currentImage) {
-      const img = new Image();
-      img.src = currentImage;
-      img.onload = () => {
-        const width = img.width;
-        const height = img.height;
-        const left = 0; // Assuming the image starts at position (0,0)
-        const top = 0;
-        setImageParameters({ width, height, left, top });
-        console.log("Image Parameters:", { width, height, left, top });
-      };
-      img.onerror = (err) => {
-        console.error("Error loading image:", err);
-      };
-    }
-  }, [currentImage]);
+
 
   return (
     <ImageContext.Provider
@@ -363,9 +294,8 @@ export const ImageProvider = ({ children }) => {
         updateAdjustmentData,
         resetAdjustmentData,
         handleAdjustment,
+        setImageParameters,
         getImageParameters,
-        drawArea,
-        mergeDrawnAreaWithImage,
       }}
     >
       {children}
