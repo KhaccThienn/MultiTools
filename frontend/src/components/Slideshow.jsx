@@ -38,7 +38,7 @@ const Slideshow = () => {
         <i className="fas fa-chevron-left"></i>
       </button>
       <Link className="slide" href="/">
-        <Image src={slides[currentSlide].image} alt={slides[currentSlide].title}    style={{ width: '100%', height: '360px', objectFit: 'cover' }}/>
+        <Image src={slides[currentSlide].image} alt={slides[currentSlide].title}    style={{ width: '100%', height: '420px', objectFit: 'cover' }}/>
         <div className="caption">{slides[currentSlide].title}</div>
       </Link>
       <button className="next" onClick={nextSlide}>

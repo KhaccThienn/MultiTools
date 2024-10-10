@@ -9,6 +9,7 @@ export const ImageProvider = ({ children }) => {
   const [history, setHistory] = useState([]); // Lưu trữ lịch sử các trạng thái ảnh
   const [currentIndex, setCurrentIndex] = useState(0); // Chỉ mục trạng thái hiện tại
   const [imageParameters, setImageParameters] = useState(null);
+  const imageRef = useRef(null);
 
   const defaultCropBoxData = {
     width: 100,
@@ -100,13 +101,13 @@ export const ImageProvider = ({ children }) => {
       const ctx = canvas.getContext("2d");
   
       // Kiểm tra giá trị của bộ lọc trước khi áp dụng
-      ctx.filter = `
-        brightness(${adjustmentData.brightness}%)
+      ctx.filter = 
+        `brightness(${adjustmentData.brightness}%)
         contrast(${adjustmentData.contrast}%)
         saturate(${adjustmentData.saturation}%)
         hue-rotate(${adjustmentData.hue}deg)
-        grayscale(${adjustmentData.grey_scale}%)
-      `;
+        grayscale(${adjustmentData.grey_scale}%)`
+      ;
       console.log("Đang áp dụng bộ lọc:", ctx.filter);
   
       // Vẽ lại hình ảnh với bộ lọc đã áp dụng
@@ -261,6 +262,19 @@ export const ImageProvider = ({ children }) => {
     }
   };
 
+    // Hàm để hợp nhất hình ảnh với những gì đã vẽ
+    const mergeDrawingWithImage = (mergedImageDataURL) => {
+      if (!mergedImageDataURL) {
+        console.error("Không có dữ liệu hình ảnh để hợp nhất");
+        return;
+      }
+  
+      // Cập nhật history và currentIndex
+      const updatedHistory = [...history.slice(0, currentIndex + 1), mergedImageDataURL];
+      setHistory(updatedHistory);
+      setCurrentIndex(updatedHistory.length - 1);
+    };
+
   // Lấy currentImage từ history hoặc null nếu không có ảnh nào
   const currentImage =
     history.length > 0 && currentIndex !== -1 ? history[currentIndex] : null;
@@ -276,6 +290,7 @@ export const ImageProvider = ({ children }) => {
     <ImageContext.Provider
       value={{
         cropBoxData,
+        imageRef,
         updateCropBoxData,
         resetCropBoxData,
         handleCrop,
@@ -296,6 +311,7 @@ export const ImageProvider = ({ children }) => {
         handleAdjustment,
         setImageParameters,
         getImageParameters,
+        mergeDrawingWithImage,
       }}
     >
       {children}

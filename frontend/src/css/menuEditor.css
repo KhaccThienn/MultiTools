@@ -594,3 +594,52 @@ input[type="range"] {
 .slider__balance {
     background: linear-gradient(to right, #000000 0%, #ffffff 100%);
 }
+
+/* Paint */
+
+.grid__tool{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.box__tool{
+    padding: 12px 30px;
+    margin: 5px 3px;
+    background-color: #383a3e;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.box__tool:hover{
+    opacity: 0.9;
+}
+
+.box__tool--active{
+    background-color: #2490d9;
+}
+
+.box__color{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #383a3e;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.input__color{
+    background-color: #383a3e;
+    height: 42px;
+    width: 85%;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.input__number{
+    background-color: #383a3e;
+    height: 42px;
+    width: 85%;
+    border-radius: 4px;
+    cursor: pointer;
+}

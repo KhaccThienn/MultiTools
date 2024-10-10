@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Modal from "react-modal";
 import "../app/globals.css";
 import MenuEditor from "@/components/MenuEditor";
@@ -49,14 +49,18 @@ export default function ImageEditorPage() {
             <div
               style={{
                 width: "22em",
+                backgroundColor: "#2e2e2e"
               }}
             >
-              <MenuEditor
-                image={image}
-                onImageUpdate={handleImageUpdate}
-                imageData={imageData}
-                onMode={handleMode}
-              />
+
+                <MenuEditor
+                  image={image}
+                  onImageUpdate={handleImageUpdate}
+                  imageData={imageData}
+                  onMode={handleMode}
+                />
+
+
             </div>
             {/* Display */}
             <div

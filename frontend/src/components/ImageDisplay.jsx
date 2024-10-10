@@ -12,8 +12,9 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
     handleCropEnd,
     adjustmentData,
     setImageParameters,
+    imageRef,
   } = useContext(ImageContext);
-  const imageRef = useRef(null);
+
   useEffect(() => {
     const updateImageParameters = () => {
       if (imageRef.current) {
@@ -22,29 +23,48 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
         const height = rect.height;
         const left = rect.left + window.scrollX;
         const top = rect.top + window.scrollY;
-
+  
         setImageParameters({ width, height, left, top });
         console.log('Image Parameters:', { width, height, left, top });
       }
     };
-
+  
+    const handleImageLoad = () => {
+      updateImageParameters();
+    };
+  
     if (imageRef.current) {
+      // Nếu hình ảnh đã load trước đó, ta cập nhật luôn
       if (imageRef.current.complete) {
         updateImageParameters();
       } else {
-        imageRef.current.onload = updateImageParameters;
+        // Nếu chưa load, ta lắng nghe sự kiện onload
+        imageRef.current.onload = handleImageLoad;
       }
+  
+      // Sử dụng MutationObserver để theo dõi bất kỳ thay đổi nào về kích thước ảnh
+      const observer = new MutationObserver(() => {
+        updateImageParameters();
+      });
+  
+      observer.observe(imageRef.current, {
+        attributes: true, // Quan sát các thay đổi thuộc tính
+        attributeFilter: ['style', 'width', 'height'] // Chỉ theo dõi thay đổi liên quan đến kích thước
+      });
+  
+      // Cleanup observer khi component unmount
+      return () => {
+        observer.disconnect();
+        window.removeEventListener('scroll', updateImageParameters);
+        window.removeEventListener('resize', updateImageParameters);
+        if (imageRef.current) {
+          imageRef.current.onload = null;
+        }
+      };
     }
-
-    // Cập nhật vị trí khi cuộn hoặc thay đổi kích thước
-    window.addEventListener('scroll', updateImageParameters);
-    window.addEventListener('resize', updateImageParameters);
-
-    return () => {
-      window.removeEventListener('scroll', updateImageParameters);
-      window.removeEventListener('resize', updateImageParameters);
-    };
-  }, [currentImage]);
+  }, [currentImage]); // Chỉ chạy 1 lần khi component mount
+  
+  
 
   useEffect(() => {
     const cropper = cropperRef.current?.cropper;

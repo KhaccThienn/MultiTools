@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   FaHome,
   FaCrop,
@@ -29,13 +29,12 @@ import "../css/menuEditor.css";
 import Crop from "@/functions/Crop";
 import RemoveBackground from "@/functions/RemoveBackground";
 import ColorAdjustment from "@/functions/ColorAdjustment";
-import Cutout from "@/functions/Cutout";
+import Paint from "@/functions/Paint";
+import { ImageContext } from "@/context/ImageContext";
 
 const menuItems = [
-  { id: "merge", name: "Ghép ảnh", icon: <FaObjectGroup /> },
   { id: "crop", name: "Cắt ảnh", icon: <FaCrop /> },
   { id: "removebg", name: "Xóa nền", icon: <TbBackground /> },
-  { id: "cutout", name: "Tạo ảnh cắt", icon: <FaCut /> },
   { id: "adjust", name: "Điều chỉnh màu", icon: <HiAdjustmentsHorizontal /> },
   { id: "filter", name: "Bộ lọc", icon: <RiColorFilterLine /> },
   { id: "liquify", name: "Biến dạng hình ảnh", icon: <PiSpiralFill /> },
@@ -103,7 +102,7 @@ export default function MenuEditor({
       <div className="menu-right">
         {selectedMenu === "crop" && <Crop />}
         {selectedMenu === "removebg" && <RemoveBackground />}
-        {selectedMenu === "cutout" && <Cutout />}
+        {selectedMenu === "paint" && <Paint />}
         {selectedMenu === "adjust" && <ColorAdjustment />}
       </div>
     </section>
