@@ -10,6 +10,7 @@ export const ImageProvider = ({ children }) => {
   const [currentIndex, setCurrentIndex] = useState(0); // Chỉ mục trạng thái hiện tại
   const [imageParameters, setImageParameters] = useState(null);
   const imageRef = useRef(null);
+  const [modeE, setModeE] = useState(""); // State để quản lý mode
 
   const defaultCropBoxData = {
     width: 100,
@@ -232,15 +233,47 @@ export const ImageProvider = ({ children }) => {
     setCurrentIndex(updatedHistory.length - 1);
   };
 
-  const undo = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+  const useHistory = (initialState) => {
+    const [index, setIndex] = useState(0);
+    const [history, setHistory] = useState([initialState]);
+  
+    const setState = (action, overwrite = false) =>{
+      const newState = typeof action === 'function' ? action(history[index]) : action;
+      if(overwrite){
+        const historyCopy = [...history]
+        historyCopy[index] = newState;
+        setHistory(historyCopy);
+      }else{
+        const updatedState = [...history].slice(0, index + 1);
+        setHistory([...updatedState, newState]);
+        setIndex((prev) => prev + 1);
+      }
     }
+
+    const undo = () => index > 0 && setIndex(prevState => prevState - 1);
+    const redo = () => index < history.length - 1 && setIndex(prevState => prevState + 1);
+    return [history[index], setState, undo, redo];
+  }
+
+  const [elements, setElements, undoE, redoE] = useHistory([]);
+
+  const undo = () => {
+    if(modeE === "paint"){
+      undoE();
+    }else{
+      if (currentIndex > 0) {
+        setCurrentIndex(currentIndex - 1);
+      }
+    } 
   };
 
   const redo = () => {
-    if (currentIndex < history.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+    if(modeE === "paint"){
+      redoE();
+    }else{
+      if (currentIndex < history.length - 1) {
+        setCurrentIndex(currentIndex + 1);
+      }
     }
   };
 
@@ -284,6 +317,32 @@ export const ImageProvider = ({ children }) => {
     setCurrentIndex(0); // Đặt currentIndex về 0
   };
 
+  const handleDownload = ({imageName, imageFormat}) => {
+    const link = document.createElement("a");
+    
+    // Xử lý tên file và định dạng
+    const fileName = `${imageName || "edited-image"}.${imageFormat}`;
+    link.download = fileName;
+
+    // Tạo một canvas để chuyển đổi ảnh sang định dạng người dùng chọn
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    img.src = currentImage;
+    
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+
+      // Chuyển đổi định dạng ảnh
+      const imageDataURL = canvas.toDataURL(`image/${imageFormat}`);
+      link.href = imageDataURL;
+      link.click();
+    };
+  };
+
+
 
 
   return (
@@ -312,6 +371,12 @@ export const ImageProvider = ({ children }) => {
         setImageParameters,
         getImageParameters,
         mergeDrawingWithImage,
+        useHistory,
+        elements,
+        setElements,
+        undoE, redoE,
+        setModeE,
+        handleDownload
       }}
     >
       {children}

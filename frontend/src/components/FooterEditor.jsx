@@ -6,17 +6,18 @@ import { useZoom } from "@/context/ZoomContext";
 
 function FooterEditor() {
   const { undo, redo, canUndo, canRedo, applyEdit } = useContext(ImageContext);
-  const { zoomIn, zoomOut, resetTransform, scale, positionX, positionY } =
-    useZoom();
+  const { zoomIn, zoomOut, resetTransform, scale, positionX, positionY } = useZoom();
+
+  
 
   return (
     <div className="toolbar">
       <div className="ajust-size-section">
-        <button className="icon-button" onClick={zoomIn}>
+        <button className="icon-button" onClick={() => zoomOut()}>
           <i className="fa fa-search-minus"></i>
         </button>
         <span className="zoom-text">{scale ? scale.toFixed(2) : "1.00"}</span>
-        <button className="icon-button" onClick={zoomOut}>
+        <button className="icon-button" onClick={() => zoomIn()}>
           <i className="fa fa-search-plus"></i>
         </button>
       </div>
