@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import '../css/app.css';
-import Link from 'next/link';
-import images from '@/constants/images';
-import Image from 'next/image';
+import React, { useState, useEffect } from "react";
+import "../css/app.css";
+import Link from "next/link";
+import images from "@/constants/images";
+import Image from "next/image";
 
 const Slideshow = () => {
   const slides = [
@@ -33,22 +33,38 @@ const Slideshow = () => {
   }, [currentSlide]);
 
   return (
-    <div className="slideshow-container" >
+    <div className="slideshow-container">
       <button className="prev" onClick={prevSlide}>
         <i className="fas fa-chevron-left"></i>
       </button>
-      <Link className="slide" href="/">
-        <Image src={slides[currentSlide].image} alt={slides[currentSlide].title}    style={{ width: '100%', height: '420px', objectFit: 'cover' }}/>
-        <div className="caption">{slides[currentSlide].title}</div>
-      </Link>
+
+      <div
+        className="slides-wrapper"
+        style={{
+          transform: `translateX(-${currentSlide * 100}%)`,
+        }}
+      >
+        {slides.map((slide, index) => (
+          <Link className="slide" href="/" key={index}>
+            <Image
+              src={slide.image}
+              alt={slide.title}
+              style={{ width: "100%", objectFit: "cover", margin: "0 auto" }}
+            />
+            {/* <div className="caption">{slide.title}</div> */}
+          </Link>
+        ))}
+      </div>
+
       <button className="next" onClick={nextSlide}>
         <i className="fas fa-chevron-right"></i>
       </button>
+
       <div className="dots">
         {slides.map((_, index) => (
           <span
             key={index}
-            className={`dot ${currentSlide === index ? 'active' : ''}`}
+            className={`dot ${currentSlide === index ? "active" : ""}`}
             onClick={() => setCurrentSlide(index)}
           ></span>
         ))}

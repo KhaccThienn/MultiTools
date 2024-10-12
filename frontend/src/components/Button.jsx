@@ -6,16 +6,15 @@ export default function Button({ label, onClick }) {
         <button 
             onClick={onClick} 
             style={{
-                padding: "10px 30px", 
-                fontSize: "18px", 
+                padding: "1em 2em", 
+                fontSize: "1.3em", 
                 backgroundColor: "#FA8072", 
                 color: "#333", 
                 border: "none", 
-                borderRadius: "10px", 
+                borderRadius: "1em", 
                 cursor: "pointer",
-                margin: "60px 0",
-                fontSize: "20px",
-                fontWeight: "bold"
+                fontWeight: "bold",
+                boxShadow: "8px 8px 16px rgba(0, 0, 0, 0.2)",
             }}
         >
             {label}
