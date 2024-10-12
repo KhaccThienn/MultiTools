@@ -6,15 +6,14 @@ import Container from "@/components/Container";
 import Button from "@/components/Button";
 import Footer from "@/components/Footer";
 import { RxDoubleArrowUp, RxDoubleArrowDown } from "react-icons/rx";
-import images from '@/constants/images';
-// import containerImg1 from "../images/container1.png";
+import images from "@/constants/images";
 
 export default function HomePage() {
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const contentRef = useRef(null);
-
   const containerRefs = useRef([]);
+
   containerRefs.current = [];
 
   const addToRefs = (el) => {
@@ -22,12 +21,6 @@ export default function HomePage() {
       containerRefs.current.push(el);
     }
   };
-
-  // const scrollToContainer = (index) => {
-  //   if (containerRefs.current[index]) {
-  //     containerRefs.current[index].scrollIntoView({ behavior: "smooth" });
-  //   }
-  // };
 
   const scrollToContainer = (index) => {
     if (containerRefs.current[index]) {
@@ -49,6 +42,29 @@ export default function HomePage() {
       behavior: "smooth",
     });
   };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    containerRefs.current.forEach((container) => {
+      if (container) observer.observe(container);
+    });
+
+    return () => {
+      containerRefs.current.forEach((container) => {
+        if (container) observer.unobserve(container);
+      });
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,77 +89,104 @@ export default function HomePage() {
       </div>
       <div className="content" ref={contentRef}>
         <Slideshow />
-        {/* <Container
-          ref={addToRefs}
-          image="https://via.placeholder.com/500x500"
-          rotate={0}
-          colorbg="#6EE7B7"
-          onClick={() => {
-            window.location.href = "/ImageEditorPage";
-          }}
-        /> */}
-        <Container
-          ref={addToRefs}
-          image={images.container1}
-          rotate={0}
-          colorbg="#6EE7B7"
-          onClick={() => {
-            window.location.href = "/ImageEditorPage";
-          }}
-          style={{ height: "500px" }} // Thêm chiều cao tạm thời
-        />
 
-        <Container
-          ref={addToRefs}
-          image={images.container2}
-          rotate={1}
-          colorbg="#FCA5A5"
-          onClick={() => {
-            window.location.href = "/ImageEditorPage";
-          }}
-        />
-        <Container
-          ref={addToRefs}
-          image={images.container3}
-          rotate={0}
-          colorbg="#67E8F9"
-          onClick={() => {}}
-        />
-        <Container
-          ref={addToRefs}
-          image={images.container4}
-          rotate={1}
-          colorbg="#6EE7B7"
-          onClick={() => {}}
-        />
-        <Container
-          ref={addToRefs}
-          image={images.container5}
-          rotate={0}
-          colorbg="#ffc59c"
-          onClick={() => {}}
-        />
-        {/* <Container
-          ref={addToRefs}
-          image={images.container1}
-          rotate={1}
-          colorbg="#fff"
-          onClick={() => {}}
-        /> */}
-        <div
-          style={{
-            height: "200px",
-            backgroundColor: "#5EEAD4",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Button label="XEM CHI TIẾT" onClick={() => {}} />
+        <div ref={addToRefs} className="fade-in-section">
+          <Container
+            image={images.container1}
+            rotate={0}
+            colorbg="#b5c1ff"
+            onClick={() => {
+              window.location.href = "/ImageEditorPage";
+            }}
+          >
+            <div className="container-content">
+              <h2>Sửa ảnh trực tuyến nhanh chóng và dễ dàng</h2>
+              <p>
+                Cho dù bạn đang muốn cắt và thay đổi kích thước hình ảnh, chỉnh
+                sửa ảnh chân dung, hay điều chỉnh màu sắc cho hình ảnh, bạn đều
+                có thể thực hiện tất cả điều đó với trình chỉnh sửa ảnh trực
+                tuyến MultiTools.
+              </p>
+            </div>
+          </Container>
         </div>
-        <div style={{ height: "20px", backgroundColor: "#D9D9D9" }}></div>
+
+        <div ref={addToRefs} className="fade-in-section">
+          <Container
+            image={images.container2}
+            rotate={1}
+            colorbg="##e2e2e2"
+            onClick={() => {
+              window.location.href = "/ImageEditorPage";
+            }}
+          >
+            <div className="container-content">
+              <h2>Công cụ xóa nền AI</h2>
+              <p>
+                Tự động xóa nền ảnh, chuyển sang trong suốt hoặc đổi nền mới.
+                Giúp ảnh nổi bật trong vài giây!
+              </p>
+            </div>
+          </Container>
+        </div>
+
+        <div ref={addToRefs} className="fade-in-section">
+          <Container
+            image={images.container3}
+            rotate={0}
+            colorbg="#fdd1ee"
+            onClick={() => {}}
+          >
+            <div className="container-content">
+              <h2>Công cụ xóa vật thể trong ảnh</h2>
+              <p>
+                Xóa các vật trong ảnh chưa bao giờ dễ dàng đến thế. Chỉ cần lướt
+                qua các yếu tố gây mất tập trung làm hỏng bức ảnh của bạn và xem
+                MultiTools ngay lập tức dọn dẹp chúng để mang lại cho bức ảnh
+                diện mạo hoàn hảo. Sửa ảnh dễ chưa từng có!
+              </p>
+            </div>
+          </Container>
+        </div>
+
+        <div ref={addToRefs} className="fade-in-section">
+          <Container
+            image={images.container4}
+            rotate={1}
+            colorbg="##e2e2e2"
+            onClick={() => {}}
+          >
+            <div className="container-content">
+              <h2>Công cụ chỉnh sửa và biên tập video</h2>
+              <p>
+                Dễ dàng tạo ra những thước phim sinh động và mượt mà với các
+                chức năng và hiệu ứng đa dạng, phù hợp cho cả người mới và những
+                tay lão luyện!
+              </p>
+            </div>
+          </Container>
+        </div>
+
+        <div ref={addToRefs} className="fade-in-section">
+          <Container
+            image={images.container5}
+            rotate={0}
+            colorbg="#6EE7B7"
+            onClick={() => {}}
+          >
+            <div className="container-content">
+              <h2>Trình chuyển đổi trực tuyến</h2>
+              <p>
+                Chuyển đổi file media từ định dạng này sang dịnh dạng khác nhanh
+                chóng và dễ dàng hơn bao giờ hết.
+              </p>
+            </div>
+          </Container>
+        </div>
       </div>
-      <Footer />
+      <div ref={addToRefs} className="fade-in-section">
+        <Footer className="" />
+      </div>
 
       <div className="scroll-btn scroll-top" onClick={scrollToTop}>
         <RxDoubleArrowUp />
