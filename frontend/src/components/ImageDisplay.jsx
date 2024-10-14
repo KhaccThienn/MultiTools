@@ -45,6 +45,7 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
   
       // Sử dụng MutationObserver để theo dõi bất kỳ thay đổi nào về kích thước ảnh
       const observer = new MutationObserver(() => {
+        
         updateImageParameters();
       });
   

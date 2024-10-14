@@ -1,6 +1,6 @@
 # app/utils.py
 
-from PIL import Image
+from PIL import Image, ImageFilter
 import io
 import cv2
 import numpy as np
@@ -85,6 +85,40 @@ def remove_object(file, x1, y1, x2, y2, method='telea'):
 
 from rembg import remove
 
+
+# def remove_background(image_data):
+#     try:
+#         # Loại bỏ tiền tố 'data:image/png;base64,' nếu có
+#         if ',' in image_data:
+#             image_data = image_data.split(',')[1]
+
+#         # Giải mã chuỗi base64 thành dữ liệu nhị phân
+#         decoded_image = base64.b64decode(image_data)
+
+#         # Sử dụng BytesIO để chuyển đổi dữ liệu nhị phân thành đối tượng hình ảnh
+#         input_image = Image.open(BytesIO(decoded_image)).convert("RGBA")
+
+#         # Chuyển đổi hình ảnh thành mảng numpy
+#         input_np = np.array(input_image)
+
+#         # Xóa nền bằng rembg
+#         output_np = remove(input_np)
+
+#         # Chuyển đổi mảng numpy kết quả thành hình ảnh PIL
+#         output_image = Image.fromarray(output_np).convert("RGBA")
+
+#         # Chuyển hình ảnh kết quả thành chuỗi base64
+#         buffered = BytesIO()
+#         output_image.save(buffered, format="PNG")
+#         output_image_str = base64.b64encode(buffered.getvalue()).decode()
+
+#         return output_image_str
+
+#     except Exception as e:
+#         print(f"Lỗi khi xử lý xóa nền: {e}")
+#         return None
+    
+
 def remove_background(image_data):
     try:
         # Loại bỏ tiền tố 'data:image/png;base64,' nếu có
@@ -94,25 +128,26 @@ def remove_background(image_data):
         # Giải mã chuỗi base64 thành dữ liệu nhị phân
         decoded_image = base64.b64decode(image_data)
 
-        # Sử dụng BytesIO để chuyển đổi dữ liệu nhị phân thành đối tượng hình ảnh
-        input_image = Image.open(BytesIO(decoded_image)).convert("RGBA")
+        # Chuyển đổi dữ liệu nhị phân thành mảng numpy để sử dụng với OpenCV
+        nparr = np.frombuffer(decoded_image, np.uint8)
+        input_image = cv2.imdecode(nparr, cv2.IMREAD_UNCHANGED)  # Đọc ảnh RGBA nếu có
 
-        # Chuyển đổi hình ảnh thành mảng numpy
-        input_np = np.array(input_image)
+        if input_image is None:
+            raise ValueError("Không thể đọc ảnh từ dữ liệu base64")
 
-        # Xóa nền bằng rembg
-        output_np = remove(input_np)
+        # Xóa nền bằng rembg (rembg hỗ trợ xử lý mảng numpy)
+        output_image = remove(input_image)
 
-        # Chuyển đổi mảng numpy kết quả thành hình ảnh PIL
-        output_image = Image.fromarray(output_np).convert("RGBA")
+        # Chuyển đổi ảnh kết quả sang định dạng PNG
+        _, buffer = cv2.imencode('.png', output_image)
 
-        # Chuyển hình ảnh kết quả thành chuỗi base64
-        buffered = BytesIO()
-        output_image.save(buffered, format="PNG")
-        output_image_str = base64.b64encode(buffered.getvalue()).decode()
+        # Mã hóa kết quả thành base64
+        output_image_str = base64.b64encode(buffer).decode()
 
         return output_image_str
 
     except Exception as e:
         print(f"Lỗi khi xử lý xóa nền: {e}")
-        return None
+        return None 
+
+        
