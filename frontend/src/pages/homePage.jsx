@@ -175,7 +175,7 @@ export default function HomePage() {
             rotate={0}
             colorbg="#6EE7B7"
             onClick={() => {
-              window.location.href = "/ConvertImagePage";
+              window.location.href = "/ConvertPage";
             }}
           >
             <div className="container-content">
