@@ -60,6 +60,20 @@
     z-index: 1000;
 }
 
+.logo-container{
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+
+.li-item{
+    /* flex items-start cursor-pointer */
+    display: flex;
+    align-items: start;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
 .navbar-links {
     list-style: none;
     list-style-type: none;

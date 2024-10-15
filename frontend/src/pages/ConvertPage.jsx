@@ -1,8 +1,9 @@
-import Navbar from "@/components/Navbar";
 import { useState, useEffect, useRef } from "react";
-import "../css/app.css";
+import Navbar from "@/components/navbar";
+import HowToUse from "@/components/HowToUse";
 import Footer from "@/components/Footer";
 import { RxDoubleArrowUp, RxDoubleArrowDown } from "react-icons/rx";
+import "../css/app.css";
 
 export default function ConvertPage() {
   const [showNavbar, setShowNavbar] = useState(true);
@@ -18,18 +19,20 @@ export default function ConvertPage() {
     }
   };
 
-  const scrollToContainer = (index) => {
-    if (containerRefs.current[index]) {
-      const { top } = containerRefs.current[index].getBoundingClientRect();
-      window.scrollTo({
-        top: window.scrollY + top,
-        behavior: "smooth",
-      });
-    }
-  };
+  
+
+  // const scrollToContainer = (index) => {
+  //   if (containerRefs.current[index]) {
+  //     const { top } = containerRefs.current[index].getBoundingClientRect();
+  //     window.scrollTo({
+  //       top: window.scrollY + top,
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // };
 
   const scrollToTop = () => {
-    contentRef.current.scrollIntoView({ behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const scrollToBottom = () => {
@@ -77,13 +80,20 @@ export default function ConvertPage() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [lastScrollY, showNavbar]);
+
   return (
     <>
-      <div className={`head ${showNavbar ? "show" : "hide"}`}>
-        <Navbar scrollToContainer={scrollToContainer} />
+      <div className={`head ${showNavbar ? "show" : "hide"}`} >
+        {/* */}
+        <Navbar />
       </div>
+
+      <div>
+        <HowToUse />
+      </div>
+
       <div ref={addToRefs} className="fade-in-section">
-        <Footer className="" />
+        <Footer />
       </div>
 
       <div className="scroll-btn scroll-top" onClick={scrollToTop}>

@@ -64,7 +64,7 @@ const HowToUse = () => {
           Với trình sửa ảnh miễn phí của MultiTools, bạn có thể sửa ảnh trực
           tuyến như chuyên gia chỉ với 3 bước đơn giản.
           <div className="instruction-steps">
-            <div className="step-card">
+            <div className="step-card" style={{width:"32%"}}>
               <div className="step-header">
                 <LiaCloudUploadAltSolid className="step-icon" />
                 <h3>1. Tải ảnh lên</h3>
@@ -82,7 +82,7 @@ const HowToUse = () => {
                 />
               </div>
             </div>
-            <div className="step-card">
+            <div className="step-card" style={{width:"32%"}}>
               <div className="step-header">
                 <HiOutlineAdjustmentsHorizontal className="step-icon" />
                 <h3>2. Sửa ảnh</h3>
@@ -100,7 +100,7 @@ const HowToUse = () => {
                 />
               </div>
             </div>
-            <div className="step-card">
+            <div className="step-card" style={{width:"32%"}}>
               <div className="step-header">
                 <LuDownload className="step-icon" />
                 <h3>3. Tải ảnh về</h3>
@@ -129,7 +129,7 @@ const HowToUse = () => {
           Dễ dàng biên tập và chỉnh sửa video trực tuyến với trình chỉnh sửa
           video của MultiTools.
           <div className="instruction-steps">
-            <div className="step-card">
+            <div className="step-card" style={{width:"32%"}}>
               <div className="step-header">
                 <LiaCloudUploadAltSolid className="step-icon" />
                 <h3>1. Tải video lên</h3>
@@ -147,7 +147,7 @@ const HowToUse = () => {
                 />
               </div>
             </div>
-            <div className="step-card">
+            <div className="step-card" style={{width:"32%"}}>
               <div className="step-header">
                 <HiOutlineAdjustmentsHorizontal className="step-icon" />
                 <h3>2. Chỉnh sửa video</h3>
@@ -165,7 +165,7 @@ const HowToUse = () => {
                 />
               </div>
             </div>
-            <div className="step-card">
+            <div className="step-card" style={{width:"32%"}}>
               <div className="step-header">
                 <LuDownload className="step-icon" />
                 <h3>3. Tải video về</h3>
@@ -212,7 +212,7 @@ const HowToUse = () => {
                 />
               </div>
             </div>
-            <div className="step-card">
+            <div className="step-card" style={{width:"32%"}}>
               <div className="step-header">
                 <LuMousePointer2 className="step-icon" />
                 <h3>2. Chọn định dạng chuyển đổi</h3>
@@ -230,7 +230,7 @@ const HowToUse = () => {
                 />
               </div>
             </div>
-            <div className="step-card">
+            <div className="step-card" style={{width:"32%"}}>
               <div className="step-header">
                 <LuDownload className="step-icon" />
                 <h3>3. Tải file về</h3>
