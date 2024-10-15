@@ -199,7 +199,9 @@ export default function HomePage() {
             image={images.container4}
             rotate={1}
             colorbg="##e2e2e2"
-            onClick={() => {}}
+            onClick={() => {
+
+            }}
           >
             <div className="container-content">
               <h2>Công cụ chỉnh sửa và biên tập video</h2>
@@ -217,7 +219,9 @@ export default function HomePage() {
             image={images.container5}
             rotate={0}
             colorbg="#6EE7B7"
-            onClick={() => {}}
+            onClick={() => {
+              window.location.href = "/ConvertImagePage";
+            }}
           >
             <div className="container-content">
               <h2>Trình chuyển đổi trực tuyến</h2>

@@ -10,6 +10,7 @@ export const ImageProvider = ({ children }) => {
   const [currentIndex, setCurrentIndex] = useState(0); // Chỉ mục trạng thái hiện tại
   const [imageParameters, setImageParameters] = useState(null);
   const imageRef = useRef(null);
+  const [modeE, setModeE] = useState(""); // State để quản lý mode
 
   const defaultCropBoxData = {
     width: 100,
@@ -17,7 +18,7 @@ export const ImageProvider = ({ children }) => {
     rotate: 0,
     flipHorizontal: false,
     flipVertical: false,
-    aspectRatio: 3/4,
+    aspectRatio: 3 / 4,
   };
 
   const [cropBoxData, setCropBoxData] = useState(defaultCropBoxData);
@@ -56,17 +57,17 @@ export const ImageProvider = ({ children }) => {
     const cropper = cropperRef.current?.cropper;
     const value = cropBoxData.aspectRatio;
     console.log("Tỷ lệ cố định:", value);
-  
+
     if (cropper) {
       let aspectRatio;
-  
+
       // Nếu giá trị là "NaN" thì bỏ qua tỷ lệ cố định
       if (value === "NaN") {
         aspectRatio = NaN;
       } else if (typeof value === "string" && value.includes(":")) {
         // Chia tách chuỗi tỷ lệ, ví dụ "3:4"
         const ratioParts = value.split(":");
-  
+
         // Tính tỷ lệ aspect ratio
         aspectRatio = parseFloat(ratioParts[0]) / parseFloat(ratioParts[1]);
       } else if (typeof value === "number") {
@@ -75,54 +76,54 @@ export const ImageProvider = ({ children }) => {
         console.error("Giá trị tỷ lệ không hợp lệ:", value);
         return;
       }
-  
+
       // Đặt aspect ratio cho Cropper
       cropper.setAspectRatio(aspectRatio);
     }
   };
-  
 
   const handleAdjustment = () => {
     if (!currentImage) {
       console.error("Không có hình ảnh để chỉnh sửa");
       return;
     }
-  
+
     // Log giá trị của bộ lọc để kiểm tra trước khi áp dụng
     console.log("Giá trị bộ lọc hiện tại:", adjustmentData);
-  
+
     const img = new Image();
     img.src = currentImage; // Đảm bảo sử dụng ảnh hiện tại
     img.onload = () => {
       const canvas = document.createElement("canvas");
       canvas.width = img.width;
       canvas.height = img.height;
-  
+
       const ctx = canvas.getContext("2d");
-  
+
       // Kiểm tra giá trị của bộ lọc trước khi áp dụng
-      ctx.filter = 
-        `brightness(${adjustmentData.brightness}%)
+      ctx.filter = `brightness(${adjustmentData.brightness}%)
         contrast(${adjustmentData.contrast}%)
         saturate(${adjustmentData.saturation}%)
         hue-rotate(${adjustmentData.hue}deg)
-        grayscale(${adjustmentData.grey_scale}%)`
-      ;
+        grayscale(${adjustmentData.grey_scale}%)`;
       console.log("Đang áp dụng bộ lọc:", ctx.filter);
-  
+
       // Vẽ lại hình ảnh với bộ lọc đã áp dụng
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  
+
       const updatedImageURL = canvas.toDataURL("image/jpeg");
-  
+
       // Cập nhật lại hình ảnh mới
-      const updatedHistory = [...history.slice(0, currentIndex + 1), updatedImageURL];
+      const updatedHistory = [
+        ...history.slice(0, currentIndex + 1),
+        updatedImageURL,
+      ];
       setHistory(updatedHistory);
       setCurrentIndex(updatedHistory.length - 1);
       setAdjustmentData(defaultAdjustmentData);
     };
   };
-  
+
   const handleRemoveBackground = async () => {
     const imageDataUrl = currentImage;
     if (!imageDataUrl) {
@@ -191,8 +192,6 @@ export const ImageProvider = ({ children }) => {
     }));
   };
 
-
-
   const getImageParameters = () => {
     if (imageParameters) {
       return imageParameters;
@@ -202,19 +201,17 @@ export const ImageProvider = ({ children }) => {
     }
   };
 
-  
-
   // Hàm xử lý sự kiện cropend
   const handleCropEnd = () => {
     const cropper = cropperRef.current?.cropper;
     if (cropper) {
       // Lấy giá trị vùng crop sau khi thả chuột
       const cropBoxData = cropper.getCropBoxData();
-  
+
       // Bạn có thể sử dụng cropBoxData hoặc lưu vào state để xử lý sau này
       const { width, height, left, top } = cropBoxData;
-      updateCropBoxData('width', width);
-      updateCropBoxData('height', height);
+      updateCropBoxData("width", width);
+      updateCropBoxData("height", height);
     } else {
       console.error("Không tìm thấy cropper");
     }
@@ -232,15 +229,49 @@ export const ImageProvider = ({ children }) => {
     setCurrentIndex(updatedHistory.length - 1);
   };
 
+  const useHistory = (initialState) => {
+    const [index, setIndex] = useState(0);
+    const [history, setHistory] = useState([initialState]);
+
+    const setState = (action, overwrite = false) => {
+      const newState =
+        typeof action === "function" ? action(history[index]) : action;
+      if (overwrite) {
+        const historyCopy = [...history];
+        historyCopy[index] = newState;
+        setHistory(historyCopy);
+      } else {
+        const updatedState = [...history].slice(0, index + 1);
+        setHistory([...updatedState, newState]);
+        setIndex((prev) => prev + 1);
+      }
+    };
+
+    const undo = () => index > 0 && setIndex((prevState) => prevState - 1);
+    const redo = () =>
+      index < history.length - 1 && setIndex((prevState) => prevState + 1);
+    return [history[index], setState, undo, redo];
+  };
+
+  const [elements, setElements, undoE, redoE] = useHistory([]);
+
   const undo = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+    if (modeE === "paint") {
+      undoE();
+    } else {
+      if (currentIndex > 0) {
+        setCurrentIndex(currentIndex - 1);
+      }
     }
   };
 
   const redo = () => {
-    if (currentIndex < history.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+    if (modeE === "paint") {
+      redoE();
+    } else {
+      if (currentIndex < history.length - 1) {
+        setCurrentIndex(currentIndex + 1);
+      }
     }
   };
 
@@ -262,18 +293,21 @@ export const ImageProvider = ({ children }) => {
     }
   };
 
-    // Hàm để hợp nhất hình ảnh với những gì đã vẽ
-    const mergeDrawingWithImage = (mergedImageDataURL) => {
-      if (!mergedImageDataURL) {
-        console.error("Không có dữ liệu hình ảnh để hợp nhất");
-        return;
-      }
-  
-      // Cập nhật history và currentIndex
-      const updatedHistory = [...history.slice(0, currentIndex + 1), mergedImageDataURL];
-      setHistory(updatedHistory);
-      setCurrentIndex(updatedHistory.length - 1);
-    };
+  // Hàm để hợp nhất hình ảnh với những gì đã vẽ
+  const mergeDrawingWithImage = (mergedImageDataURL) => {
+    if (!mergedImageDataURL) {
+      console.error("Không có dữ liệu hình ảnh để hợp nhất");
+      return;
+    }
+
+    // Cập nhật history và currentIndex
+    const updatedHistory = [
+      ...history.slice(0, currentIndex + 1),
+      mergedImageDataURL,
+    ];
+    setHistory(updatedHistory);
+    setCurrentIndex(updatedHistory.length - 1);
+  };
 
   // Lấy currentImage từ history hoặc null nếu không có ảnh nào
   const currentImage =
@@ -284,7 +318,42 @@ export const ImageProvider = ({ children }) => {
     setCurrentIndex(0); // Đặt currentIndex về 0
   };
 
+  const handleDownload = ({ imageName, imageFormat }) => {
+    const link = document.createElement("a");
 
+    // Xử lý tên file và định dạng
+    const fileName = `${imageName || "edited-image"}.${imageFormat}`;
+    link.download = fileName;
+
+    const imgSrc = currentImage; // Replace 'currentImage' with your actual variable
+    // Tạo một canvas để chuyển đổi ảnh sang định dạng người dùng chọn
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+
+    // Handle CORS issues if necessary
+    img.crossOrigin = "anonymous";
+
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+
+      // Convert image format
+      const mimeType = `image/${imageFormat || "jpeg"}`;
+      const imageDataURL = canvas.toDataURL(mimeType);
+      link.href = imageDataURL;
+      link.click();
+    };
+
+    img.onerror = (err) => {
+      console.error("Error loading image:", err);
+    };
+
+    img.src = imgSrc;
+  };
+
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   return (
     <ImageContext.Provider
@@ -312,6 +381,15 @@ export const ImageProvider = ({ children }) => {
         setImageParameters,
         getImageParameters,
         mergeDrawingWithImage,
+        useHistory,
+        elements,
+        setElements,
+        undoE,
+        redoE,
+        setModeE,
+        handleDownload,
+        setDimensions,
+        dimensions,
       }}
     >
       {children}

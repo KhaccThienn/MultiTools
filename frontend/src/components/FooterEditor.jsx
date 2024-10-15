@@ -1,22 +1,23 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import "../css/edit.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { ImageContext } from "@/context/ImageContext";
 import { useZoom } from "@/context/ZoomContext";
+import Download from "./Download"; // Adjust the path if necessary
 
 function FooterEditor() {
-  const { undo, redo, canUndo, canRedo, applyEdit } = useContext(ImageContext);
-  const { zoomIn, zoomOut, resetTransform, scale, positionX, positionY } =
-    useZoom();
+  const { undo, redo, canUndo, canRedo } = useContext(ImageContext);
+  const { zoomIn, zoomOut, scale } = useZoom();
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
 
   return (
     <div className="toolbar">
       <div className="ajust-size-section">
-        <button className="icon-button" onClick={zoomIn}>
+        <button className="icon-button" onClick={zoomOut}>
           <i className="fa fa-search-minus"></i>
         </button>
         <span className="zoom-text">{scale ? scale.toFixed(2) : "1.00"}</span>
-        <button className="icon-button" onClick={zoomOut}>
+        <button className="icon-button" onClick={zoomIn}>
           <i className="fa fa-search-plus"></i>
         </button>
       </div>
@@ -30,13 +31,16 @@ function FooterEditor() {
           <span className="zoom-text">HOÀN LẠI</span>
         </button>
       </div>
-      <button className="toolbar-button close">
-        <span>Đóng</span>
-      </button>
-      <button className="toolbar-button save-button">
+      <button
+        className="toolbar-button save-button"
+        onClick={() => setShowDownloadModal(true)}
+      >
         <i className="fa-solid fa-download"></i>
         <span>Lưu</span>
       </button>
+      {showDownloadModal && (
+        <Download closeModal={() => setShowDownloadModal(false)} />
+      )}
     </div>
   );
 }

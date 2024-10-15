@@ -3,6 +3,7 @@ import { Cropper } from "react-cropper";
 import "cropperjs/dist/cropper.css"; // Import CSS của cropperjs
 import { ImageContext } from "@/context/ImageContext";
 import { TransformComponent } from "react-zoom-pan-pinch"; // Sử dụng TransformComponent cho zoom
+import { ZoomableContent } from "@/context/ZoomContext";
 
 const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
   const {
@@ -44,6 +45,7 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
   
       // Sử dụng MutationObserver để theo dõi bất kỳ thay đổi nào về kích thước ảnh
       const observer = new MutationObserver(() => {
+        
         updateImageParameters();
       });
   
@@ -129,7 +131,7 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
           />
         </div>
       ) : (
-        <TransformComponent>
+        <ZoomableContent>
           {currentImage && (
             <img
               src={currentImage || imageSrc} // Hiển thị ảnh đã crop hoặc ảnh gốc nếu chưa crop
@@ -144,7 +146,7 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
               ref={imageRef}
             />
           )}
-        </TransformComponent>
+        </ZoomableContent>
       )}
     </div>
   );

@@ -52,10 +52,12 @@ export default function MenuEditor({
 }) {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [hoveredItem, setHoveredItem] = useState(null);
+  const {setModeE} = useContext(ImageContext);
 
   const handleMenuClick = (menuId) => {
     setSelectedMenu(menuId);
     onMode(menuId);
+    setModeE(menuId);
   };
 
   return (
