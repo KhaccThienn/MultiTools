@@ -142,6 +142,7 @@
 }
 
 
+
 /* Hiển thị ListMenu khi được mở */
 
 .navbar-links li:hover::after {
@@ -177,6 +178,7 @@
 }
 
 .navbar-user-section {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -191,6 +193,20 @@
     vertical-align: middle;
 }
 
+.navbar-avatar {
+    cursor: pointer;
+}
+ /*css cho profile popup */ 
+ .avatar-popup {
+    position: absolute;
+    top: 75px; 
+    right: 0; /* Canh popup ở bên phải avatar */
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Tạo đổ bóng cho popup */
+    padding: 10px;
+    z-index: 1000; /* Đảm bảo popup nổi lên trên các thành phần khác */
+  }
 
 /* CSS cho slideshow */
 

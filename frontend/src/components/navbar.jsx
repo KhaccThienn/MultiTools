@@ -6,6 +6,7 @@ import ThemeToggle from "./ThemeToggle";
 import Sign from "./Sign";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import ListMenu from "./ListMenu";
+import AvatarPopup from "./AvatarPopup";
 
 function Navbar() {
   const [showSignPage, setShowSignPage] = React.useState(false);
@@ -14,7 +15,7 @@ function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [username, setUsername] = React.useState(""); // Lưu tên người dùng
   const [avatar, setAvatar] = React.useState("");
-
+  const [openAvatar, setOpenAvatar] = React.useState(false);
   // Kiểm tra token đăng nhập
   useEffect(() => {
     checkLoginStatus();
@@ -66,6 +67,9 @@ function Navbar() {
     setShowSignPage(false);
   };
 
+  // const openAvatarPopup = () => {
+  //   setOpenAvatar(!openAvatar);
+  // }
   // Đăng xuất
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -161,12 +165,14 @@ function Navbar() {
                 height={40}
                 className="navbar-avatar"
                 onClick={() => {
-                  window.location.href = "/Profile";
+                  //window.location.href = "/Profile";
+                  setOpenAvatar(!openAvatar);
                 }}
              />
               <span className="mr-4">{username}</span>
               <i class="fa-solid fa-arrow-right-from-bracket"  onClick={handleLogout}></i>
             </div>
+            {openAvatar && <AvatarPopup />}  
           </>
         ) : (
           <>
