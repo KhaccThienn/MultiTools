@@ -191,34 +191,69 @@
 }
 
 .navbar-user-section {
+    min-width: 200px;
     position: relative;
     display: flex;
-    justify-content: center;
+    justify-content: right;
     align-items: center;
     margin-right: 40px;
     gap: 5px;
 }
 
-.navbar-user-section i {
-    font-size: 25px;
-    margin: 0 10px;
-    color: #666666;
-    vertical-align: middle;
-}
-
 .navbar-avatar {
     cursor: pointer;
 }
- /*css cho profile popup */ 
+ /*css cho avatar popup */ 
  .avatar-popup {
+    width: 250px;
+    min-height: 300px;
     position: absolute;
-    top: 75px; 
-    right: 0; /* Canh popup ở bên phải avatar */
-    background-color: white;
+    top: 60px; 
+    right: -50px; 
+    background-color: #FEF2F2;
     border: 1px solid #ddd;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Tạo đổ bóng cho popup */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
     padding: 10px;
-    z-index: 1000; /* Đảm bảo popup nổi lên trên các thành phần khác */
+    z-index: 1000;
+ }
+  .popup-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .popup-menu li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+
+  }
+  
+  .popup-menu li i {
+    margin-right: 10px;
+    color: #6c757d;
+  }
+  
+  .popup-menu li:hover {
+    background-color: #BBBBBB;
+    border-radius: 4px;
+  }
+  
+  .dark-mode {
+    display: flex;
+    padding: 10px;
+    justify-content: space-between;
+  }
+
+  .dark-mode i {
+    margin-right: 10px;
+    color: #6c757d;
+  }
+
+  .dark-mode:hover {
+    background-color: #B8B8B8;
+    border-radius: 4px;
   }
 
 /* CSS cho slideshow */

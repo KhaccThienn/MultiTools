@@ -13,7 +13,6 @@ function Navbar() {
   const [isSignin, setIsSignin] = React.useState(false);
   const [activeMenu, setActiveMenu] = React.useState(null);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  const [username, setUsername] = React.useState(""); // Lưu tên người dùng
   const [avatar, setAvatar] = React.useState("");
   const [openAvatar, setOpenAvatar] = React.useState(false);
   // Kiểm tra token đăng nhập
@@ -49,7 +48,6 @@ function Navbar() {
       menuItems: [
         { item_name: "Hình ảnh", containerIndex: 4 },
         { item_name: "Tài liệu", containerIndex: 5 },
-        {item_name: "Video", containerIndex: 6},
       ],
     },
   ];
@@ -77,7 +75,7 @@ function Navbar() {
     localStorage.removeItem("username");
     localStorage.removeItem("avatar");
     setIsLoggedIn(false);
-    setUsername("");
+    setOpenAvatar(false); 
     setAvatar("");
   };
 
@@ -88,7 +86,6 @@ function Navbar() {
     const storedAvatar = localStorage.getItem("avatar");
     if (token && storedUsername) {
       setIsLoggedIn(true); // Cập nhật trạng thái đã đăng nhập
-      setUsername(storedUsername); // Lưu username từ localStorage vào state
       setAvatar(storedAvatar); 
       console.log("Đã đăng nhập");
     }
@@ -114,9 +111,9 @@ function Navbar() {
   return (
     <nav className="navbar">
       <span
-        className="logo-container"
+        className="flex items-center"
         onClick={scrollToTop}
-        style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
+        style={{ cursor: "pointer" }}
       >
         <Image
           src={images.logo}
@@ -131,11 +128,11 @@ function Navbar() {
         {navbarItems.map((navbarItem) => (
           <li
             key={navbarItem.id}
-            className="li-item"
+            className="flex items-start cursor-pointer"
             onMouseEnter={() => handleMouseEnter(navbarItem.id)}
             onMouseLeave={handleMouseLeave}
           >
-            <span style={{marginRight:'5px'}}>{navbarItem.title}</span>
+            <span className="mr-2">{navbarItem.title}</span>
             <i className="fa-solid fa-sort-down"></i>
             {activeMenu === navbarItem.id && (
               <ListMenu
@@ -166,14 +163,11 @@ function Navbar() {
                 height={40}
                 className="navbar-avatar"
                 onClick={() => {
-                  //window.location.href = "/Profile";
                   setOpenAvatar(!openAvatar);
                 }}
              />
-              <span className="mr-4">{username}</span>
-              <i class="fa-solid fa-arrow-right-from-bracket"  onClick={handleLogout}></i>
+              {openAvatar && <AvatarPopup handleLogout={handleLogout} />}
             </div>
-            {openAvatar && <AvatarPopup />}  
           </>
         ) : (
           <>
@@ -186,7 +180,6 @@ function Navbar() {
             </button>
           </>
         )}
-        <ThemeToggle />
       </div>
       {showSignPage && (
         <Sign
