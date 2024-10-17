@@ -15,31 +15,30 @@ export default function Container({
     <div
       style={{
         background: `linear-gradient(135deg, ${colorbg}, #fff)`,
-        padding: "3em 0",
+        padding: "4em 0",
       }}
     >
       <div
         className="container"
         style={{
-          display: "flex",
           flexDirection: flexDirection,
-          alignItems: "center",
-          justifyContent: "space-between",
         }}
       >
-        <Image
-          src={image}
-          alt="Hình ảnh"
-          width={450}
-          height={450}
-          style={{
-            borderRadius: "2em",
-            boxShadow: "8px 8px 16px rgba(0, 0, 0, 0.2)",
-          }}
-        />
         <div
           style={{
-            width: "600px",
+            width: "40%",
+            position: "relative",
+          }}
+        >
+          <Image
+            className="container-image"
+            src={image}
+            alt="Hình ảnh"
+          />
+        </div>
+        <div
+          style={{
+            width: "50%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",

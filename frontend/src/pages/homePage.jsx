@@ -3,10 +3,16 @@ import Navbar from "@/components/Navbar";
 import Slideshow from "@/components/SlideShow";
 import "../css/app.css";
 import Container from "@/components/Container";
+import HowToUse from "@/components/HowToUse";
 import Button from "@/components/Button";
 import Footer from "@/components/Footer";
-import { RxDoubleArrowUp, RxDoubleArrowDown } from "react-icons/rx";
 import images from "@/constants/images";
+import { RxDoubleArrowUp, RxDoubleArrowDown } from "react-icons/rx";
+import { RiImageEditLine } from "react-icons/ri";
+import { PiVideo } from "react-icons/pi";
+import { SiConvertio } from "react-icons/si";
+import { PiSelectionBackgroundDuotone } from "react-icons/pi";
+import { MdOutlineFilterVintage } from "react-icons/md";
 
 export default function HomePage() {
   const [showNavbar, setShowNavbar] = useState(true);
@@ -22,18 +28,18 @@ export default function HomePage() {
     }
   };
 
-  const scrollToContainer = (index) => {
-    if (containerRefs.current[index]) {
-      const { top } = containerRefs.current[index].getBoundingClientRect();
-      window.scrollTo({
-        top: window.scrollY + top,
-        behavior: "smooth",
-      });
-    }
-  };
+  // const scrollToContainer = (index) => {
+  //   if (containerRefs.current[index]) {
+  //     const { top } = containerRefs.current[index].getBoundingClientRect();
+  //     window.scrollTo({
+  //       top: window.scrollY + top,
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // };
 
   const scrollToTop = () => {
-    contentRef.current.scrollIntoView({ behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const scrollToBottom = () => {
@@ -85,10 +91,49 @@ export default function HomePage() {
   return (
     <>
       <div className={`head ${showNavbar ? "show" : "hide"}`}>
-        <Navbar scrollToContainer={scrollToContainer} />
+        {/* */}
+        <Navbar />
       </div>
       <div className="content" ref={contentRef}>
         <Slideshow />
+
+        <div ref={addToRefs} className="tool-bar fade-in-section">
+          <div
+            className="tool-item"
+            onClick={() => (window.location.href = "/ImageEditorPage")}
+          >
+            <RiImageEditLine />
+            Chỉnh sửa ảnh
+          </div>
+          <div
+            className="tool-item"
+            onClick={() => (window.location.href = "")}
+          >
+            <PiVideo />
+            Chỉnh sửa video
+          </div>
+          <div
+            className="tool-item"
+            onClick={() => (window.location.href = "")}
+          >
+            <SiConvertio />
+            Chuyển đổi định dạng
+          </div>
+          <div
+            className="tool-item"
+            onClick={() => (window.location.href = "")}
+          >
+            <PiSelectionBackgroundDuotone />
+            Xóa nền
+          </div>
+          <div
+            className="tool-item"
+            onClick={() => (window.location.href = "")}
+          >
+            <MdOutlineFilterVintage />
+            Thêm bộ lọc
+          </div>
+        </div>
 
         <div ref={addToRefs} className="fade-in-section">
           <Container
@@ -100,7 +145,7 @@ export default function HomePage() {
             }}
           >
             <div className="container-content">
-              <h2>Sửa ảnh trực tuyến nhanh chóng và dễ dàng</h2>
+              <h2>Chỉnh sửa ảnh nhanh chóng và dễ dàng</h2>
               <p>
                 Cho dù bạn đang muốn cắt và thay đổi kích thước hình ảnh, chỉnh
                 sửa ảnh chân dung, hay điều chỉnh màu sắc cho hình ảnh, bạn đều
@@ -154,7 +199,9 @@ export default function HomePage() {
             image={images.container4}
             rotate={1}
             colorbg="##e2e2e2"
-            onClick={() => {}}
+            onClick={() => {
+
+            }}
           >
             <div className="container-content">
               <h2>Công cụ chỉnh sửa và biên tập video</h2>
@@ -172,7 +219,9 @@ export default function HomePage() {
             image={images.container5}
             rotate={0}
             colorbg="#6EE7B7"
-            onClick={() => {}}
+            onClick={() => {
+              window.location.href = "/ConvertPage";
+            }}
           >
             <div className="container-content">
               <h2>Trình chuyển đổi trực tuyến</h2>
@@ -184,8 +233,13 @@ export default function HomePage() {
           </Container>
         </div>
       </div>
+
+      <div>
+        <HowToUse />
+      </div>
+
       <div ref={addToRefs} className="fade-in-section">
-        <Footer className="" />
+        <Footer />
       </div>
 
       <div className="scroll-btn scroll-top" onClick={scrollToTop}>

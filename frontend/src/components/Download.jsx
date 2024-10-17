@@ -1,37 +1,40 @@
-import { ImageContext } from '@/context/ImageContext';
-import React, { useContext, useState } from 'react';
-import '../css/app.css'
-const Download = ({ closeModal }) => {
-  const [imageName, setImageName] = useState("edited-image"); // Tên mặc định cho ảnh
-  const [imageFormat, setImageFormat] = useState("jpeg"); // Định dạng mặc định
+import React, { useContext, useState } from "react";
+import { ImageContext } from "@/context/ImageContext";
+import "../css/app.css";
 
+const Download = ({ closeModal }) => {
+  const [imageName, setImageName] = useState("edited-image");
+  const [imageFormat, setImageFormat] = useState("jpeg");
   const { handleDownload } = useContext(ImageContext);
 
   const handleDownloadClick = () => {
-    handleDownload(imageName, imageFormat); // Gọi hàm download
-    closeModal(); // Đóng modal sau khi tải ảnh
+    console.log('Image Name:', imageName);
+    console.log('Image Format:', imageFormat);
+    handleDownload({ imageName, imageFormat });
+    closeModal();
   };
+  
 
   return (
-    <div className="modal">
+    <div className="modal-overlay">
       <div className="modal-content">
         <h2>Tải ảnh xuống</h2>
 
-        {/* Input cho tên ảnh */}
-        <label>
-          Tên ảnh: 
+        <div className="form-group">
+          <label htmlFor="imageName">Tên ảnh:</label>
           <input
+            id="imageName"
             type="text"
             value={imageName}
             onChange={(e) => setImageName(e.target.value)}
             placeholder="Nhập tên ảnh"
           />
-        </label>
+        </div>
 
-        {/* Select để chọn định dạng ảnh */}
-        <label>
-          Định dạng ảnh: 
+        <div className="form-group">
+          <label htmlFor="imageFormat">Định dạng ảnh:</label>
           <select
+            id="imageFormat"
             value={imageFormat}
             onChange={(e) => setImageFormat(e.target.value)}
           >
@@ -39,13 +42,16 @@ const Download = ({ closeModal }) => {
             <option value="png">PNG</option>
             <option value="webp">WebP</option>
           </select>
-        </label>
+        </div>
 
-        {/* Nút download */}
-        <button onClick={handleDownloadClick}>Download Ảnh</button>
-
-        {/* Nút đóng modal */}
-        <button onClick={closeModal}>Đóng</button>
+        <div className="modal-actions">
+          <button className="button download-button" onClick={handleDownloadClick}>
+            <i className="fa fa-download"></i> Tải xuống
+          </button>
+          <button className="button close-button" onClick={closeModal}>
+            <i className="fa fa-times"></i> Đóng
+          </button>
+        </div>
       </div>
     </div>
   );

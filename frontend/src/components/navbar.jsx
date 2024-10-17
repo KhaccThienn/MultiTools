@@ -49,6 +49,7 @@ function Navbar() {
       menuItems: [
         { item_name: "Hình ảnh", containerIndex: 4 },
         { item_name: "Tài liệu", containerIndex: 5 },
+        {item_name: "Video", containerIndex: 6},
       ],
     },
   ];
@@ -113,9 +114,9 @@ function Navbar() {
   return (
     <nav className="navbar">
       <span
-        className="flex items-center"
+        className="logo-container"
         onClick={scrollToTop}
-        style={{ cursor: "pointer" }}
+        style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
       >
         <Image
           src={images.logo}
@@ -130,11 +131,11 @@ function Navbar() {
         {navbarItems.map((navbarItem) => (
           <li
             key={navbarItem.id}
-            className="flex items-start cursor-pointer"
+            className="li-item"
             onMouseEnter={() => handleMouseEnter(navbarItem.id)}
             onMouseLeave={handleMouseLeave}
           >
-            <span className="mr-2">{navbarItem.title}</span>
+            <span style={{marginRight:'5px'}}>{navbarItem.title}</span>
             <i className="fa-solid fa-sort-down"></i>
             {activeMenu === navbarItem.id && (
               <ListMenu

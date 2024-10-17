@@ -24,6 +24,8 @@ import {
   RiTriangleLine,
 } from "react-icons/ri";
 import rough from "roughjs/bundled/rough.esm";
+import getStroke from "perfect-freehand";
+import { GiStraightPipe } from "react-icons/gi";
 
 const generator = rough.generator();
 
@@ -58,11 +60,16 @@ function createElement(id, x1, y1, x2, y2, type, shape, options) {
     } else if (shape === "line") {
       roughElement = generator.line(x1, y1, x2, y2, options);
     }
+    return { id, x1, y1, x2, y2, type, shape, roughElement };
   } else if (type === "pen") {
-    roughElement = generator.line(x1, y1, x2, y2, options);
+    return {
+      id,
+      type,
+      points: [{ x: x1, y: y1 }],
+      stroke: options.stroke,
+      strokeWidth: options.strokeWidth,
+    };
   }
-
-  return { id, x1, y1, x2, y2, type, shape, roughElement };
 }
 
 function nearPoint(x, y, x1, y1, point) {
@@ -94,17 +101,6 @@ const positionWithinElement = (x, y, element) => {
         const inside =
           x >= x1 && x <= x2 && y >= y1 && y <= y2 ? "inside" : null;
         return topLeft || topRight || bottomLeft || bottomRight || inside;
-      case "pencil":
-        const betweenAnyPoint = element.points.some((point, index) => {
-          const nextPoint = element.points[index + 1];
-          if (!nextPoint) return false;
-          return (
-            onLine(point.x, point.y, nextPoint.x, nextPoint.y, x, y, 5) != null
-          );
-        });
-        return betweenAnyPoint ? "inside" : null;
-      case "text":
-        return x >= x1 && x <= x2 && y >= y1 && y <= y2 ? "inside" : null;
       case "circle":
         const center = { x: (x1 + x2) / 2, y: (y1 + y2) / 2 };
         const radius = distance(center, { x: x1, y: y1 });
@@ -124,6 +120,15 @@ const positionWithinElement = (x, y, element) => {
       default:
         throw new Error(`Type not recognised: ${type}`);
     }
+  } else if (type === "pen") {
+    const betweenAnyPoint = element.points.some((point, index) => {
+      const nextPoint = element.points[index + 1];
+      if (!nextPoint) return false;
+      return (
+        onLine(point.x, point.y, nextPoint.x, nextPoint.y, x, y, 5) != null
+      );
+    });
+    return betweenAnyPoint ? "inside" : null;
   }
 };
 
@@ -212,6 +217,49 @@ const resizedCoordinates = (clientX, clientY, position, coordinates) => {
   }
 };
 
+const getSvgPathFromStroke = (stroke) => {
+  if (!stroke.length) return "";
+
+  const d = stroke.reduce(
+    (acc, [x0, y0], i, arr) => {
+      const [x1, y1] = arr[(i + 1) % arr.length];
+      acc.push(x0, y0, (x0 + x1) / 2, (y0 + y1) / 2);
+      return acc;
+    },
+    ["M", ...stroke[0], "Q"]
+  );
+
+  d.push("Z");
+  return d.join(" ");
+};
+
+const drawElement = (roughCanvas, ctx, element) => {
+  switch (element.type) {
+    case "shape":
+      if (element.roughElement) {
+        roughCanvas.draw(element.roughElement);
+      } else {
+        console.warn("roughElement is undefined for the shape");
+      }
+      break;
+    case "pen":
+      if (element.points && element.points.length > 0) {
+        const stroke = getStroke(element.points, { size: element.strokeWidth });
+        const path = getSvgPathFromStroke(stroke);
+        ctx.strokeStyle = element.stroke || "black";
+        ctx.lineWidth = element.strokeWidth || 1;
+        ctx.stroke(new Path2D(path));
+      } else {
+        console.warn("No points found for the pen");
+      }
+      break;
+    default:
+      console.warn(`Type not recognised: ${element.type}`);
+  }
+};
+
+const adjustmentRequired = (type) => ["shape"].includes(type);
+
 const Paint = () => {
   const {
     currentImage,
@@ -219,8 +267,7 @@ const Paint = () => {
     mergeDrawingWithImage,
     elements,
     setElements,
-    undoE,
-    redoE,
+    dimensions,
   } = useContext(ImageContext);
   const canvasRef = useRef(null);
   const [action, setAction] = useState("none");
@@ -242,34 +289,45 @@ const Paint = () => {
     { id: "rectangle", name: "Hình chữ nhật", icon: <RiRectangleLine /> },
     { id: "circle", name: "Hình tròn", icon: <RiCircleLine /> },
     { id: "triangle", name: "Hình tam giác", icon: <RiTriangleLine /> },
-    { id: "line", name: "Đường thẳng", icon: <RiLineHeight /> },
+    { id: "line", name: "Đường thẳng", icon: <GiStraightPipe/> },
   ];
   useLayoutEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
-    const { top, left, width, height } = getImageParameters();
+    // Kiểm tra nếu getImageParameters hoặc dimensions không tồn tại
+    const imageParams = getImageParameters();
+    if (!imageParams || !dimensions) {
+      return; // Thoát ra nếu chưa có hình ảnh hoặc kích thước chưa xác định
+    }
+
+    const { top, left, width, height } = imageParams;
 
     // Set canvas dimensions and styles before drawing
     canvas.style.position = "absolute";
     canvas.style.top = `${top}px`;
     const offset = (22 * 16 * 15) / 100;
     canvas.style.left = `${left - offset}px`;
-    canvas.width = width;
-    canvas.height = height;
-    canvas.style.zIndex = 10; // Ensure canvas is on top of the image
 
-    // Now proceed to draw
-    const roughCanvas = rough.canvas(canvas);
+    console.log("size for image ", width, height);
+    console.log("size for canvas ", dimensions.width, dimensions.height);
+
+    // Giới hạn kích thước của canvas để không vượt quá kích thước màn hình
+    canvas.width = Math.min(width, dimensions.width);
+    canvas.height = Math.min(height, dimensions.height);
+    canvas.style.zIndex = 10; // Ensure canvas is on top of the image
 
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Now proceed to draw
+    const roughCanvas = rough.canvas(canvas);
+
     // Draw elements
-    elements.forEach((element) => roughCanvas.draw(element.roughElement));
+    elements.forEach((element) => drawElement(roughCanvas, ctx, element));
 
     // Draw the bounding box if an element is selected
-    if (selectedElement) {
+    if (selectedElement && selectedElement.type === "shape") {
       ctx.save();
       ctx.strokeStyle = "white"; // Chọn màu viền rõ ràng
       ctx.lineWidth = 1;
@@ -287,16 +345,26 @@ const Paint = () => {
       ctx.strokeRect(minX, minY, boxWidth, boxHeight);
       ctx.restore();
     }
-  }, [elements, getImageParameters, currentImage, selectedElement]);
+  }, [elements, getImageParameters, currentImage, selectedElement, dimensions]);
 
   const updateElement = (id, x1, y1, x2, y2, type, shape) => {
-    const updatedElement = createElement(id, x1, y1, x2, y2, type, shape, {
-      stroke: color,
-      strokeWidth: lineWidth,
-    });
-
     const elementsCopy = [...elements];
-    elementsCopy[id] = updatedElement;
+    switch (type) {
+      case "shape":
+        elementsCopy[id] = createElement(id, x1, y1, x2, y2, type, shape, {
+          stroke: color,
+          strokeWidth: lineWidth,
+        });
+        break;
+      case "pen":
+        elementsCopy[id].points = [
+          ...elementsCopy[id].points,
+          { x: x2, y: y2 },
+        ];
+        break;
+      default:
+        throw new Error(`Type not recognised: ${type}`);
+    }
     setElements(elementsCopy, true);
   };
 
@@ -307,9 +375,15 @@ const Paint = () => {
 
     if (tool === "selection") {
       const element = getElementAtPosition(clientX, clientY, elements);
-
       if (element) {
-        if (element.position === "inside") {
+        if (element.type === "pen") {
+          const xOffsets = element.points.map((point) => clientX - point.x);
+          const yOffsets = element.points.map((point) => clientY - point.y);
+          setSelectedElement({ ...element, xOffsets, yOffsets });
+          setTimeout(() => {
+            setAction("moving");
+          }, 0);
+        } else if (element.position === "inside") {
           const offsetX = clientX - element.x1;
           const offsetY = clientY - element.y1;
           const width = element.x2 - element.x1;
@@ -320,7 +394,7 @@ const Paint = () => {
           setShape(element.shape);
           setColor(element.roughElement.options.stroke);
           setLineWidth(element.roughElement.options.strokeWidth);
-          setElements(prevState => prevState);
+          setElements((prevState) => prevState);
 
           setTimeout(() => {
             setAction("moving");
@@ -372,15 +446,17 @@ const Paint = () => {
     if (selectedElement) {
       const index = selectedElement.id;
       const { id, type } = elements[index];
-      if (action === "drawing" || action === "resizing") {
+      if (
+        (action === "drawing" || action === "resizing") &&
+        adjustmentRequired(type)
+      ) {
         const { x1, y1, x2, y2 } = adjustElementCoordinates(elements[index]);
-        updateElement(id, x1, y1, x2, y2, type, shape); // Truyền shape vào
-        
+        updateElement(id, x1, y1, x2, y2, type, shape);
       }
     }
     setTool("selection");
     setAction("none");
-    // setSelectedElement(null);
+    setSelectedElement(null);
   };
 
   const handleMouseMove = (e) => {
@@ -400,15 +476,25 @@ const Paint = () => {
       const { x1, y1 } = elements[index];
       updateElement(index, x1, y1, currentX, currentY, tool, shape); // Truyền shape vào
     } else if (action === "moving" && selectedElement) {
-      const { id, type, offsetX, offsetY, width, height } = selectedElement;
+      if (selectedElement.type === "pen") {
+        const newPoints = selectedElement.points.map((_, index) => ({
+          x: currentX - selectedElement.xOffsets[index],
+          y: currentY - selectedElement.yOffsets[index],
+        }));
+        const elementsCopy = [...elements];
+        elementsCopy[selectedElement.id].points = newPoints;
+        setElements(elementsCopy, true);
+      } else {
+        const { id, type, offsetX, offsetY, width, height } = selectedElement;
 
-      const nextX1 = currentX - offsetX;
-      const nextY1 = currentY - offsetY;
-      const nextX2 = nextX1 + width;
-      const nextY2 = nextY1 + height;
+        const nextX1 = currentX - offsetX;
+        const nextY1 = currentY - offsetY;
+        const nextX2 = nextX1 + width;
+        const nextY2 = nextY1 + height;
 
-      updateElement(id, nextX1, nextY1, nextX2, nextY2, type, shape); // Truyền shape vào
-    } else if (action === "resizing") {
+        updateElement(id, nextX1, nextY1, nextX2, nextY2, type, shape); // Truyền shape vào
+      }
+    } else if (action === "resizing" && selectedElement.type === "shape") {
       const { id, type, position, ...coordinates } = selectedElement;
       const { x1, y1, x2, y2 } = resizedCoordinates(
         currentX,
@@ -481,27 +567,40 @@ const Paint = () => {
   };
 
   const handleChangeLineWidth = (e) => {
+    const newLineWidth = e.target.value;
+  
     if (selectedElement) {
-      const { id, type, shape } = selectedElement;
-      const updatedElement = createElement(
-        id,
-        selectedElement.x1,
-        selectedElement.y1,
-        selectedElement.x2,
-        selectedElement.y2,
-        type,
-        shape, // Truyền shape vào
-        {
-          stroke: color,
-          strokeWidth: e.target.value,
-        }
-      );
-      const elementsCopy = [...elements];
-      elementsCopy[id] = updatedElement;
-      setElements(elementsCopy);
+      const { id, type } = selectedElement;
+  
+      // Nếu là phần tử 'pen'
+      if (type === "pen") {
+        const elementsCopy = [...elements];
+        elementsCopy[id].strokeWidth = newLineWidth;
+        setElements(elementsCopy);
+      } else if (type === "shape") {
+        // Nếu là phần tử 'shape'
+        const updatedElement = createElement(
+          id,
+          selectedElement.x1,
+          selectedElement.y1,
+          selectedElement.x2,
+          selectedElement.y2,
+          type,
+          selectedElement.shape, // Truyền shape vào
+          {
+            stroke: color,
+            strokeWidth: newLineWidth,
+          }
+        );
+        const elementsCopy = [...elements];
+        elementsCopy[id] = updatedElement;
+        setElements(elementsCopy);
+      }
     }
-    setLineWidth(e.target.value);
+  
+    setLineWidth(newLineWidth);
   };
+  
 
   const handleClick = (e) => {
     const rect = canvasRef.current.getBoundingClientRect();
@@ -516,7 +615,7 @@ const Paint = () => {
       return; // Không làm gì nếu phần tử đang được chọn lại
     }
 
-    if (element) {
+    if (element && element.type === "shape") {
       // Nếu có phần tử được chọn, vẽ border và lưu vào state
       setSelectedElement(element);
       setShape(element.shape); // Cập nhật shape
@@ -624,15 +723,15 @@ const Paint = () => {
           </div>
         )}
         <div className="bottom-content">
-        <div className="action-btn">
-          <button id="crop-action-cancel" onClick={{}}>
-            Hủy
-          </button>
-          <button id="crop-action-apply" onClick={handleMerge}>
-            Áp dụng
-          </button>
+          <div className="action-btn">
+            <button id="crop-action-cancel" onClick={{}}>
+              Hủy
+            </button>
+            <button id="crop-action-apply" onClick={handleMerge}>
+              Áp dụng
+            </button>
+          </div>
         </div>
-      </div>
       </section>
     </>
   );

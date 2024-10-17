@@ -25,7 +25,7 @@ export const ZoomProvider = ({ children }) => {
       maxScale={20}
       limitToBounds={true}
     >
-      {({ zoomIn, zoomOut, resetTransform, scale, positionX, positionY }) => (
+      {({ zoomIn, zoomOut, resetTransform,scale , positionX, positionY }) => (
         <ZoomContext.Provider
           value={{
             zoomIn,
