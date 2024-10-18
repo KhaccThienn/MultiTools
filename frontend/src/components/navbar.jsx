@@ -6,17 +6,15 @@ import ThemeToggle from "./ThemeToggle";
 import Sign from "./Sign";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import ListMenu from "./ListMenu";
-import { MdArrowDropDown } from "react-icons/md";
-import { FaArrowRightFromBracket } from "react-icons/fa6";
+import AvatarPopup from "./AvatarPopup";
 
 function Navbar() {
   const [showSignPage, setShowSignPage] = React.useState(false);
   const [isSignin, setIsSignin] = React.useState(false);
   const [activeMenu, setActiveMenu] = React.useState(null);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  const [username, setUsername] = React.useState(""); // Lưu tên người dùng
   const [avatar, setAvatar] = React.useState("");
-
+  const [openAvatar, setOpenAvatar] = React.useState(false);
   // Kiểm tra token đăng nhập
   useEffect(() => {
     checkLoginStatus();
@@ -50,7 +48,6 @@ function Navbar() {
       menuItems: [
         { item_name: "Hình ảnh", containerIndex: 4 },
         { item_name: "Tài liệu", containerIndex: 5 },
-        {item_name: "Video", containerIndex: 6},
       ],
     },
   ];
@@ -69,13 +66,16 @@ function Navbar() {
     setShowSignPage(false);
   };
 
+  // const openAvatarPopup = () => {
+  //   setOpenAvatar(!openAvatar);
+  // }
   // Đăng xuất
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("avatar");
     setIsLoggedIn(false);
-    setUsername("");
+    setOpenAvatar(false); 
     setAvatar("");
   };
 
@@ -86,7 +86,6 @@ function Navbar() {
     const storedAvatar = localStorage.getItem("avatar");
     if (token && storedUsername) {
       setIsLoggedIn(true); // Cập nhật trạng thái đã đăng nhập
-      setUsername(storedUsername); // Lưu username từ localStorage vào state
       setAvatar(storedAvatar); 
       console.log("Đã đăng nhập");
     }
@@ -112,9 +111,9 @@ function Navbar() {
   return (
     <nav className="navbar">
       <span
-        className="logo-container"
+        className="flex items-center"
         onClick={scrollToTop}
-        style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
+        style={{ cursor: "pointer" }}
       >
         <Image
           src={images.logo}
@@ -129,7 +128,7 @@ function Navbar() {
         {navbarItems.map((navbarItem) => (
           <li
             key={navbarItem.id}
-            className="li-item"
+            className="flex items-start cursor-pointer"
             onMouseEnter={() => handleMouseEnter(navbarItem.id)}
             onMouseLeave={handleMouseLeave}
           >
@@ -164,11 +163,10 @@ function Navbar() {
                 height={40}
                 className="navbar-avatar"
                 onClick={() => {
-                  window.location.href = "/Profile";
+                  setOpenAvatar(!openAvatar);
                 }}
              />
-              <span className="">{username}</span>
-              <FaArrowRightFromBracket className="logout-icon" onClick={handleLogout}/>
+              {openAvatar && <AvatarPopup handleLogout={handleLogout} />}
             </div>
           </>
         ) : (
@@ -182,7 +180,6 @@ function Navbar() {
             </button>
           </>
         )}
-        <ThemeToggle />
       </div>
       {showSignPage && (
         <Sign
