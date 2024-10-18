@@ -7,6 +7,7 @@ import Sign from "./Sign";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import ListMenu from "./ListMenu";
 import AvatarPopup from "./AvatarPopup";
+import { MdArrowDropDown } from "react-icons/md";
 
 function Navbar() {
   const [showSignPage, setShowSignPage] = React.useState(false);
@@ -128,7 +129,7 @@ function Navbar() {
         {navbarItems.map((navbarItem) => (
           <li
             key={navbarItem.id}
-            className="flex items-start cursor-pointer"
+            className="li-item"
             onMouseEnter={() => handleMouseEnter(navbarItem.id)}
             onMouseLeave={handleMouseLeave}
           >
@@ -168,6 +169,7 @@ function Navbar() {
              />
               {openAvatar && <AvatarPopup handleLogout={handleLogout} />}
             </div>
+            <ThemeToggle />
           </>
         ) : (
           <>
@@ -178,6 +180,7 @@ function Navbar() {
             <button onClick={openSignupModal} className="button1 signup-button">
               Đăng ký
             </button>
+            <ThemeToggle />
           </>
         )}
       </div>
