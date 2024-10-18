@@ -1,6 +1,8 @@
 import React, { useContext, useState } from "react";
 import { ImageContext } from "@/context/ImageContext";
 import "../css/app.css";
+import { FiDownload } from "react-icons/fi";
+import { CgClose } from "react-icons/cg";
 
 const Download = ({ closeModal }) => {
   const [imageName, setImageName] = useState("edited-image");
@@ -8,12 +10,11 @@ const Download = ({ closeModal }) => {
   const { handleDownload } = useContext(ImageContext);
 
   const handleDownloadClick = () => {
-    console.log('Image Name:', imageName);
-    console.log('Image Format:', imageFormat);
+    console.log("Image Name:", imageName);
+    console.log("Image Format:", imageFormat);
     handleDownload({ imageName, imageFormat });
     closeModal();
   };
-  
 
   return (
     <div className="modal-overlay">
@@ -45,11 +46,14 @@ const Download = ({ closeModal }) => {
         </div>
 
         <div className="modal-actions">
-          <button className="button download-button" onClick={handleDownloadClick}>
-            <i className="fa fa-download"></i> Tải xuống
+          <button
+            className="button download-button"
+            onClick={handleDownloadClick}
+          >
+            <FiDownload /> Tải xuống
           </button>
           <button className="button close-button" onClick={closeModal}>
-            <i className="fa fa-times"></i> Đóng
+            <CgClose /> Đóng
           </button>
         </div>
       </div>

@@ -6,6 +6,8 @@ import ThemeToggle from "./ThemeToggle";
 import Sign from "./Sign";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import ListMenu from "./ListMenu";
+import { MdArrowDropDown } from "react-icons/md";
+import { FaArrowRightFromBracket } from "react-icons/fa6";
 
 function Navbar() {
   const [showSignPage, setShowSignPage] = React.useState(false);
@@ -132,7 +134,7 @@ function Navbar() {
             onMouseLeave={handleMouseLeave}
           >
             <span style={{marginRight:'5px'}}>{navbarItem.title}</span>
-            <i className="fa-solid fa-sort-down"></i>
+            <MdArrowDropDown className="drop-down-icon"/>
             {activeMenu === navbarItem.id && (
               <ListMenu
                 items={navbarItem.menuItems.map((item) => ({
@@ -151,7 +153,7 @@ function Navbar() {
           </li>
         ))}
       </ul>
-      <div className="flex items-center">
+      <div className="sign-buttons">
         {isLoggedIn ? (
           <>
             <div className="navbar-user-section">
@@ -165,8 +167,8 @@ function Navbar() {
                   window.location.href = "/Profile";
                 }}
              />
-              <span className="mr-4">{username}</span>
-              <i class="fa-solid fa-arrow-right-from-bracket"  onClick={handleLogout}></i>
+              <span className="">{username}</span>
+              <FaArrowRightFromBracket className="logout-icon" onClick={handleLogout}/>
             </div>
           </>
         ) : (

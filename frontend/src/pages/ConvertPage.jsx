@@ -4,6 +4,7 @@ import HowToUse from "@/components/HowToUse";
 import Footer from "@/components/Footer";
 import { RxDoubleArrowUp, RxDoubleArrowDown } from "react-icons/rx";
 import "../css/app.css";
+import "../app/globals.css";
 
 export default function ConvertPage() {
   const [showNavbar, setShowNavbar] = useState(true);
@@ -18,8 +19,6 @@ export default function ConvertPage() {
       containerRefs.current.push(el);
     }
   };
-
-  
 
   // const scrollToContainer = (index) => {
   //   if (containerRefs.current[index]) {
@@ -83,24 +82,14 @@ export default function ConvertPage() {
 
   return (
     <>
-      <div className={`head ${showNavbar ? "show" : "hide"}`} >
+      <div className={`head ${showNavbar ? "show" : "hide"}`}>
         {/* */}
         <Navbar />
       </div>
 
-      <div>
-        <HowToUse />
-      </div>
-
+      <div style={{ height: "500px" }}></div>
       <div ref={addToRefs} className="fade-in-section">
         <Footer />
-      </div>
-
-      <div className="scroll-btn scroll-top" onClick={scrollToTop}>
-        <RxDoubleArrowUp />
-      </div>
-      <div className="scroll-btn scroll-bottom" onClick={scrollToBottom}>
-        <RxDoubleArrowDown />
       </div>
     </>
   );
