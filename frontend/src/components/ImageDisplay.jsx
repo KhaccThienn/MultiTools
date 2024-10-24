@@ -13,8 +13,12 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
     handleCropEnd,
     adjustmentData,
     setImageParameters,
+    setDimensions,
     imageRef,
   } = useContext(ImageContext);
+
+    // Thêm ref cho toàn bộ div chứa ImageDisplay
+    const imageDisplayRef = useRef(null);
 
   useEffect(() => {
     const updateImageParameters = () => {
@@ -29,6 +33,17 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
         console.log('Image Parameters:', { width, height, left, top });
       }
     };
+
+    if (imageDisplayRef.current) {
+      const rect = imageDisplayRef.current.getBoundingClientRect();
+      const width = rect.width;
+      const height = rect.height;
+
+
+      // Sử dụng setDimensions để lưu kích thước của toàn bộ ImageDisplay
+      setDimensions({ width, height });
+    }
+  
   
     const handleImageLoad = () => {
       updateImageParameters();
@@ -89,6 +104,7 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
 
   return (
     <div
+    ref={imageDisplayRef} // Gán ref vào toàn bộ ImageDisplay
       style={{
         display: "flex",
         justifyContent: "center",
@@ -134,17 +150,25 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
         <ZoomableContent>
           {currentImage && (
             <img
-              src={currentImage || imageSrc} // Hiển thị ảnh đã crop hoặc ảnh gốc nếu chưa crop
-              alt={altText}
-              style={{
-                maxWidth: "100%",
-                maxHeight: "100%",
-                objectFit: "contain",
-                filter: `brightness(${adjustmentData.brightness}%) saturate(${adjustmentData.saturation}%) contrast(${adjustmentData.contrast}%) hue-rotate(${adjustmentData.hue}deg) grayscale(${adjustmentData.grey_scale}%)`,
-                
-              }}
-              ref={imageRef}
-            />
+            src={currentImage || imageSrc} // Hiển thị ảnh đã crop hoặc ảnh gốc nếu chưa crop
+            alt={altText}
+            style={{
+              maxWidth: "100%",
+              maxHeight: "100%",
+              objectFit: "contain",
+              filter: `
+                brightness(${adjustmentData.brightness}%)
+                saturate(${adjustmentData.saturation}%)
+                contrast(${adjustmentData.contrast}%)
+                hue-rotate(${adjustmentData.hue}deg)
+                grayscale(${adjustmentData.grey_scale}%)
+                sepia(${adjustmentData.sepia}%)
+                invert(${adjustmentData.invert}%)
+                blur(${adjustmentData.blur}px)
+              `,
+            }}
+            ref={imageRef}
+          />
           )}
         </ZoomableContent>
       )}

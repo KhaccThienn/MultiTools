@@ -169,7 +169,7 @@ function Navbar() {
              />
               {openAvatar && <AvatarPopup handleLogout={handleLogout} />}
             </div>
-            <ThemeToggle />
+
           </>
         ) : (
           <>
@@ -180,7 +180,7 @@ function Navbar() {
             <button onClick={openSignupModal} className="button1 signup-button">
               Đăng ký
             </button>
-            <ThemeToggle />
+
           </>
         )}
       </div>

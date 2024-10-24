@@ -1,10 +1,12 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+import express from 'express';
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import cors from 'cors';
+
 const app = express();
-const cors = require('cors');
 const port = 4000;
+  
 
 // Middleware 
 app.use(express.json());

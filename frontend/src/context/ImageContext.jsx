@@ -30,6 +30,9 @@ export const ImageProvider = ({ children }) => {
     saturation: 100,
     hue: 0,
     grey_scale: 0,
+    sepia: 0,
+    invert: 0,
+    blur: 0,
   };
 
   const [adjustmentData, setAdjustmentData] = useState(defaultAdjustmentData);

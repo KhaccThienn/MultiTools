@@ -16,6 +16,9 @@ const ColorAdjustment = () => {
   const setContrast = (value) => updateAdjustmentData("contrast", value);
   const setHue = (value) => updateAdjustmentData("hue", value);
   const setGreyScale = (value) => updateAdjustmentData("grey_scale", value);
+  const setSepia = (value) => updateAdjustmentData("sepia", value);
+  const setInvert = (value) => updateAdjustmentData("invert", value);
+  const setBlur = (value) => updateAdjustmentData("blur", value)
 
   const autoAdjust = () => {
     // Ví dụ các giá trị tự động có thể là những giá trị đã được thử nghiệm
@@ -62,7 +65,7 @@ const ColorAdjustment = () => {
         </button>
       </div>
       <div className="splitter"></div>
-      <div className="box--basic">
+      <div className="box__option">
         <button className="btn" onClick={() => autoAdjust()}>
           <FaMagic /> Tự động
         </button>
@@ -147,6 +150,47 @@ const ColorAdjustment = () => {
             onChange={(e) => setGreyScale(e.target.value)}
           />
         </div>
+
+        <div className="slider-group">
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <label>Hiệu ứng cổ điển</label>
+            <label>{adjustmentData.sepia}</label>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={adjustmentData.sepia}
+            onChange={(e) => setSepia(e.target.value)}
+          />
+        </div>
+
+        <div className="slider-group">
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <label>Đảo ngược màu</label>
+            <label>{adjustmentData.invert}</label>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={adjustmentData.invert}
+            onChange={(e) => setInvert(e.target.value)}
+          />
+          </div>
+        <div className="slider-group">
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <label>Mờ</label>
+            <label>{adjustmentData.blur}</label>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={adjustmentData.blur}
+            onChange={(e) => setBlur(e.target.value)}
+          />
+          </div>
       </div>
 
       <div className="bottom-content">

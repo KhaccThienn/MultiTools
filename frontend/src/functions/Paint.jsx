@@ -26,6 +26,8 @@ import {
 import rough from "roughjs/bundled/rough.esm";
 import getStroke from "perfect-freehand";
 import { GiStraightPipe } from "react-icons/gi";
+import "../css/menuEditor.css";
+
 
 const generator = rough.generator();
 
@@ -283,6 +285,7 @@ const Paint = () => {
     { id: "shape", name: "Tạo hình", icon: <IoShapesOutline /> },
     { id: "eraser", name: "Bút xóa", icon: <FaEraser /> },
     { id: "selection", name: "Chọn", icon: <FaMousePointer /> },
+    
   ];
 
   const menuShape = [
@@ -639,7 +642,7 @@ const Paint = () => {
         onMouseMove={handleMouseMove}
       ></canvas>
 
-      <section id="crop" className="tool-drawer">
+      <section id="paint" className="tool-drawer">
         <div className="tool-name" style={{ justifyContent: "center" }}>
           <div></div>
           Cắt ảnh

@@ -481,6 +481,22 @@ select:focus {
     background-color: #0067ac;
 }
 
+.box__option{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2e2e2e;
+    color: #636363;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 0.5em;
+    border: 1px solid #454545;
+    margin: 0.5em 1em;
+    padding: 0.5em;
+    font-weight: bold;
+
+}
+
 .box--basic {
     display: flex;
     justify-content: center;
@@ -494,7 +510,35 @@ select:focus {
     margin: 0.5em 1em;
     padding: 0.5em;
     font-weight: bold;
+    overflow-y: auto; /* Chỉ thêm thanh cuộn theo chiều dọc */
+    max-height: 360px; /* Giới hạn chiều cao để kích hoạt thanh cuộn khi nội dung quá dài */
+    scroll-behavior: smooth; /* Thêm hiệu ứng cuộn mượt mà */
+    scroll-padding-top: 0; /* Đảm bảo nội dung hiển thị từ đầu */
 }
+
+/* CSS tùy chỉnh thanh cuộn cho WebKit (Chrome, Safari, và các trình duyệt WebKit khác) */
+.box--basic::-webkit-scrollbar {
+    width: 5px; /* Thu nhỏ chiều rộng của thanh cuộn */
+}
+
+.box--basic::-webkit-scrollbar-track {
+    background: #3a3a3a; /* Màu nền của thanh cuộn */
+    border-radius: 0.5em; /* Làm tròn các góc của thanh cuộn */
+}
+
+.box--basic::-webkit-scrollbar-thumb {
+    background-color: #6a6a6a; /* Màu của thanh cuộn */
+    border-radius: 0.5em; /* Làm tròn các góc của thanh kéo */
+    border: 1px solid #4e4e4e; /* Viền quanh thanh kéo để dễ nhìn hơn */
+}
+
+/* CSS cho các trình duyệt không phải WebKit */
+.box--basic {
+    scrollbar-width: thin; /* Thu nhỏ thanh cuộn trong Firefox */
+    scrollbar-color: #6a6a6a #3a3a3a; /* Màu thanh kéo và nền cho Firefox */
+}
+
+
 
 .removebg-icon {
     margin-right: 5px;
@@ -643,3 +687,96 @@ input[type="range"] {
     border-radius: 4px;
     cursor: pointer;
 }
+
+/* menuEditor.css */
+.filter-grid {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start; /* Đảm bảo các phần tử bắt đầu từ đầu */
+    margin-top: 10px;
+    overflow-x: auto; /* Kích hoạt cuộn ngang */
+    scroll-behavior: smooth; /* Tạo hiệu ứng cuộn mượt mà */
+    white-space: nowrap; /* Ngăn chặn phần tử xuống dòng */
+    padding-bottom: 10px; /* Tạo khoảng cách bên dưới cho thanh cuộn */
+}
+
+.filter-grid > * {
+    flex: 0 0 auto; /* Ngăn các phần tử con co giãn, đảm bảo chúng chiếm kích thước cố định */
+}
+
+/* Tùy chỉnh thanh cuộn ngang cho WebKit (Chrome, Safari) */
+.filter-grid::-webkit-scrollbar {
+    height: 8px; /* Chiều cao của thanh cuộn ngang */
+}
+
+.filter-grid::-webkit-scrollbar-track {
+    background: #ddd; /* Màu nền của thanh cuộn */
+}
+
+.filter-grid::-webkit-scrollbar-thumb {
+    background-color: #888; /* Màu của thanh kéo cuộn */
+    border-radius: 10px; /* Bo tròn các góc của thanh kéo */
+    border: 2px solid transparent; /* Tạo khoảng cách giữa thanh kéo và track */
+}
+
+/* Firefox và các trình duyệt khác */
+.filter-grid {
+    scrollbar-width: thin; /* Thu nhỏ thanh cuộn trong Firefox */
+    scrollbar-color: #888 #ddd; /* Màu của thanh kéo và nền cho Firefox */
+}
+
+  
+  .filter-item {
+    width: 100px;
+    height: 100px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+  }
+  
+  .filter-item:hover {
+    border-color: #888;
+  }
+  
+  .filter-item .filter-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* You can add a background image or canvas here */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .filter-item span {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    font-size: 12px;
+    text-align: center;
+  }
+  
+  .sub-filters {
+    margin-top: 10px;
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  
+  .sub-filter-item {
+    padding: 5px;
+    background-color: #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+  }
+  
+  .sub-filter-item:hover {
+    background-color: #bbb;
+  }
+  

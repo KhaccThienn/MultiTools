@@ -31,6 +31,7 @@ import RemoveBackground from "@/functions/RemoveBackground";
 import ColorAdjustment from "@/functions/ColorAdjustment";
 import Paint from "@/functions/Paint";
 import { ImageContext } from "@/context/ImageContext";
+import ColorFilter from "@/functions/ColorFilter";
 
 const menuItems = [
   { id: "crop", name: "Cắt ảnh", icon: <FaCrop /> },
@@ -40,7 +41,6 @@ const menuItems = [
   { id: "liquify", name: "Biến dạng hình ảnh", icon: <PiSpiralFill /> },
   { id: "retouch", name: "Tinh chỉnh", icon: <MdFaceRetouchingNatural /> },
   { id: "paint", name: "Vẽ", icon: <FaPaintBrush /> },
-  { id: "add-text", name: "Văn bản", icon: <FaFont /> },
   { id: "add-element", name: "Thành phần", icon: <FaSmile /> },
 ];
 
@@ -106,6 +106,7 @@ export default function MenuEditor({
         {selectedMenu === "removebg" && <RemoveBackground />}
         {selectedMenu === "paint" && <Paint />}
         {selectedMenu === "adjust" && <ColorAdjustment />}
+        {selectedMenu === "filter" && <ColorFilter />}
       </div>
     </section>
   );

@@ -10,7 +10,7 @@
         "lint": "next lint",
         "frontend": "npm run dev",
         "python-backend": "cd ../backend && venv\\Scripts\\activate && python run.py",
-        "nodejs-backend": "nodemon ../frontend/nodejs/server.jsx",
+        "nodejs-backend": "nodemon ../frontend/nodejs/server.js",
         "all": "concurrently \"npm run frontend\" \"npm run python-backend\" \"npm run nodejs-backend\""
     },
     "dependencies": {
@@ -27,6 +27,7 @@
         "cropperjs": "^1.6.2",
         "express": "^4.21.0",
         "frontend": "file:",
+        "imagetracerjs": "^1.2.6",
         "jsonwebtoken": "^9.0.2",
         "mongodb": "^6.8.0",
         "mongoose": "^8.6.3",
@@ -44,6 +45,10 @@
         "styled-components": "^6.1.13"
     },
     "devDependencies": {
+        "@babel/core": "^7.25.8",
+        "@babel/preset-env": "^7.25.8",
+        "@babel/preset-react": "^7.25.7",
+        "@babel/register": "^7.25.7",
         "concurrently": "^8.2.2",
         "eslint": "^8",
         "eslint-config-next": "14.2.6",
