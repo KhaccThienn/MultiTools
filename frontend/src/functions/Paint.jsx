@@ -28,7 +28,6 @@ import getStroke from "perfect-freehand";
 import { GiStraightPipe } from "react-icons/gi";
 import "../css/menuEditor.css";
 
-
 const generator = rough.generator();
 
 function createElement(id, x1, y1, x2, y2, type, shape, options) {
@@ -270,6 +269,8 @@ const Paint = () => {
     elements,
     setElements,
     dimensions,
+    undoE,
+    redoE,
   } = useContext(ImageContext);
   const canvasRef = useRef(null);
   const [action, setAction] = useState("none");
@@ -285,14 +286,13 @@ const Paint = () => {
     { id: "shape", name: "Tạo hình", icon: <IoShapesOutline /> },
     { id: "eraser", name: "Bút xóa", icon: <FaEraser /> },
     { id: "selection", name: "Chọn", icon: <FaMousePointer /> },
-    
   ];
 
   const menuShape = [
     { id: "rectangle", name: "Hình chữ nhật", icon: <RiRectangleLine /> },
     { id: "circle", name: "Hình tròn", icon: <RiCircleLine /> },
     { id: "triangle", name: "Hình tam giác", icon: <RiTriangleLine /> },
-    { id: "line", name: "Đường thẳng", icon: <GiStraightPipe/> },
+    { id: "line", name: "Đường thẳng", icon: <GiStraightPipe /> },
   ];
   useLayoutEffect(() => {
     const canvas = canvasRef.current;
@@ -571,10 +571,10 @@ const Paint = () => {
 
   const handleChangeLineWidth = (e) => {
     const newLineWidth = e.target.value;
-  
+
     if (selectedElement) {
       const { id, type } = selectedElement;
-  
+
       // Nếu là phần tử 'pen'
       if (type === "pen") {
         const elementsCopy = [...elements];
@@ -600,10 +600,9 @@ const Paint = () => {
         setElements(elementsCopy);
       }
     }
-  
+
     setLineWidth(newLineWidth);
   };
-  
 
   const handleClick = (e) => {
     const rect = canvasRef.current.getBoundingClientRect();
@@ -725,6 +724,17 @@ const Paint = () => {
             </div>
           </div>
         )}
+  
+        <div className="bottom-content">
+          <div className="action-btn">
+            <button id="filter-action-apply" onClick={undoE}>
+              Hoàn tác
+            </button>
+            <button id="filter-action-apply" onClick={redoE}>
+              Hoàn lại
+            </button>
+          </div>
+        </div>
         <div className="bottom-content">
           <div className="action-btn">
             <button id="crop-action-cancel" onClick={{}}>

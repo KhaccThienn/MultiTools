@@ -1,5 +1,5 @@
 // ColorFilter.jsx
-import React, { useContext, useRef, useEffect } from "react";
+import React, { useContext, useRef, useEffect, useState } from "react";
 import { ImageContext } from "@/context/ImageContext";
 import { FaTimes } from "react-icons/fa";
 import "../css/menuEditor.css"; // Import your CSS styles
@@ -14,35 +14,90 @@ const ColorFilter = () => {
     handleAdjustment,
   } = useContext(ImageContext);
 
+  const [selectedFilter, setSelectedFilter] = useState(null);
+  const [filterIntensity, setFilterIntensity] = useState(100);
+
   const filters = [
     {
-      name: "Sepia",
+      name: "Sống động",
       adjustments: {
-        brightness: 100,
-        contrast: 100,
-        saturation: 100,
+        brightness: 110,
+        contrast: 110,
+        saturation: 130,
         hue: 0,
         grey_scale: 0,
-        sepia: 100,
+        sepia: 0,
         invert: 0,
         blur: 0,
       },
     },
     {
-      name: "Vintage",
+      name: "Sống động ấm",
+      adjustments: {
+        brightness: 110,
+        contrast: 110,
+        saturation: 130,
+        hue: 15,
+        grey_scale: 0,
+        sepia: 0,
+        invert: 0,
+        blur: 0,
+      },
+    },
+    {
+      name: "Sống động mát",
+      adjustments: {
+        brightness: 110,
+        contrast: 110,
+        saturation: 130,
+        hue: -15,
+        grey_scale: 0,
+        sepia: 0,
+        invert: 0,
+        blur: 0,
+      },
+    },
+    {
+      name: "Kịch tính",
       adjustments: {
         brightness: 90,
-        contrast: 110,
-        saturation: 120,
-        hue: -10,
+        contrast: 130,
+        saturation: 80,
+        hue: 0,
         grey_scale: 0,
-        sepia: 50,
+        sepia: 0,
         invert: 0,
         blur: 0,
       },
     },
     {
-      name: "Black & White",
+      name: "Kịch tính ấm",
+      adjustments: {
+        brightness: 90,
+        contrast: 130,
+        saturation: 80,
+        hue: 15,
+        grey_scale: 0,
+        sepia: 0,
+        invert: 0,
+        blur: 0,
+      },
+    },
+    {
+      name: "Kịch tính mát",
+      adjustments: {
+        brightness: 90,
+        contrast: 130,
+        saturation: 80,
+        hue: -15,
+        grey_scale: 0,
+        sepia: 0,
+        invert: 0,
+        blur: 0,
+      },
+    },
+    {
+      name: "Đơn sắc",
       adjustments: {
         brightness: 100,
         contrast: 100,
@@ -55,27 +110,73 @@ const ColorFilter = () => {
       },
     },
     {
-      name: "Invert",
+      name: "Bạc đá",
       adjustments: {
         brightness: 100,
-        contrast: 100,
-        saturation: 100,
+        contrast: 110,
+        saturation: 0,
         hue: 0,
-        grey_scale: 0,
-        sepia: 0,
-        invert: 100,
+        grey_scale: 100,
+        sepia: 20,
+        invert: 0,
         blur: 0,
       },
     },
-
-    // Add more filters as needed
+    {
+      name: "Noir",
+      adjustments: {
+        brightness: 80,
+        contrast: 120,
+        saturation: 0,
+        hue: 0,
+        grey_scale: 100,
+        sepia: 0,
+        invert: 0,
+        blur: 0,
+      },
+    },
   ];
 
-  const applyFilter = (filterAdjustments) => {
-    // Update all adjustmentData with the filter's adjustments
+  useEffect(() => {
+    if (selectedFilter === null) {
+      // Nếu không có bộ lọc được chọn, đặt lại các điều chỉnh
+      resetAdjustmentData();
+      return;
+    }
+
+    const defaultAdjustments = {
+      brightness: 100,
+      contrast: 100,
+      saturation: 100,
+      hue: 0,
+      grey_scale: 0,
+      sepia: 0,
+      invert: 0,
+      blur: 0,
+    };
+
+    const filterAdjustments = selectedFilter.adjustments;
+
     Object.keys(filterAdjustments).forEach((key) => {
-      updateAdjustmentData(key, filterAdjustments[key]);
+      const defaultValue = defaultAdjustments[key];
+      const filterValue = filterAdjustments[key];
+
+      const scaledValue =
+        defaultValue +
+        (filterValue - defaultValue) * (filterIntensity / 100);
+
+      updateAdjustmentData(key, scaledValue);
     });
+  }, [selectedFilter, filterIntensity]);
+
+  const resetFilter = () => {
+    setSelectedFilter(null);
+    resetAdjustmentData();
+  };
+
+  const applyFilter = () => {
+    handleAdjustment();
+    setSelectedFilter(null);
   };
 
   return (
@@ -83,7 +184,7 @@ const ColorFilter = () => {
       <div className="tool-name">
         <div></div>
         Bộ lọc màu
-        <button onClick={{}} className="icon-cancel" id="icon-cancel">
+        <button onClick={resetFilter} className="icon-cancel" id="icon-cancel">
           <FaTimes />
         </button>
       </div>
@@ -95,17 +196,34 @@ const ColorFilter = () => {
             key={index}
             filter={filter}
             imageRef={imageRef}
-            applyFilter={applyFilter}
+            applyFilter={() => {
+              setSelectedFilter(filter);
+              setFilterIntensity(100);
+            }}
+            isSelected={selectedFilter === filter}
           />
         ))}
       </div>
 
+      {selectedFilter && (
+        <div className="filter-intensity-slider">
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={filterIntensity}
+            onChange={(e) => setFilterIntensity(e.target.value)}
+          />
+          <span>Độ đậm của bộ lọc: {filterIntensity}%</span>
+        </div>
+      )}
+
       <div className="bottom-content">
         <div className="action-btn">
-          <button id="filter-action-cancel" onClick={resetAdjustmentData}>
+          <button id="filter-action-cancel" onClick={resetFilter}>
             Hủy
           </button>
-          <button id="filter-action-apply" onClick={handleAdjustment}>
+          <button id="filter-action-apply" onClick={applyFilter}>
             Áp dụng
           </button>
         </div>
@@ -114,7 +232,7 @@ const ColorFilter = () => {
   );
 };
 
-const FilterItem = ({ filter, imageRef, applyFilter }) => {
+const FilterItem = ({ filter, imageRef, applyFilter, isSelected }) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -124,7 +242,7 @@ const FilterItem = ({ filter, imageRef, applyFilter }) => {
     const ctx = canvas.getContext("2d");
 
     const img = new Image();
-    img.crossOrigin = "Anonymous"; // Important for CORS
+    img.crossOrigin = "Anonymous";
 
     img.src = imageRef.current.src;
 
@@ -134,7 +252,7 @@ const FilterItem = ({ filter, imageRef, applyFilter }) => {
       canvas.width = width;
       canvas.height = height;
 
-      // Apply filters
+      // Áp dụng bộ lọc
       ctx.filter = `
         brightness(${filter.adjustments.brightness}%)
         contrast(${filter.adjustments.contrast}%)
@@ -152,8 +270,8 @@ const FilterItem = ({ filter, imageRef, applyFilter }) => {
 
   return (
     <div
-      className="filter-item"
-      onClick={() => applyFilter(filter.adjustments)}
+      className={`filter-item ${isSelected ? "selected" : ""}`}
+      onClick={applyFilter}
     >
       <canvas ref={canvasRef} className="filter-preview" />
       <span>{filter.name}</span>

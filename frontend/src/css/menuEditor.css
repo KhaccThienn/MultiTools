@@ -692,11 +692,13 @@ input[type="range"] {
 .filter-grid {
     display: flex;
     gap: 10px;
-    justify-content: flex-start; /* Đảm bảo các phần tử bắt đầu từ đầu */
+    justify-content: center; /* Đảm bảo các phần tử bắt đầu từ đầu */
+    flex-wrap: wrap; /* Cho phép các phần tử xuống dòng khi không đủ chỗ */
+    align-items: flex-start; /* Căn giữa các phần tử theo chiều dọc */
     margin-top: 10px;
-    overflow-x: auto; /* Kích hoạt cuộn ngang */
+    height: 400px;
+    overflow-y: auto; /* Kích hoạt cuộn ngang */
     scroll-behavior: smooth; /* Tạo hiệu ứng cuộn mượt mà */
-    white-space: nowrap; /* Ngăn chặn phần tử xuống dòng */
     padding-bottom: 10px; /* Tạo khoảng cách bên dưới cho thanh cuộn */
 }
 
@@ -779,4 +781,13 @@ input[type="range"] {
   .sub-filter-item:hover {
     background-color: #bbb;
   }
+
+  .filter-intensity-slider {
+    margin: 10px 0;
+  }
+  
+  .filter-item.selected {
+    border: 2px solid #007bff;
+  }
+  
   
