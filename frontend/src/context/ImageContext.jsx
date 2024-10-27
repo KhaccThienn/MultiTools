@@ -183,6 +183,68 @@ export const ImageProvider = ({ children }) => {
     }
   };
 
+  const handleChangeBackground = async (backgroundType, backgroundValue) => {
+    console.log("Bắt đầu handleChangeBackground");
+    console.log("backgroundType:", backgroundType);
+    console.log("backgroundValue:", backgroundValue);
+    const imageDataUrl = currentImage;
+    if (!imageDataUrl) {
+      console.error("Không có hình ảnh để xử lý");
+      return;
+    }
+  
+    // Hàm chuyển đổi Blob URL thành chuỗi base64
+    const getBase64FromUrl = async (blobUrl) => {
+      const response = await fetch(blobUrl);
+      const blob = await response.blob();
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    };
+  
+    try {
+      const imageBase64 = await getBase64FromUrl(imageDataUrl);
+      const imageBase64WithoutPrefix = imageBase64.replace(
+        /^data:image\/[a-z]+;base64,/,
+        ""
+      );
+  
+      // Gửi yêu cầu tới server để thay đổi nền
+      const response = await axios.post(
+        "http://localhost:5000/change-background",
+        {
+          image: imageBase64WithoutPrefix,
+          backgroundType: backgroundType,
+          backgroundValue: backgroundValue,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      const { output_image } = response.data;
+  
+      // Cập nhật hình ảnh trong state
+      const updatedHistory = [
+        ...history.slice(0, currentIndex + 1),
+        output_image,
+      ];
+      setHistory(updatedHistory);
+      setCurrentIndex(updatedHistory.length - 1);
+      console.log("Kết thúc handleChangeBackground");
+    } catch (error) {
+      console.error(
+        "Lỗi khi thay đổi nền hình ảnh:",
+        error.response?.data?.error || error.message
+      );
+    }
+  };
+  
   // Hàm cập nhật cropBoxData từ cropper khi người dùng thay đổi vùng crop
   const updateCropBoxDataFromCropper = (data) => {
     setCropBoxData((prevData) => ({
@@ -376,6 +438,7 @@ export const ImageProvider = ({ children }) => {
         canUndo: currentIndex > 0,
         canRedo: currentIndex < history.length - 1,
         handleRemoveBackground,
+        handleChangeBackground,
         setInitialImage, // Thêm hàm này vào context
         adjustmentData,
         updateAdjustmentData,

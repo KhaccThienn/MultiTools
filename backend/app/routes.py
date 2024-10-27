@@ -4,7 +4,7 @@ import base64
 from io import BytesIO
 from tkinter import Image
 from flask import Blueprint, request, send_file, jsonify
-from .utils import resize_image, crop_image, remove_object, process_crop, remove_background
+from .utils import change_background, resize_image, crop_image, remove_object, process_crop, remove_background
 
 # Sử dụng Blueprint để tổ chức các route
 bp = Blueprint('main', __name__)
@@ -49,8 +49,6 @@ def remove_object_route():
     return send_file(result_io, mimetype='image/jpeg')
 
 @bp.route('/remove-background', methods=['POST'])
-
-@bp.route('/remove-background', methods=['POST'])
 def remove_background_route():
     try:
         data = request.get_json()
@@ -69,3 +67,29 @@ def remove_background_route():
             return jsonify({'error': 'Lỗi khi xử lý xóa nền.'}), 500
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+
+import traceback
+
+@bp.route('/change-background', methods=['POST'])
+def change_background_route():
+    try:
+        data = request.get_json()
+        image_data = data.get('image')
+        background_type = data.get('backgroundType')
+        background_value = data.get('backgroundValue')
+
+        if not image_data or not background_type or not background_value:
+            return jsonify({'error': 'Thiếu dữ liệu cần thiết.'}), 400
+
+        output_image_str = change_background(image_data, background_type, background_value)
+
+        if output_image_str:
+            return jsonify({'output_image': 'data:image/png;base64,' + output_image_str})
+        else:
+            return jsonify({'error': 'Lỗi khi thay đổi nền.'}), 500
+    except Exception as e:
+        print(f"Lỗi khi xử lý yêu cầu thay đổi nền: {e}")
+        traceback.print_exc()
+        # Trả về chi tiết lỗi cho frontend
+        return jsonify({'error': f'Lỗi khi xử lý yêu cầu: {str(e)}'}), 500

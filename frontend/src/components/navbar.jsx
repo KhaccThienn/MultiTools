@@ -26,32 +26,32 @@ function Navbar() {
       id: 1,
       title: "Chỉnh sửa ảnh",
       menuItems: [
-        { item_name: "Chỉnh sửa ảnh", containerIndex: 0 },
-        { item_name: "Tách nền ảnh", containerIndex: 1 },
-        { item_name: "Làm nét/mờ ảnh", containerIndex: 0 },
-        { item_name: "Điều chỉnh màu sắc", containerIndex: 1 },
-        { item_name: "Ghép ảnh", containerIndex: 1 },
+        { item_name: "Chỉnh sửa ảnh", containerIndex: 0, link: "/ImageEditorPage" },
+        { item_name: "Tách nền ảnh", containerIndex: 1, link: "/ImageEditorPage" },
+        { item_name: "Làm nét/mờ ảnh", containerIndex: 0, link: "/ImageEditorPage" },
+        { item_name: "Điều chỉnh màu sắc", containerIndex: 1, link: "/ImageEditorPage" },
+        { item_name: "Ghép ảnh", containerIndex: 1, link: "/ImageEditorPage" },
       ],
     },
     {
       id: 2,
       title: "Chỉnh sửa video",
       menuItems: [
-        { item_name: "Chỉnh sửa video", containerIndex: 2 },
-        { item_name: "Cắt video", containerIndex: 3 },
-        { item_name: "Ghép video", containerIndex: 2 },
-        // { item_name: "Cắt video", containerIndex: 3 },
+        { item_name: "Chỉnh sửa video", containerIndex: 2, link: "/VideoEditorPage" },
+        { item_name: "Cắt video", containerIndex: 3, link: "/VideoEditorPage" },
+        { item_name: "Ghép video", containerIndex: 2, link: "/VideoEditorPage" },
       ],
     },
     {
       id: 3,
       title: "Chuyển định dạng",
       menuItems: [
-        { item_name: "Hình ảnh", containerIndex: 4 },
-        { item_name: "Tài liệu", containerIndex: 5 },
+        { item_name: "Hình ảnh", containerIndex: 4, link: "/ConvertPage" },
+        { item_name: "Tài liệu", containerIndex: 5, link: "/ConvertPage" },
       ],
     },
   ];
+  
 
   const openSigninModal = () => {
     setIsSignin(true);
@@ -140,11 +140,12 @@ function Navbar() {
                 items={navbarItem.menuItems.map((item) => ({
                   ...item,
                   onClick: () => {
-                    console.log("Clicked on item:", item.item_name);
-                    if (item.containerIndex === null) {
-                      scrollToTop();
-                    } else {
+                    if (item.link) {
+                      window.location.href = item.link;
+                    } else if (item.containerIndex !== null) {
                       scrollToContainer(item.containerIndex);
+                    } else {
+                      scrollToTop();
                     }
                   },
                 }))}

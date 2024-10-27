@@ -50,7 +50,9 @@ export const useZoom = () => useContext(ZoomContext);
 export const ZoomableContent = ({ children }) => {
 
   return (
-    <TransformComponent>
+    <TransformComponent
+    wrapperStyle={{ overflow: "visible" }} // Ghi đè overflow thành visible
+    >
       {children}
     </TransformComponent>
   );

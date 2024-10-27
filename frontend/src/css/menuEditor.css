@@ -247,6 +247,10 @@
     margin-bottom: 1em;
 }
 
+.box_remove{
+    gap: 10px;
+}
+
 
 /* .select-crop-frame {
     display: flex;
@@ -789,5 +793,64 @@ input[type="range"] {
   .filter-item.selected {
     border: 2px solid #007bff;
   }
+
+
+.custom_range_slider {
+    position: relative;
+
+    margin: 10px 30px;
+}
+
+.custom_range_slider .bubble {
+    background-color: #0097f0;
+    color: #fff;
+    position: absolute;
+    left: 0;
+    top: 18px;
+    padding: 5px 7px;
+    border-radius: 3px;
+    z-index: 999;
+    display: none;
+
+}
+
+.custom_range_slider input[type="range"]:hover+.bubble,
+.custom_range_slider input[type="range"]:focus+.bubble {
+    display: inline-block;
+}
   
   
+.background-options {
+    margin: 10px 20px;
+    
+  }
+  
+  .background-settings {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+  }
+  
+  .background-settings select,
+  .background-settings input {
+    margin-bottom: 5px;
+  }
+  
+  .background-settings button {
+    align-self: flex-start;
+  }
+
+.auto_complete{
+    display: flex;
+    /* width: 100%; */
+    /* flex-wrap: wrap; */
+    gap: 1rem; /* gap-4 */
+
+}
+
+.auto_complete_item{
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+
+}

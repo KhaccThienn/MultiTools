@@ -724,17 +724,17 @@ const Paint = () => {
             </div>
           </div>
         )}
-  
-        <div className="bottom-content">
-          <div className="action-btn">
-            <button id="filter-action-apply" onClick={undoE}>
-              Hoàn tác
-            </button>
-            <button id="filter-action-apply" onClick={redoE}>
-              Hoàn lại
-            </button>
-          </div>
-        </div>
+{/*   
+  <div className="undo-redo-section">
+        <button className="toolbar-button" onClick={undoE} >
+          <span className="zoom-text">HOÀN TÁC</span>
+          <i className="fas fa-undo icon-custom"></i>
+        </button>
+        <button className="toolbar-button" onClick={redoE} >
+          <i className="fas fa-redo icon-custom"></i>
+          <span className="zoom-text">HOÀN LẠI</span>
+        </button>
+      </div> */}
         <div className="bottom-content">
           <div className="action-btn">
             <button id="crop-action-cancel" onClick={{}}>
