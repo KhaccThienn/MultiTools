@@ -32,6 +32,7 @@ import ColorAdjustment from "@/functions/ColorAdjustment";
 import Paint from "@/functions/Paint";
 import { ImageContext } from "@/context/ImageContext";
 import ColorFilter from "@/functions/ColorFilter";
+import Retouch from "@/functions/Retouch";
 
 const menuItems = [
   { id: "crop", name: "Cắt ảnh", icon: <FaCrop /> },
@@ -107,6 +108,7 @@ export default function MenuEditor({
         {selectedMenu === "paint" && <Paint />}
         {selectedMenu === "adjust" && <ColorAdjustment />}
         {selectedMenu === "filter" && <ColorFilter />}
+        {selectedMenu === "retouch" && <Retouch />}
       </div>
     </section>
   );

@@ -151,3 +151,111 @@ def remove_background(image_data):
         return None 
 
         
+import traceback
+import requests
+
+def change_background(image_data, background_type, background_value):
+    try:
+        print("Bắt đầu hàm change_background")
+        print("background_type:", background_type)
+        print("background_value:", background_value)
+
+        # Loại bỏ tiền tố 'data:image/png;base64,' nếu có
+        if ',' in image_data:
+            image_data = image_data.split(',')[1]
+
+        # Giải mã chuỗi base64 thành dữ liệu nhị phân
+        decoded_image = base64.b64decode(image_data)
+
+        # Chuyển đổi dữ liệu nhị phân thành mảng numpy để sử dụng với OpenCV
+        nparr = np.frombuffer(decoded_image, np.uint8)
+        input_image = cv2.imdecode(nparr, cv2.IMREAD_UNCHANGED)  # Đọc ảnh RGBA nếu có
+
+        if input_image is None:
+            raise ValueError("Không thể đọc ảnh từ dữ liệu base64")
+
+        print("Kích thước input_image:", input_image.shape)
+        print("Số kênh của input_image:", input_image.shape[2])
+
+        # Kiểm tra xem ảnh có kênh alpha không
+        if input_image.shape[2] < 4:
+            # Nếu không có kênh alpha, cần xóa nền trước
+            input_image = remove(input_image)
+
+            # Kiểm tra lại xem ảnh đã có kênh alpha chưa
+            if input_image.shape[2] < 4:
+                raise ValueError("Không thể tạo kênh alpha cho ảnh")
+
+        # Tách kênh màu và kênh alpha
+        bgr = input_image[:, :, :3]
+        alpha_channel = input_image[:, :, 3] / 255.0  # Chuyển đổi alpha về phạm vi [0,1]
+        alpha_channel = alpha_channel.astype(np.float32)
+
+        print("Kích thước bgr:", bgr.shape)
+        print("Kích thước alpha_channel:", alpha_channel.shape)
+
+        # Xử lý nền mới
+        if background_type == 'color':
+            # Chuyển đổi mã màu hex sang tuple BGR
+            hex_color = background_value.lstrip('#')
+            if len(hex_color) != 6 or not all(c in '0123456789abcdefABCDEF' for c in hex_color):
+                raise ValueError("Mã màu hex không hợp lệ")
+            background_color = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+            # Tạo ảnh nền với màu sắc chỉ định
+            background = np.zeros_like(bgr, dtype=np.uint8)
+            background[:] = background_color[::-1]  # Đảo ngược để chuyển RGB sang BGR
+        elif background_type == 'image':
+            # Kiểm tra xem background_value là base64 hay URL
+            if background_value.startswith('data:image'):
+                # Nếu là chuỗi base64
+                bg_image_data = background_value.split(',')[1]
+                bg_decoded_image = base64.b64decode(bg_image_data)
+                bg_nparr = np.frombuffer(bg_decoded_image, np.uint8)
+                background = cv2.imdecode(bg_nparr, cv2.IMREAD_COLOR)
+            else:
+                # Nếu là URL, tải ảnh từ URL
+                response = requests.get(background_value)
+                if response.status_code != 200:
+                    raise ValueError("Không thể tải ảnh nền từ URL")
+                bg_image_data = response.content
+                bg_nparr = np.frombuffer(bg_image_data, np.uint8)
+                background = cv2.imdecode(bg_nparr, cv2.IMREAD_COLOR)
+
+            if background is None:
+                raise ValueError("Không thể đọc ảnh nền")
+
+            # Thay đổi kích thước ảnh nền cho khớp với ảnh gốc
+            background = cv2.resize(background, (bgr.shape[1], bgr.shape[0]))
+        else:
+            raise ValueError("Loại nền không hợp lệ")
+
+        # Mở rộng kênh alpha lên 3 kênh
+        alpha_mask = np.dstack((alpha_channel, alpha_channel, alpha_channel))
+        alpha_mask = alpha_mask.astype(np.float32)
+
+        # Chuyển đổi ảnh về phạm vi [0, 1]
+        bgr_normalized = bgr.astype(np.float32) / 255.0
+        background_normalized = background.astype(np.float32) / 255.0
+
+        # Kết hợp ảnh gốc với nền mới sử dụng kênh alpha mở rộng
+        foreground = cv2.multiply(alpha_mask, bgr_normalized)
+        background = cv2.multiply(1.0 - alpha_mask, background_normalized)
+        out_image = cv2.add(foreground, background)
+
+        # Chuyển đổi ảnh kết quả về dạng uint8
+        out_image = (out_image * 255).astype(np.uint8)
+
+        # Chuyển đổi ảnh kết quả sang định dạng PNG
+        _, buffer = cv2.imencode('.png', out_image)
+
+        # Mã hóa kết quả thành base64
+        output_image_str = base64.b64encode(buffer).decode()
+
+        print("Hoàn thành hàm change_background")
+
+        return output_image_str
+
+    except Exception as e:
+        print(f"Lỗi khi thay đổi nền: {e}")
+        traceback.print_exc()
+        return None

@@ -108,28 +108,28 @@ export default function HomePage() {
           </div>
           <div
             className="tool-item"
-            onClick={() => (window.location.href = "")}
+            onClick={() => (window.location.href = "/VideoEditorPage")}
           >
             <PiVideo />
             Chỉnh sửa video
           </div>
           <div
             className="tool-item"
-            onClick={() => (window.location.href = "")}
+            onClick={() => (window.location.href = "/ConvertPage")}
           >
             <SiConvertio />
             Chuyển đổi định dạng
           </div>
           <div
             className="tool-item"
-            onClick={() => (window.location.href = "")}
+            onClick={() => (window.location.href = "/ImageEditorPage")}
           >
             <PiSelectionBackgroundDuotone />
             Xóa nền
           </div>
           <div
             className="tool-item"
-            onClick={() => (window.location.href = "")}
+            onClick={() => (window.location.href = "/ImageEditorPage")}
           >
             <MdOutlineFilterVintage />
             Thêm bộ lọc

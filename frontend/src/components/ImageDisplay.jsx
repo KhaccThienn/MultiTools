@@ -17,8 +17,8 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
     imageRef,
   } = useContext(ImageContext);
 
-    // Thêm ref cho toàn bộ div chứa ImageDisplay
-    const imageDisplayRef = useRef(null);
+  // Thêm ref cho toàn bộ div chứa ImageDisplay
+  const imageDisplayRef = useRef(null);
 
   useEffect(() => {
     const updateImageParameters = () => {
@@ -28,9 +28,9 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
         const height = rect.height;
         const left = rect.left + window.scrollX;
         const top = rect.top + window.scrollY;
-  
+
         setImageParameters({ width, height, left, top });
-        console.log('Image Parameters:', { width, height, left, top });
+        console.log("Image Parameters:", { width, height, left, top });
       }
     };
 
@@ -39,16 +39,14 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
       const width = rect.width;
       const height = rect.height;
 
-
       // Sử dụng setDimensions để lưu kích thước của toàn bộ ImageDisplay
       setDimensions({ width, height });
     }
-  
-  
+
     const handleImageLoad = () => {
       updateImageParameters();
     };
-  
+
     if (imageRef.current) {
       // Nếu hình ảnh đã load trước đó, ta cập nhật luôn
       if (imageRef.current.complete) {
@@ -57,31 +55,28 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
         // Nếu chưa load, ta lắng nghe sự kiện onload
         imageRef.current.onload = handleImageLoad;
       }
-  
+
       // Sử dụng MutationObserver để theo dõi bất kỳ thay đổi nào về kích thước ảnh
       const observer = new MutationObserver(() => {
-        
         updateImageParameters();
       });
-  
+
       observer.observe(imageRef.current, {
         attributes: true, // Quan sát các thay đổi thuộc tính
-        attributeFilter: ['style', 'width', 'height'] // Chỉ theo dõi thay đổi liên quan đến kích thước
+        attributeFilter: ["style", "width", "height"], // Chỉ theo dõi thay đổi liên quan đến kích thước
       });
-  
+
       // Cleanup observer khi component unmount
       return () => {
         observer.disconnect();
-        window.removeEventListener('scroll', updateImageParameters);
-        window.removeEventListener('resize', updateImageParameters);
+        window.removeEventListener("scroll", updateImageParameters);
+        window.removeEventListener("resize", updateImageParameters);
         if (imageRef.current) {
           imageRef.current.onload = null;
         }
       };
     }
   }, [currentImage]); // Chỉ chạy 1 lần khi component mount
-  
-  
 
   useEffect(() => {
     const cropper = cropperRef.current?.cropper;
@@ -104,7 +99,7 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
 
   return (
     <div
-    ref={imageDisplayRef} // Gán ref vào toàn bộ ImageDisplay
+      ref={imageDisplayRef} // Gán ref vào toàn bộ ImageDisplay
       style={{
         display: "flex",
         justifyContent: "center",
@@ -113,8 +108,8 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
         height: "100%",
         padding: "10px",
         margin: "auto",
-        // overflow: "hidden",
         position: "relative", // Thêm position relative để đặt nền caro
+        overflow: "visible", // Đảm bảo overflow là visible
       }}
     >
       {/* Lớp nền caro hiển thị vùng trong suốt */}
@@ -143,32 +138,33 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
             background={false}
             cropend={handleCropEnd} // Thêm sự kiện onCropEnd
             viewMode={1}
-
           />
         </div>
       ) : (
         <ZoomableContent>
           {currentImage && (
             <img
-            src={currentImage || imageSrc} // Hiển thị ảnh đã crop hoặc ảnh gốc nếu chưa crop
-            alt={altText}
-            style={{
-              maxWidth: "100%",
-              maxHeight: "100%",
-              objectFit: "contain",
-              filter: `
-                brightness(${adjustmentData.brightness}%)
-                saturate(${adjustmentData.saturation}%)
-                contrast(${adjustmentData.contrast}%)
-                hue-rotate(${adjustmentData.hue}deg)
-                grayscale(${adjustmentData.grey_scale}%)
-                sepia(${adjustmentData.sepia}%)
-                invert(${adjustmentData.invert}%)
-                blur(${adjustmentData.blur}px)
-              `,
-            }}
-            ref={imageRef}
-          />
+              src={currentImage || imageSrc} // Hiển thị ảnh đã crop hoặc ảnh gốc nếu chưa crop
+              alt={altText}
+              style={{
+                width: "auto",
+                height: "auto",
+                maxWidth: "none",
+                maxHeight: "none",
+                objectFit: "contain",
+                filter: `
+                  brightness(${adjustmentData.brightness}%)
+                  saturate(${adjustmentData.saturation}%)
+                  contrast(${adjustmentData.contrast}%)
+                  hue-rotate(${adjustmentData.hue}deg)
+                  grayscale(${adjustmentData.grey_scale}%)
+                  sepia(${adjustmentData.sepia}%)
+                  invert(${adjustmentData.invert}%)
+                  blur(${adjustmentData.blur}px)
+                `,
+              }}
+              ref={imageRef}
+            />
           )}
         </ZoomableContent>
       )}

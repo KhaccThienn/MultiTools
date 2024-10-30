@@ -206,7 +206,7 @@ const ColorFilter = () => {
       </div>
 
       {selectedFilter && (
-        <div className="filter-intensity-slider">
+        <div className="custom_range_slider">
           <input
             type="range"
             min="0"
@@ -214,7 +214,6 @@ const ColorFilter = () => {
             value={filterIntensity}
             onChange={(e) => setFilterIntensity(e.target.value)}
           />
-          <span>Độ đậm của bộ lọc: {filterIntensity}%</span>
         </div>
       )}
 
