@@ -1,246 +1,290 @@
+body {
+  margin: 0;
+  padding: 0;
+}
 
 /* Định dạng cho layout chính */
 .profile-page {
-    display: flex;
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
-  }
-  
-  /* Sidebar */
-  .sidebar {
-    width: 250px;
-    background-color: #f4f5f7;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .user-section{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 30px;
-  }
-  
-  .user-section img{
-    width: 200px;
-    border-radius: 50%;
-    margin-bottom: 10px;
-    transition: filter 0.3s ease;
-  }
-  
-  
-  .user-section img:hover{
-    filter: brightness(0.7);
-  }
-  
-   .edit-icon {
-    display: block; /* Hiển thị biểu tượng bút khi hover */
-  }
-  
-  .sidebar h3 {
-    margin-top: 0;
-  }
-  
-  .sidebar p {
-    color: gray;
-    font-size: 14px;
-  }
-  
-  .sidebar button {
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    width: 100%;
-  }
-  
-  .edit-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 24px;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.6); /* Nền tối cho biểu tượng bút */
-    padding: 10px;
-    border-radius: 50%;
-    display: none; /* Ẩn theo mặc định */
-  }
-  
-  .menu {
-    margin-top: 100px;
-    text-align: left;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .menu li{
-    color: gray;
-    text-align: left ;
-    background-color:transparent;
-    padding: 10px 0;
-    font-size: 15px;
-    border-radius: 8px;
-    padding-left: 5px;
-    cursor: pointer;
-  }
-  
-  .menu li:hover, .menu li.active{
-    background-color: #2F2F2F;
-  }
-  
-  /* Phần bên phải sidebar */
-  .main-content {
-    flex: 1;
-    padding: 20px;
-    background-color: #D1F8E8;
-  }
-  
-  .user-info-container {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 20px;
-  }
-  
-  .user-info-key {
-    width: auto; 
-    margin-right: 15px;
-  }
-  
-  .user-info-key p, .user-info-value p {
-    margin: 0;
-    padding: 10px 0;
-  }
-  
-  .user-info-value input {
-    width: 100%;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 10px;
-  }
-  
-  button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  
-  /* ChangePassword.css */
-  .change-password-page {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f4f4f4;
-    text-align: center;
-  }
-  
-  .change-password-page h2 {
-    margin-bottom: 20px;
-  }
-  
-  .change-password-form .form-group {
-    margin-bottom: 15px;
-    text-align: left;
-    
-  }
-  
-  .change-password-form label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  .change-password-form input {
-    width: 90%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    align-self: center;
-  }
-  
-  .error-message {
-    color: red;
-    margin-bottom: 10px;
-  }
-  
-  .success-message {
-    color: green;
-    margin-bottom: 10px;
-  }
-  
-  button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  .avatar-edit-options {
-    margin-top: 10px;
-  }
-  
-  .default-avatars img {
-    margin: 5px;
-    border: 2px solid transparent;
-  }
-  
-  .default-avatars img:hover {
-    border-color: #007bff;
-  }
-  
+  display: flex;
+  min-height: 100vh;
+}
 
-  /*ChangeAvatar.css*/
-  .avatar-edit-options {
-    text-align: center; /* Căn giữa nội dung */
-    margin-top: 20px;
-  }
-  
-  h3 {
-    font-size: 1.2rem;
-    margin: 20px 0; 
-  }
-  
-  .selected-avatar {
-    border: 3px solid #4CAF50; /* Tạo viền nổi bật cho ảnh đại diện được chọn */
-    padding: 5px;
-    margin-bottom: 20px;
-  }
-  
-  .default-avatars {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Hiển thị các ảnh đại diện mặc định theo lưới */
-    gap: 15px; /* Tạo khoảng cách giữa các ảnh */
-    justify-items: center;
-  }
-  
-  .default-avatar:hover {
-    transform: scale(1.1); /* Hiệu ứng hover khi chọn ảnh */
-    transition: transform 0.2s ease;
-  }
-  
-  input[type="file"] {
-    margin-top: 20px;
-  }
-  .confirm-button{
-    align-self: center ;
-  }
+.home-button {
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  cursor: pointer;
+  padding: 0.2em 0.5em;
+  font-size: 1.5em;
+  border-radius: 0.2em;
+  background-color: #b8f1d9;
+  box-shadow: 0px 0px 8px #6decb7;
+  transition: background-color 0.3s ease;
+}
+
+.home-button:hover {
+  background-color: #a3e4cb;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 300px;
+  padding: 5em 1.5em 1.5em 1.5em;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 3em;
+  background: linear-gradient(0deg, #eaf2ffc2, #fffbebb6, #fffbebb6, #eaf2ffc2);
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-section img {
+  width: 200px;
+  border-radius: 50%;
+  margin-bottom: 1em;
+  transition: filter 0.3s ease;
+}
+
+.user-section img:hover {
+  filter: brightness(0.7);
+}
+
+.edit-icon {
+  position: absolute;
+  left: 8em;
+  top: 10.4em;
+  font-size: 1.5em;
+  padding: 0.2em;
+  color: #4a4e52;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.edit-icon:hover {
+  color: #d4b039;
+}
+
+.user-section span {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.menu {
+  text-align: left;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  color: rgb(70, 70, 70);
+  text-align: left;
+  padding: 10px 0;
+  font-size: 15px;
+  border-radius: 8px;
+  padding-left: 5px;
+  cursor: pointer;
+}
+
+.menu li:hover,
+.menu li.active {
+  background-color: #b8f1d9;
+}
+
+/* Phần bên phải sidebar */
+.main-content {
+  flex: 1;
+  padding: 4em 3em 3em 3em;
+  background: linear-gradient(0deg, #89ff997a, #fff7dd6c, #fff7dd6c, #fff7dd6c, #89ff997a);
+}
+
+.user-info-title {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 1.5em;
+}
+
+.user-info-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2em;
+}
+
+.user-info-field {
+  display: flex;
+  margin-bottom: 1em;
+}
+
+.user-info-label {
+  width: 6.5em;
+  text-wrap: nowrap;
+  text-align: left;
+  margin-right: 1em;
+  font-weight: 500;
+  padding: 0.2em 0;
+}
+
+.user-info-value {
+  padding: 0.2em 0.3em;
+  color: #4a4e52;
+}
+
+.user-info-input {
+  padding: 0.1em 0.3em;
+  border: 1px solid #ccc;
+  border-radius: 0.3em;
+  width: 30em;
+  color: #4a4e52;
+}
+
+.group-button {
+  display: flex;
+  gap: 2em;
+}
+
+.confirm-button,
+.back-button {
+  padding: 0.3em 1em;
+  color: white;
+  border: none;
+  border-radius: 0.5em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.confirm-button {
+  background-color: #1c87fada;
+}
+
+.confirm-button:hover {
+  background-color: #0865c9d7;
+}
+
+.back-button {
+  background-color: #f4b836e1;
+}
+
+.back-button:hover {
+  background-color: #c98901;
+}
+
+/* ChangeAvatar.css */
+.avatar-edit-options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3em;
+}
+
+.default-avatar {
+  border: 2px solid transparent;
+}
+
+.default-avatar:hover {
+  border-color: #007bff;
+  padding: 0.1em;
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+.avatar-edit-options h3 {
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+.selected-avatar {
+  border: 3px solid #4CAF50;
+  padding: 5px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.list-default-avatars {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 800px;
+  gap: 2em;
+  justify-content: center;
+  margin: 1em 0;
+}
+
+/* ChangePassword.css */
+.change-password-page h2 {
+  margin-bottom: 2.5em;
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+.change-password-form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 2em;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f4f4f4;
+  text-align: center;
+}
+
+.change-password-form .form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.change-password-form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.change-password-form input {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  align-self: center;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+  font-size: 0.8em;
+}
+
+.success-message {
+  color: green;
+  margin-bottom: 10px;
+  font-size: 0.8em;
+}
+
+.password-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.password-input span {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #555;
+  font-size: 18px;
+}
+
+.change-password-form button {
+  margin-top: 1em;
+}

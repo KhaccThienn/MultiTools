@@ -1,23 +1,29 @@
-'use client'; // Đảm bảo rằng component này chạy trên client side
+"use client"; // Đảm bảo rằng component này chạy trên client side
 
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import { useEffect, useState } from 'react';
-import '../css/sign.css';
-import images from "@/constants/images"; 
-
-
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import { useEffect, useState } from "react";
+import "../css/sign.css";
+import images from "@/constants/images";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
-  const [isLogin, setIsLogin] = useState(isSignin); 
-  const [username, setUsername] = useState(""); 
-  const [password, setPassword] = useState(""); 
-  const [email, setEmail] = useState(""); 
+  const [isLogin, setIsLogin] = useState(isSignin);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const defaultAvatars = [
-    images.dog, images.fox, images.lion, images.gorrila, 
-    images.koala, images.rabbit, images.tiger, images.otter];
+    images.dog,
+    images.fox,
+    images.lion,
+    images.gorrila,
+    images.koala,
+    images.rabbit,
+    images.tiger,
+    images.otter,
+  ];
 
-  
   // reset input fields
   const resetInputs = () => {
     setUsername("");
@@ -35,7 +41,7 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
     setIsLogin(true); // move to signin
   };
 
-  //Random Avt 
+  //Random Avt
   const getRandomAvatar = () => {
     const randomIndex = Math.floor(Math.random() * defaultAvatars.length);
     return defaultAvatars[randomIndex];
@@ -43,29 +49,28 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
 
   // Logic đăng nhập
   const handleSignin = async () => {
-
     try {
-      const response = await fetch('http://localhost:4000/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:4000/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
       if (response.ok) {
-        // Lưu token và username vào localStorage 
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('username', username);
-        localStorage.setItem( 'avatar', data.avatar);
-        alert('Đăng nhập thành công!');
-        onLoginSuccess(); 
+        // Lưu token và username vào localStorage
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("username", username);
+        localStorage.setItem("avatar", data.avatar);
+        alert("Đăng nhập thành công!");
+        onLoginSuccess();
       } else {
         alert(data.error);
       }
     } catch (error) {
-      console.error('Đã xảy ra lỗi khi đăng nhập:', error);
+      console.error("Đã xảy ra lỗi khi đăng nhập:", error);
     }
   };
 
@@ -74,23 +79,28 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
     console.log("Đã gọi hàm handleSignup");
     const randomAvatar = getRandomAvatar();
     try {
-      const response = await fetch('http://localhost:4000/register', {
-        method: 'POST',
+      const response = await fetch("http://localhost:4000/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, email, password, avatar: randomAvatar.src }),
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          avatar: randomAvatar.src,
+        }),
       });
 
       const data = await response.json();
       if (response.ok) {
-        alert('Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.');
+        alert("Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.");
         toggleToSignin(); // Chuyển sang trang đăng nhập
       } else {
         alert(data.error);
       }
     } catch (error) {
-      console.error('Đã xảy ra lỗi khi đăng ký:', error);
+      console.error("Đã xảy ra lỗi khi đăng ký:", error);
     }
   };
 
@@ -100,13 +110,13 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
 
     if (closeSigninBtn) {
       closeSigninBtn.addEventListener("click", () => {
-        closeModal(); 
+        closeModal();
       });
     }
 
     if (closeSignupBtn) {
       closeSignupBtn.addEventListener("click", () => {
-        closeModal(); 
+        closeModal();
       });
     }
 
@@ -122,7 +132,9 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
       {isLogin ? (
         <div id="signin-modal" className="signin-modal active">
           <div className="large-signin-box">
-            <button id="close-signin-btn" className="close-btn">X</button>
+            <button id="close-signin-btn" className="close-btn">
+              X
+            </button>
             <div className="signin">
               <div className="signinBox">
                 <h2>
@@ -136,16 +148,33 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)} // update input value
                 />
-                <input
-                  type="password"
-                  placeholder="Mật khẩu"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)} // update input value
-                />
+                <div className="password-input-container">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Mật khẩu"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  {showPassword ? (
+                    <AiFillEyeInvisible
+                      className="show-pass-icon"
+                      onClick={() => setShowPassword(false)}
+                    />
+                  ) : (
+                    <AiFillEye
+                      className="show-pass-icon"
+                      onClick={() => setShowPassword(true)}
+                    />
+                  )}
+                </div>
                 <input type="submit" value="Đăng nhập" onClick={handleSignin} />
                 <div className="signin-group">
-                  <a href="#" id="forgot-pass-link">Quên mật khẩu</a>
-                  <a href="#" id="signup-link" onClick={toggleToSignup}>Đăng ký</a>
+                  <a href="#" id="forgot-pass-link">
+                    Quên mật khẩu
+                  </a>
+                  <a href="#" id="signup-link" onClick={toggleToSignup}>
+                    Đăng ký
+                  </a>
                 </div>
                 <div className="separator">
                   <span>Hoặc</span>
@@ -165,7 +194,9 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
       ) : (
         <div id="signup-modal" className="signup-modal active">
           <div className="large-signup-box">
-            <button id="close-signup-btn" className="close-btn">X</button>
+            <button id="close-signup-btn" className="close-btn">
+              X
+            </button>
             <div className="signup">
               <div className="signupBox">
                 <h2>
@@ -179,12 +210,25 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)} // update input value
                 />
-                <input
-                  type="password"
-                  placeholder="Mật khẩu"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)} // update input value
-                />
+                <div className="password-input-container">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Mật khẩu"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  {showPassword ? (
+                    <AiFillEyeInvisible
+                      className="show-pass-icon"
+                      onClick={() => setShowPassword(false)}
+                    />
+                  ) : (
+                    <AiFillEye
+                      className="show-pass-icon"
+                      onClick={() => setShowPassword(true)}
+                    />
+                  )}
+                </div>
                 <input
                   type="text"
                   placeholder="Email"
@@ -195,7 +239,10 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
                 <div className="signup-group">
                   <p>
                     <span>Đã có tài khoản? </span>
-                    <a href="#" id="signin-link" onClick={toggleToSignin}> Đăng nhập</a>
+                    <a href="#" id="signin-link" onClick={toggleToSignin}>
+                      {" "}
+                      Đăng nhập
+                    </a>
                   </p>
                 </div>
                 <div className="separator">
