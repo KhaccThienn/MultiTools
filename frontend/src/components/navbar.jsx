@@ -18,8 +18,10 @@ function Navbar() {
   const [openAvatar, setOpenAvatar] = React.useState(false);
   // Kiểm tra token đăng nhập
   useEffect(() => {
+
     checkLoginStatus();
   }, []);
+  
 
   const navbarItems = [
     {

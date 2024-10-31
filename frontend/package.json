@@ -14,6 +14,7 @@
         "all": "concurrently \"npm run frontend\" \"npm run python-backend\" \"npm run nodejs-backend\""
     },
     "dependencies": {
+        "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
         "@fortawesome/fontawesome-free": "^6.6.0",
         "@fortawesome/fontawesome-svg-core": "^6.6.0",
         "@fortawesome/free-solid-svg-icons": "^6.6.0",
@@ -28,6 +29,7 @@
         "cors": "^2.8.5",
         "cropperjs": "^1.6.2",
         "express": "^4.21.0",
+        "firebase": "^11.0.1",
         "frontend": "file:",
         "imagetracerjs": "^1.2.6",
         "jsonwebtoken": "^9.0.2",
@@ -38,7 +40,7 @@
         "react": "^18",
         "react-cropper": "^2.3.3",
         "react-dom": "^18",
-        "react-easy-crop": "^5.0.8",
+        "react-easy-crop": "^5.1.0",
         "react-icons": "^5.3.0",
         "react-image-crop": "^11.0.7",
         "react-modal": "^3.16.1",

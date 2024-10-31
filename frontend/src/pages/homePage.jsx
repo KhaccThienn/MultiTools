@@ -98,6 +98,7 @@ export default function HomePage() {
         <Slideshow />
 
         <div ref={addToRefs} className="tool-bar fade-in-section">
+          <a href="/ImageEditorPage"></a>
           <div
             className="tool-item"
             onClick={() => (window.location.href = "/ImageEditorPage")}

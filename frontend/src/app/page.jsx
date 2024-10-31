@@ -8,6 +8,9 @@ import HomePage from "@/pages/HomePage";
 
 export default function App() {
   const [theme, setTheme] = useState("light");
+  // remove all data local storage
+  // localStorage.clear();
+
 
   const toggleTheme = () => {
     theme === "light" ? setTheme("dark") : setTheme("light");

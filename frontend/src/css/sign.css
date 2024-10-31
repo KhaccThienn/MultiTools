@@ -1,6 +1,7 @@
 /* homepage.css */
 
 @import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
+
 @font-face {
     font-family: 'PoppinsCustom';
     src: url('../../public/fonts/DESIGNERVN-POPPINS-REGULAR.TTF') format('truetype');
@@ -52,6 +53,7 @@ body .signin-modal .large-signin-box {
     0% {
         --a: 0deg;
     }
+
     100% {
         --a: 360deg;
     }
@@ -136,6 +138,38 @@ body .signin-modal .large-signin-box .signin .signinBox h2 {
 body .signin-modal .large-signin-box .signin .signinBox h2 i {
     color: #22f0ff;
     margin: 0 10px;
+}
+
+.password-input-container {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-container input {
+    width: 100%;
+    padding-right: 2em;
+    padding-left: 0.5em;
+    padding-top: 0.7em;
+    padding-bottom: 0.7em;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+} 
+
+.show-pass-icon {
+    position: absolute;
+    right: 0.5em;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.3s ease;
+}
+
+.show-pass-icon:hover {
+    color: #333;
 }
 
 body .signin-modal .large-signin-box .signin .signinBox input {
@@ -448,7 +482,6 @@ body .signup-modal .large-signup-box .signup .signupBox input:hover {
 
 body .signup-modal .large-signup-box .signup .signupBox input::placeholder {
     color: #b8b8b8;
-    /* letter-spacing: 0.1em; */
 }
 
 body .signup-modal .large-signup-box .signup .signupBox input[type="submit"] {
