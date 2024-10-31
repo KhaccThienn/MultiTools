@@ -1,12 +1,9 @@
-'use client'; // Đảm bảo rằng component này chạy trên client side
+"use client"; // Đảm bảo rằng component này chạy trên client side
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useEffect, useState } from 'react';
 import '../css/sign.css';
 import images from "@/constants/images"; 
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { signInWithPopup } from 'firebase/auth';
-import { googleProvider, auth } from '@/auth/firebase';
 
 
 
@@ -15,17 +12,18 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
   const [username, setUsername] = useState(""); 
   const [password, setPassword] = useState(""); 
   const [email, setEmail] = useState(""); 
-  const [showPassword, setShowPassword] = useState(false);
 
   const defaultAvatars = [
     images.dog, images.fox, images.lion, images.gorrila, 
     images.koala, images.rabbit, images.tiger, images.otter];
 
   
-    const resetInputs = () => {
-      setUsername("");
-      setIsLogin(true); // move to signin
-    };
+  // reset input fields
+  const resetInputs = () => {
+    setUsername("");
+    setPassword("");
+    setEmail("");
+  };
 
   const toggleToSignup = () => {
     resetInputs(); // reset input
@@ -37,7 +35,7 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
     setIsLogin(true); // move to signin
   };
 
-  //Random Avt 
+  //Random Avt
   const getRandomAvatar = () => {
     const randomIndex = Math.floor(Math.random() * defaultAvatars.length);
     return defaultAvatars[randomIndex];
@@ -56,12 +54,12 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
 
       const data = await response.json();
       if (response.ok) {
-        // Lưu token và username vào localStorage 
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('username', username);
-        localStorage.setItem( 'avatar', data.avatar);
-        alert('Đăng nhập thành công!');
-        onLoginSuccess(); 
+        // Lưu token và username vào localStorage
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("username", username);
+        localStorage.setItem("avatar", data.avatar);
+        alert("Đăng nhập thành công!");
+        onLoginSuccess();
       } else {
         alert(data.error);
       }
@@ -90,7 +88,7 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
 
       const data = await response.json();
       if (response.ok) {
-        alert('Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.');
+        alert("Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.");
         toggleToSignin(); // Chuyển sang trang đăng nhập
       } else {
         alert(data.error);
