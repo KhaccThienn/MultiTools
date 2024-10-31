@@ -1,29 +1,43 @@
-"use client"; // Đảm bảo rằng component này chạy trên client side
+
+'use client'; // Đảm bảo rằng component này chạy trên client side
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useEffect, useState } from 'react';
 import '../css/sign.css';
 import images from "@/constants/images"; 
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { signInWithPopup } from 'firebase/auth';
+import { googleProvider, auth } from '@/auth/firebase';
 
 
 
 const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
-  const [isLogin, setIsLogin] = useState(isSignin); 
-  const [username, setUsername] = useState(""); 
-  const [password, setPassword] = useState(""); 
-  const [email, setEmail] = useState(""); 
+
+  const [isLogin, setIsLogin] = useState(isSignin);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const defaultAvatars = [
-    images.dog, images.fox, images.lion, images.gorrila, 
-    images.koala, images.rabbit, images.tiger, images.otter];
+    images.dog,
+    images.fox,
+    images.lion,
+    images.gorrila,
+    images.koala,
+    images.rabbit,
+    images.tiger,
+    images.otter,
+  ];
+
 
   
-  // reset input fields
-  const resetInputs = () => {
-    setUsername("");
-    setPassword("");
-    setEmail("");
-  };
+    const resetInputs = () => {
+      setUsername("");
+      setIsLogin(true); // move to signin
+    };
+
 
   const toggleToSignup = () => {
     resetInputs(); // reset input
