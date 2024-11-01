@@ -733,8 +733,6 @@ input[type="range"] {
 
   
   .filter-item {
-    width: 100px;
-    height: 100px;
     background-color: #eee;
     border: 1px solid #ccc;
     cursor: pointer;

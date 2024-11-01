@@ -244,13 +244,15 @@ const FilterItem = ({ filter, imageRef, applyFilter, isSelected }) => {
     img.crossOrigin = "Anonymous";
 
     img.src = imageRef.current.src;
+    
 
     img.onload = () => {
       const width = 100;
-      const height = 100;
+      const height = (img.height / img.width) * width;
       canvas.width = width;
       canvas.height = height;
 
+      
       // Áp dụng bộ lọc
       ctx.filter = `
         brightness(${filter.adjustments.brightness}%)
@@ -267,9 +269,13 @@ const FilterItem = ({ filter, imageRef, applyFilter, isSelected }) => {
     };
   }, [imageRef, filter.adjustments]);
 
+  
+  
+
   return (
     <div
       className={`filter-item ${isSelected ? "selected" : ""}`}
+      style={{width: canvasRef.current ? canvasRef.current.width : 100, height: canvasRef.current ? canvasRef.current.height : 100}}
       onClick={applyFilter}
     >
       <canvas ref={canvasRef} className="filter-preview" />
