@@ -259,3 +259,45 @@ def change_background(image_data, background_type, background_value):
         print(f"Lỗi khi thay đổi nền: {e}")
         traceback.print_exc()
         return None
+
+def generate_image_from_text(text):
+    """Call the NVIDIA text-to-image API and return the generated image in Base64 format."""
+    
+    # NVIDIA API endpoint
+    invoke_url = "https://ai.api.nvidia.com/v1/genai/stabilityai/stable-diffusion-xl"
+    
+    # Replace with your actual API key
+    headers = {
+        "Authorization": "Bearer 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",
+        "Accept": "application/json",
+    }
+    
+    # Payload with text prompt and parameters
+    payload = {
+        "text_prompts": [
+            {
+                "text": text,
+                "weight": 1
+            },
+            {
+                "text": "",
+                "weight": -1
+            }
+        ],
+        "cfg_scale": 5,
+        "sampler": "K_DPM_2_ANCESTRAL",
+        "seed": 0,
+        "steps": 25
+    }
+
+    try:
+        response = requests.post(invoke_url, headers=headers, json=payload)
+        response.raise_for_status()
+        
+        response_body = response.json()
+        base64_image = response_body['artifacts'][0]['base64']
+        
+        return base64_image
+    except Exception as e:
+        print(f"Error generating image: {e}")
+        return None

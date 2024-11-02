@@ -475,6 +475,47 @@ export const ImageProvider = ({ children }) => {
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
+  // Handle API Text to Image
+  const handleTextToImage = async (text) => {
+    // Define the local backend API endpoint
+    const invokeUrl = "http://localhost:5000/text-to-image";  // Change this if the backend URL is different
+
+    try {
+        const response = await fetch(invokeUrl, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ text })  // Send the text as JSON
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to generate image');
+        }
+
+        const responseBody = await response.json();
+        const base64String = responseBody.image;
+
+        // Convert Base64 to Blob
+        const imageData = atob(base64String);
+        const byteNumbers = new Array(imageData.length);
+        for (let i = 0; i < imageData.length; i++) {
+            byteNumbers[i] = imageData.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'image/png' });
+        // Convert blob to image
+        const url = URL.createObjectURL(blob);
+        // Save the generated image to history
+        const updatedHistory = [...history.slice(0, currentIndex + 1), url];
+        setHistory(updatedHistory);
+        setCurrentIndex(updatedHistory.length - 1);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
+
   return (
     <ImageContext.Provider
       value={{
@@ -512,6 +553,7 @@ export const ImageProvider = ({ children }) => {
         setDimensions,
         dimensions,
         handleRetouchSkin,
+        handleTextToImage,
       }}
     >
       {children}
