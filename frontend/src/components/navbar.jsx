@@ -40,8 +40,10 @@ function Navbar() {
 
   // Kiểm tra token đăng nhập
   useEffect(() => {
+
     checkLoginStatus();
   }, []);
+  
 
   const navbarItems = [
     {

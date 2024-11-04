@@ -4,7 +4,7 @@ import base64
 from io import BytesIO
 from tkinter import Image
 from flask import Blueprint, request, send_file, jsonify
-from .utils import change_background, resize_image, crop_image, remove_object, process_crop, remove_background
+from .utils import change_background, generate_image_from_text, resize_image, crop_image, remove_object, process_crop, remove_background
 
 # Sử dụng Blueprint để tổ chức các route
 bp = Blueprint('main', __name__)
@@ -93,3 +93,20 @@ def change_background_route():
         traceback.print_exc()
         # Trả về chi tiết lỗi cho frontend
         return jsonify({'error': f'Lỗi khi xử lý yêu cầu: {str(e)}'}), 500
+
+@bp.route('/text-to-image', methods=['POST'])
+def text_to_image_route():
+    print("Request received")
+    data = request.get_json()
+    text_prompt = data.get('text', '')
+    
+    if not text_prompt:
+        return jsonify({"error": "Text prompt is required"}), 400
+
+    # Call the utility function to generate the image
+    base64_image = generate_image_from_text(text_prompt)
+    
+    if base64_image:
+        return jsonify({"image": base64_image})
+    else:
+        return jsonify({"error": "Failed to generate image"}), 500

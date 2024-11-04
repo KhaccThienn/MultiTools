@@ -25,6 +25,50 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
+app.post('/auth/google', async (req, res) => {
+    const { idToken } = req.body;
+  
+    if (!idToken) {
+      console.error('ID token missing in request');
+      return res.status(400).json({ error: 'ID token is required!' });
+    }
+  
+    try {
+      // Verify the ID token using Firebase Admin SDK
+      const decodedToken = await admin.auth().verifyIdToken(idToken);
+      const { email, name, picture } = decodedToken;
+  
+      console.log("Decoded token:", decodedToken); // Log for debugging
+  
+      // Check if the user exists in the database
+      let user = await User.findOne({ email });
+  
+      if (!user) {
+        // If the user does not exist, create a new user
+        user = new User({
+          username: name || email.split('@')[0],
+          email,
+          password: '', // Password is not needed for Google sign-in
+          avatar: picture || '', // Use Google profile picture if available
+        });
+        await user.save();
+      }
+  
+      // Generate a JWT token for the user
+      const token = jwt.sign({ userId: user._id }, 'secretKey', { expiresIn: '1h' });
+  
+      // Respond with the JWT and user information
+      res.json({
+        token,
+        username: user.username,
+        avatar: user.avatar,
+      });
+    } catch (error) {
+      console.error('Error verifying ID token:', error);
+      res.status(401).json({ error: 'Invalid or expired token!' });
+    }
+  });
+  
 // Đăng ký người dùng
 app.post('/register', async (req, res) => {
     const { username, email, password, avatar } = req.body;

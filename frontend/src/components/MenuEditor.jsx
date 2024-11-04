@@ -33,6 +33,8 @@ import Paint from "@/functions/Paint";
 import { ImageContext } from "@/context/ImageContext";
 import ColorFilter from "@/functions/ColorFilter";
 import Retouch from "@/functions/Retouch";
+import { IoMdImage } from "react-icons/io";
+import TextToImage from "@/functions/TextToImage";
 
 const menuItems = [
   { id: "crop", name: "Cắt ảnh", icon: <FaCrop /> },
@@ -42,7 +44,7 @@ const menuItems = [
   { id: "liquify", name: "Biến dạng hình ảnh", icon: <PiSpiralFill /> },
   { id: "retouch", name: "Tinh chỉnh", icon: <MdFaceRetouchingNatural /> },
   { id: "paint", name: "Vẽ", icon: <FaPaintBrush /> },
-  { id: "add-element", name: "Thành phần", icon: <FaSmile /> },
+  { id: "text-to-image", name: "Image AI", icon: <IoMdImage/> },
 ];
 
 export default function MenuEditor({
@@ -109,6 +111,7 @@ export default function MenuEditor({
         {selectedMenu === "adjust" && <ColorAdjustment />}
         {selectedMenu === "filter" && <ColorFilter />}
         {selectedMenu === "retouch" && <Retouch />}
+        {selectedMenu === "text-to-image" && <TextToImage />}
       </div>
     </section>
   );

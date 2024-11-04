@@ -1,16 +1,23 @@
-"use client"; // Đảm bảo rằng component này chạy trên client side
 
-import "@fortawesome/fontawesome-free/css/all.min.css";
-import { useEffect, useState } from "react";
-import "../css/sign.css";
-import images from "@/constants/images";
+'use client'; // Đảm bảo rằng component này chạy trên client side
+
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import { useEffect, useState } from 'react';
+import '../css/sign.css';
+import images from "@/constants/images"; 
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { signInWithPopup } from 'firebase/auth';
+import { googleProvider, auth } from '@/auth/firebase';
+
+
 
 const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
+
   const [isLogin, setIsLogin] = useState(isSignin);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
 
   const defaultAvatars = [
@@ -24,12 +31,13 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
     images.otter,
   ];
 
-  // reset input fields
-  const resetInputs = () => {
-    setUsername("");
-    setPassword("");
-    setEmail("");
-  };
+
+  
+    const resetInputs = () => {
+      setUsername("");
+      setIsLogin(true); // move to signin
+    };
+
 
   const toggleToSignup = () => {
     resetInputs(); // reset input
@@ -47,7 +55,7 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
     return defaultAvatars[randomIndex];
   };
 
-  // Logic đăng nhập
+  // Logic for sign-in
   const handleSignin = async () => {
     try {
       const response = await fetch("http://localhost:4000/login", {
@@ -74,7 +82,7 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
     }
   };
 
-  // Logic đăng ký
+  // Logic for sign-up
   const handleSignup = async () => {
     console.log("Đã gọi hàm handleSignup");
     const randomAvatar = getRandomAvatar();
@@ -127,6 +135,40 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
     };
   }, [closeModal]);
 
+  const signInWithGoogle = async () => {
+    try {
+      // Sign in with Google
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log("Google sign-in result:", result); // Debugging
+      
+      const user = result.user;
+  
+      // Get the Firebase ID token for the current user
+      const token = await auth.currentUser.getIdToken();
+  
+      if (!token) {
+        console.error('Failed to retrieve Firebase ID token.');
+        alert('Đã xảy ra lỗi trong quá trình xác thực.');
+        return;
+      }
+  
+      console.log("Firebase ID token:", token); // Debugging
+  
+      // Store token and user info in localStorage
+      localStorage.setItem('token', token); // Store Firebase token
+      localStorage.setItem('username', user.displayName); // Store username
+      localStorage.setItem('avatar', user.photoURL); // Store avatar URL
+      alert('Đăng nhập thành công với Google!');
+      onLoginSuccess();
+  
+    } catch (error) {
+      console.error("Error during Google sign-in:", error);
+      alert('Đã xảy ra lỗi khi đăng nhập với Google.');
+    }
+  };
+  
+   
+  
   return (
     <>
       {isLogin ? (
@@ -180,7 +222,7 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
                   <span>Hoặc</span>
                 </div>
                 <div className="social-signin">
-                  <button className="google-signin">
+                  <button className="google-signin" onClick={signInWithGoogle}>
                     <i className="fab fa-google"></i> Đăng nhập với Google
                   </button>
                   <button className="facebook-signin">
@@ -249,7 +291,7 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
                   <span>Hoặc</span>
                 </div>
                 <div className="social-signup">
-                  <button className="google-signup">
+                  <button className="google-signup" >
                     <i className="fab fa-google"></i> Đăng ký với Google
                   </button>
                   <button className="facebook-signup">

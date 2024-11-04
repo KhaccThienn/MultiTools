@@ -266,6 +266,61 @@ export const ImageProvider = ({ children }) => {
     }
   };
 
+
+  const handleRetouchSkin = async (retouchDegree = 1.45, whiteningDegree = 1.45) => {
+    const imageDataUrl = currentImage;
+    if (!imageDataUrl) {
+      console.error("Không có hình ảnh để xử lý");
+      return;
+    }
+  
+    try {
+      // Fetch the Blob from the imageDataUrl
+      const response = await fetch(imageDataUrl);
+      if (!response.ok) {
+        throw new Error("Failed to fetch the image");
+      }
+      const blob = await response.blob();
+  
+      // Create a FormData object to prepare the multipart/form-data request
+      const formData = new FormData();
+      formData.append("image", blob, "image.jpg"); // Append the image as a file
+      formData.append("retouch_degree", retouchDegree);
+      formData.append("whitening_degree", whiteningDegree);
+  
+      // Send the request to the API
+      const apiResponse = await fetch(
+        "https://www.ailabapi.com/api/portrait/effects/smart-skin",
+        {
+          method: "POST",
+          headers: {
+            "ailabapi-api-key": "mBIkJX1MhD2i1PrUzyHMcq3i35FlbdDHZCGjtsmsaRVBCgApKa7xOYz6lrvXyQWL",
+            // Note: 'Content-Type' should NOT be set explicitly for FormData. 
+            // The browser will automatically set the appropriate 'Content-Type' boundary.
+          },
+          body: formData,
+        }
+      );
+  
+      if (!apiResponse.ok) {
+        console.error(`API Error: Status ${apiResponse.status} - ${apiResponse.statusText}`);
+        throw new Error("Network response was not ok");
+      }
+  
+      const result = await apiResponse.json();
+      const output_image = result.data.image_url;
+  
+      // Update the image in state
+      const updatedHistory = [...history.slice(0, currentIndex + 1), output_image];
+      setHistory(updatedHistory);
+      setCurrentIndex(updatedHistory.length - 1);
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+  
+    
+
   // Hàm xử lý sự kiện cropend
   const handleCropEnd = () => {
     const cropper = cropperRef.current?.cropper;
@@ -420,6 +475,47 @@ export const ImageProvider = ({ children }) => {
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
+  // Handle API Text to Image
+  const handleTextToImage = async (text) => {
+    // Define the local backend API endpoint
+    const invokeUrl = "http://localhost:5000/text-to-image";  // Change this if the backend URL is different
+
+    try {
+        const response = await fetch(invokeUrl, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ text })  // Send the text as JSON
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to generate image');
+        }
+
+        const responseBody = await response.json();
+        const base64String = responseBody.image;
+
+        // Convert Base64 to Blob
+        const imageData = atob(base64String);
+        const byteNumbers = new Array(imageData.length);
+        for (let i = 0; i < imageData.length; i++) {
+            byteNumbers[i] = imageData.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'image/png' });
+        // Convert blob to image
+        const url = URL.createObjectURL(blob);
+        // Save the generated image to history
+        const updatedHistory = [...history.slice(0, currentIndex + 1), url];
+        setHistory(updatedHistory);
+        setCurrentIndex(updatedHistory.length - 1);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
+
   return (
     <ImageContext.Provider
       value={{
@@ -456,6 +552,8 @@ export const ImageProvider = ({ children }) => {
         handleDownload,
         setDimensions,
         dimensions,
+        handleRetouchSkin,
+        handleTextToImage,
       }}
     >
       {children}
