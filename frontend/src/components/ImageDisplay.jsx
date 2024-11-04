@@ -120,7 +120,7 @@ const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
           left: 0,
           width: "100%",
           height: "100%",
-          backgroundSize: "5px 5px",
+          backgroundSize: "3px 3px",
           backgroundImage:
             "linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)",
           backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",

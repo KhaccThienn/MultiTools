@@ -42,6 +42,7 @@ const Footer = () => {
             <a href="">MultiTools Image Editor</a>
             <a href="">MultiTools Video Editor</a>
             <a href="">MultiTools Converter</a>
+            <a href="">MultiTools AI Generator</a>
           </div>
           <div className="links-section">
             <h3>Trợ giúp</h3>

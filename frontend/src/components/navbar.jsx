@@ -1,5 +1,8 @@
-import React, { useEffect } from "react";
+/* components/navbar.jsx */
+"use client";
+import React, { useEffect, useContext  } from "react";
 import "../css/app.css";
+import ThemeContext from "@/constants/themes/ThemeContext";
 import images from "@/constants/images";
 import Image from "next/image";
 import ThemeToggle from "./ThemeToggle";
@@ -8,14 +11,33 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import ListMenu from "./ListMenu";
 import AvatarPopup from "./AvatarPopup";
 import { MdArrowDropDown } from "react-icons/md";
+import { IoIosArrowDown } from "react-icons/io";
 
 function Navbar() {
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const [showSignPage, setShowSignPage] = React.useState(false);
   const [isSignin, setIsSignin] = React.useState(false);
   const [activeMenu, setActiveMenu] = React.useState(null);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [avatar, setAvatar] = React.useState("");
   const [openAvatar, setOpenAvatar] = React.useState(false);
+  const navbarUserSectionRef = React.useRef(null);
+  const [offsetLeft, setOffsetLeft] = React.useState(0);
+
+  useEffect(() => {
+    function updateOffset() {
+      if (navbarUserSectionRef.current) {
+        setOffsetLeft(navbarUserSectionRef.current.offsetLeft);
+      }
+    }
+
+    window.addEventListener("resize", updateOffset);
+    updateOffset();
+    return () => {
+      window.removeEventListener("resize", updateOffset);
+    };
+  }, []);
+
   // Kiểm tra token đăng nhập
   useEffect(() => {
     checkLoginStatus();
@@ -26,32 +48,97 @@ function Navbar() {
       id: 1,
       title: "Chỉnh sửa ảnh",
       menuItems: [
-        { item_name: "Chỉnh sửa ảnh", containerIndex: 0, link: "/ImageEditorPage" },
-        { item_name: "Tách nền ảnh", containerIndex: 1, link: "/ImageEditorPage" },
-        { item_name: "Làm nét/mờ ảnh", containerIndex: 0, link: "/ImageEditorPage" },
-        { item_name: "Điều chỉnh màu sắc", containerIndex: 1, link: "/ImageEditorPage" },
-        { item_name: "Ghép ảnh", containerIndex: 1, link: "/ImageEditorPage" },
+        {
+          item_name: "Chỉnh sửa ảnh",
+          containerIndex: 0,
+          item_link: "/ImageEditorPage",
+        },
+        {
+          item_name: "Tách nền ảnh",
+          containerIndex: 1,
+          item_link: "/ImageEditorPage",
+        },
+        {
+          item_name: "Làm nét/mờ ảnh",
+          containerIndex: 0,
+          item_link: "/ImageEditorPage",
+        },
+        {
+          item_name: "Điều chỉnh màu sắc",
+          containerIndex: 1,
+          item_link: "/ImageEditorPage",
+        },
+        {
+          item_name: "Ghép ảnh",
+          containerIndex: 1,
+          item_link: "/ImageEditorPage",
+        },
       ],
     },
     {
       id: 2,
       title: "Chỉnh sửa video",
       menuItems: [
-        { item_name: "Chỉnh sửa video", containerIndex: 2, link: "/VideoEditorPage" },
-        { item_name: "Cắt video", containerIndex: 3, link: "/VideoEditorPage" },
-        { item_name: "Ghép video", containerIndex: 2, link: "/VideoEditorPage" },
+        {
+          item_name: "Chỉnh sửa video",
+          containerIndex: 2,
+          item_link: "/VideoEditorPage",
+        },
+        {
+          item_name: "Cắt video",
+          containerIndex: 3,
+          item_link: "/VideoEditorPage",
+        },
+        {
+          item_name: "Ghép video",
+          containerIndex: 2,
+          item_link: "/VideoEditorPage",
+        },
       ],
     },
     {
       id: 3,
       title: "Chuyển định dạng",
       menuItems: [
-        { item_name: "Hình ảnh", containerIndex: 4, link: "/ConvertPage" },
-        { item_name: "Tài liệu", containerIndex: 5, link: "/ConvertPage" },
+        {
+          item_name: "Hình ảnh",
+          containerIndex: 4,
+          item_link: "/ConvertPage",
+        },
+        {
+          item_name: "Tài liệu",
+          containerIndex: 5,
+          item_link: "/ConvertPage",
+        },
+        {
+          item_name: "Âm thanh",
+          containerIndex: 6,
+          item_link: "/ConvertPage",
+        },
+      ],
+    },
+    {
+      id: 4,
+      title: "Chức năng AI",
+      menuItems: [
+        {
+          item_name: "Chuyển văn bản thành hình ảnh",
+          containerIndex: 4,
+          item_link: "/ImageEditorPage",
+        },
+        {
+          item_name: "Làm mịn da",
+          containerIndex: 5,
+          item_link: "/ImageEditorPage",
+        },
+        {
+          item_name: "Xóa watermark",
+          containerIndex: 6,
+          item_link: "/ImageEditorPage",
+        },
       ],
     },
   ];
-  
 
   const openSigninModal = () => {
     setIsSignin(true);
@@ -62,7 +149,7 @@ function Navbar() {
     setIsSignin(false);
     setShowSignPage(true);
   };
- 
+
   const closeModal = () => {
     setShowSignPage(false);
   };
@@ -76,10 +163,9 @@ function Navbar() {
     localStorage.removeItem("username");
     localStorage.removeItem("avatar");
     setIsLoggedIn(false);
-    setOpenAvatar(false); 
+    setOpenAvatar(false);
     setAvatar("");
   };
-
 
   const checkLoginStatus = () => {
     const token = localStorage.getItem("token");
@@ -87,7 +173,7 @@ function Navbar() {
     const storedAvatar = localStorage.getItem("avatar");
     if (token && storedUsername) {
       setIsLoggedIn(true); // Cập nhật trạng thái đã đăng nhập
-      setAvatar(storedAvatar); 
+      setAvatar(storedAvatar);
       console.log("Đã đăng nhập");
     }
   };
@@ -111,9 +197,10 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      <span
-        className="flex items-center"
-        onClick={scrollToTop}
+      <a
+        className="logo-container"
+        href="/"
+        // onClick={scrollToTop}
         style={{ cursor: "pointer" }}
       >
         <Image
@@ -124,7 +211,7 @@ function Navbar() {
           className="navbar-logo"
         />
         <h1 className="tommorrow_font">MULTITOOLS</h1>
-      </span>
+      </a>
       <ul className="navbar-links">
         {navbarItems.map((navbarItem) => (
           <li
@@ -133,8 +220,8 @@ function Navbar() {
             onMouseEnter={() => handleMouseEnter(navbarItem.id)}
             onMouseLeave={handleMouseLeave}
           >
-            <span style={{marginRight:'5px'}}>{navbarItem.title}</span>
-            <MdArrowDropDown className="drop-down-icon"/>
+            <span style={{ marginRight: "5px" }}>{navbarItem.title}</span>
+            <IoIosArrowDown className="drop-down-icon" />
             {activeMenu === navbarItem.id && (
               <ListMenu
                 items={navbarItem.menuItems.map((item) => ({
@@ -157,9 +244,9 @@ function Navbar() {
       <div className="sign-buttons">
         {isLoggedIn ? (
           <>
-            <div className="navbar-user-section">
-             <Image
-                src={avatar || "/images/default-avatar.png"}  // Sử dụng avatar từ localStorage hoặc avatar mặc định
+            <div className="navbar-user-section" ref={navbarUserSectionRef}>
+              <Image
+                src={avatar || "/images/default-avatar.png"}
                 alt="User Avatar"
                 width={40}
                 height={40}
@@ -167,10 +254,22 @@ function Navbar() {
                 onClick={() => {
                   setOpenAvatar(!openAvatar);
                 }}
-             />
-              {openAvatar && <AvatarPopup handleLogout={handleLogout} />}
+              />
+              {openAvatar && (
+                <AvatarPopup
+                  handleLogout={handleLogout}
+                  offsetLeft={offsetLeft}
+                  toggleTheme={toggleTheme}
+                  theme={theme}
+                />
+              )}
+              <IoIosArrowDown
+                className={`avt-drop-icon ${openAvatar ? "rotate" : ""}`}
+                onClick={() => {
+                  setOpenAvatar(!openAvatar);
+                }}
+              />
             </div>
-
           </>
         ) : (
           <>
@@ -181,7 +280,6 @@ function Navbar() {
             <button onClick={openSignupModal} className="button1 signup-button">
               Đăng ký
             </button>
-
           </>
         )}
       </div>

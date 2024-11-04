@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+/* pages/ConvertPage.jsx */
+import { useState, useEffect, useRef, useContext } from "react";
+import ThemeContext from "@/constants/themes/ThemeContext";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/Footer";
 import { FaRegFolderOpen } from "react-icons/fa6";
@@ -6,6 +8,7 @@ import "../css/app.css";
 import "../app/globals.css";
 
 export default function ConvertPage() {
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -129,7 +132,7 @@ export default function ConvertPage() {
   return (
     <>
       <div className={`head ${showNavbar ? "show" : "hide"}`}>
-        <Navbar />
+        <Navbar toggleTheme={toggleTheme} theme={theme}/>
       </div>
 
       <div className="body__convert">

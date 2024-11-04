@@ -1,3 +1,4 @@
+/* constants/themes/globalStyles.jsx */
 import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyles = createGlobalStyle`
@@ -7,7 +8,7 @@ export const GlobalStyles = createGlobalStyle`
     transition: all 0.50s linear;
   }
 
-  nav {
+  .head {
     background-color: ${({ theme }) => theme.navbarBg};
     color: ${({ theme }) => theme.text};
     

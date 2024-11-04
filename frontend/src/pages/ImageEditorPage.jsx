@@ -31,7 +31,6 @@ export default function ImageEditorPage() {
     setImage(newImage);
   };
 
-
   return (
     <ZoomProvider>
       <ImageProvider>
@@ -49,18 +48,15 @@ export default function ImageEditorPage() {
             <div
               style={{
                 width: "22em",
-                backgroundColor: "#2e2e2e"
+                backgroundColor: "#2e2e2e",
               }}
             >
-
-                <MenuEditor
-                  image={image}
-                  onImageUpdate={handleImageUpdate}
-                  imageData={imageData}
-                  onMode={handleMode}
-                />
-
-
+              <MenuEditor
+                image={image}
+                onImageUpdate={handleImageUpdate}
+                imageData={imageData}
+                onMode={handleMode}
+              />
             </div>
             {/* Display */}
             <div
@@ -86,7 +82,7 @@ export default function ImageEditorPage() {
               backgroundColor: "#292c31",
             }}
           >
-            <ImageUploader/>
+            <ImageUploader />
             <FooterEditor />
           </div>
         </div>

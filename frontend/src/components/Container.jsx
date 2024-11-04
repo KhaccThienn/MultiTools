@@ -8,6 +8,7 @@ export default function Container({
   colorbg,
   onClick,
   children,
+  href,
 }) {
   const flexDirection = rotate === 0 ? "row" : "row-reverse";
 
@@ -47,11 +48,12 @@ export default function Container({
           }}
         >
           {children}
-          <Button
+          {/* <Button
             className="container-button"
             label="KHÁM PHÁ NGAY !"
             onClick={onClick}
-          />
+          /> */}
+          <a className="container-button" href={href}>KHÁM PHÁ NGAY !</a>
         </div>
       </div>
     </div>

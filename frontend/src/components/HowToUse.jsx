@@ -64,60 +64,60 @@ const HowToUse = () => {
           Với trình sửa ảnh miễn phí của MultiTools, bạn có thể sửa ảnh trực
           tuyến như chuyên gia chỉ với 3 bước đơn giản.
           <div className="instruction-steps">
-            <div className="step-card" style={{width:"32%"}}>
-              <div className="step-header">
+            <a className="step-card" href="/ImageEditorPage">
+              <span className="step-header">
                 <LiaCloudUploadAltSolid className="step-icon" />
                 <h3>1. Tải ảnh lên</h3>
                 Tải lên hoặc kéo thả ảnh...
-              </div>
-              <div className="step-detail">
-                <div>
+              </span>
+              <span className="step-detail">
+                <span>
                   <h3>1. Tải ảnh lên</h3>
                   Tải lên hoặc kéo thả ảnh vào trình chỉnh sửa ảnh trực tuyến
                   của MultiTools để bắt đầu chỉnh sửa.
-                </div>
+                </span>
                 <PiArrowRightBold
                   className="step-arrow"
-                  onClick={() => (window.location.href = "")}
+                  // onClick={() => (window.location.href = "")}
                 />
-              </div>
-            </div>
-            <div className="step-card" style={{width:"32%"}}>
-              <div className="step-header">
+              </span>
+            </a>
+            <a className="step-card" href="/ImageEditorPage">
+              <span className="step-header">
                 <HiOutlineAdjustmentsHorizontal className="step-icon" />
                 <h3>2. Sửa ảnh</h3>
                 Cắt ảnh, điều chỉnh góc độ, độ sáng...
-              </div>
-              <div className="step-detail">
-                <div>
+              </span>
+              <span className="step-detail">
+                <span>
                   <h3>2. Sửa ảnh</h3>
                   Cắt ảnh, xoay ảnh, điều chỉnh độ sáng, tương phản, màu sắc,
                   thêm hiệu ứng, văn bản, hình ảnh, v.v.
-                </div>
+                </span>
                 <PiArrowRightBold
                   className="step-arrow"
-                  onClick={() => (window.location.href = "")}
+                  // onClick={() => (window.location.href = "")}
                 />
-              </div>
-            </div>
-            <div className="step-card" style={{width:"32%"}}>
-              <div className="step-header">
+              </span>
+            </a>
+            <a className="step-card" href="/ImageEditorPage">
+              <span className="step-header">
                 <LuDownload className="step-icon" />
                 <h3>3. Tải ảnh về</h3>
                 Lưu ảnh đã sửa về máy...
-              </div>
-              <div className="step-detail">
-                <div>
+              </span>
+              <span className="step-detail">
+                <span>
                   <h3>3. Tải ảnh về</h3>
                   Chọn định dạng và chất lượng ảnh trước khi tải về máy tính của
                   bạn.
-                </div>
+                </span>
                 <PiArrowRightBold
                   className="step-arrow"
-                  onClick={() => (window.location.href = "")}
+                  // onClick={() => (window.location.href = "")}
                 />
-              </div>
-            </div>
+              </span>
+            </a>
           </div>
         </section>
 
@@ -129,59 +129,59 @@ const HowToUse = () => {
           Dễ dàng biên tập và chỉnh sửa video trực tuyến với trình chỉnh sửa
           video của MultiTools.
           <div className="instruction-steps">
-            <div className="step-card" style={{width:"32%"}}>
-              <div className="step-header">
+            <a className="step-card" href="/VideoEditorPage">
+              <span className="step-header">
                 <LiaCloudUploadAltSolid className="step-icon" />
                 <h3>1. Tải video lên</h3>
                 Chọn và tải video lên từ thiết bị...
-              </div>
-              <div className="step-detail">
-                <div>
+              </span>
+              <span className="step-detail">
+                <span>
                   <h3>1. Tải video lên</h3>
                   Chọn và tải video lên từ thiết bị hoặc kéo thả trực tiếp vào
                   công cụ.
-                </div>
+                </span>
                 <PiArrowRightBold
                   className="step-arrow"
-                  onClick={() => (window.location.href = "")}
+                  // onClick={() => (window.location.href = "")}
                 />
-              </div>
-            </div>
-            <div className="step-card" style={{width:"32%"}}>
-              <div className="step-header">
+              </span>
+            </a>
+            <a className="step-card" href="/VideoEditorPage">
+              <span className="step-header">
                 <HiOutlineAdjustmentsHorizontal className="step-icon" />
                 <h3>2. Chỉnh sửa video</h3>
                 Cắt, ghép video, chọn khung hình...
-              </div>
-              <div className="step-detail">
-                <div>
+              </span>
+              <span className="step-detail">
+                <span>
                   <h3>2. Chỉnh sửa video</h3>
                   Cắt, ghép video, chọn khung hình, sử dụng các công cụ chỉnh
                   sửa để thêm văn bản, hình ảnh, âm nhạc, hiệu ứng chuyển cảnh.
-                </div>
+                </span>
                 <PiArrowRightBold
                   className="step-arrow"
-                  onClick={() => (window.location.href = "")}
+                  // onClick={() => (window.location.href = "")}
                 />
-              </div>
-            </div>
-            <div className="step-card" style={{width:"32%"}}>
-              <div className="step-header">
+              </span>
+            </a>
+            <a className="step-card" href="/VideoEditorPage">
+              <span className="step-header">
                 <LuDownload className="step-icon" />
                 <h3>3. Tải video về</h3>
                 Chọn chất lượng và lưu video...
-              </div>
-              <div className="step-detail">
-                <div>
+              </span>
+              <span className="step-detail">
+                <span>
                   <h3>3. Tải video về</h3>
                   Chọn chất lượng và lưu video về thiết bị của bạn.
-                </div>
+                </span>
                 <PiArrowRightBold
                   className="step-arrow"
-                  onClick={() => (window.location.href = "")}
+                  // onClick={() => (window.location.href = "")}
                 />
-              </div>
-            </div>
+              </span>
+            </a>
           </div>
         </section>
 
@@ -193,61 +193,60 @@ const HowToUse = () => {
           Chỉ với 3 bước đơn giản, bạn có thể chuyển đổi định dạng file một cách
           nhanh chóng và dễ dàng.
           <div className="instruction-steps">
-            <div className="step-card">
-              <div className="boder-top-card"></div>
-              <div className="step-header">
+            <a className="step-card" href="/ConvertPage">
+              <span className="step-header">
                 <LiaCloudUploadAltSolid className="step-icon" />
                 <h3>1. Tải file lên</h3>
                 Chọn hoặc kéo thả file...
-              </div>
-              <div className="step-detail">
-                <div>
+              </span>
+              <span className="step-detail">
+                <span>
                   <h3>1. Tải file lên</h3>
                   Chọn hoặc kéo thả file vào trình chuyển đổi. Hỗ trợ nhiều định
                   dạng file như PDF, DOCX, PPTX, MP4, MP3...
-                </div>
+                </span>
                 <PiArrowRightBold
                   className="step-arrow"
-                  onClick={() => (window.location.href = "")}
+                  // onClick={() => (window.location.href = "")}
                 />
-              </div>
-            </div>
-            <div className="step-card" style={{width:"32%"}}>
-              <div className="step-header">
+              </span>
+            </a>
+            <a className="step-card" href="/ConvertPage">
+              <span className="step-header">
                 <LuMousePointer2 className="step-icon" />
                 <h3>2. Chọn định dạng chuyển đổi</h3>
                 Lựa chọn định dạng...
-              </div>
-              <div className="step-detail">
-                <div>
+              </span>
+              <span className="step-detail">
+                <span>
                   <h3>2. Chọn định dạng chuyển đổi</h3>
                   Lựa chọn định dạng nguồn và định dạng đích muốn chuyển đổi
                   (PDF, Word, Excel, PowerPoint, video, âm thanh, v.v.)
-                </div>
+                </span>
                 <PiArrowRightBold
                   className="step-arrow"
-                  onClick={() => (window.location.href = "")}
+                  // onClick={() => (window.location.href = "")}
                 />
-              </div>
-            </div>
-            <div className="step-card" style={{width:"32%"}}>
-              <div className="step-header">
+              </span>
+            </a>
+            <a className="step-card" href="/ConvertPage">
+              <span className="step-header">
                 <LuDownload className="step-icon" />
                 <h3>3. Tải file về</h3>
                 Tải file đã chuyển đổi về thiết bị...
-              </div>
-              <div className="step-detail">
-                <div>
+              </span>
+              <span className="step-detail">
+                <span>
                   <h3>3. Tải file về</h3>
                   Sau khi chuyển đổi xong, bạn có thể tải file về với định dạng
                   mong muốn.
-                </div>
+                </span>
                 <PiArrowRightBold
                   className="step-arrow"
-                  onClick={() => (window.location.href = "")}
+                  // onClick={() => (window.location.href = "")}
                 />
-              </div>
-            </div>
+              </span>
+            </a>
           </div>
         </section>
       </div>

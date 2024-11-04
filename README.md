@@ -6,22 +6,32 @@
 - chỉnh sửa video
 - chỉnh sửa audio
 - convert files
-- AI gender (coming soon...)
+- AI generator (coming soon...)
 
 ---
 
 ## Setup project
 
-### Yêu cầu: laptop/pc đã cài đặt nodejs
+### Yêu cầu: 
 
-**các bước setup**
+- Thiết bị đã cài đặt nodejs, python.
+- Thiết bị đã cài đặt mongoDB với port mặc định và tạo một database trống có tên `mydatabase` (nếu chưa cài, có thể tham khảo hướng dẫn trong video này: https://www.youtube.com/watch?v=RmPp69cwNgg)
+- Sử dụng VS Code để chạy dự án.
+
+---
+
+#### **Các bước setup**
 
 1. Clone dự án về
 2. Mở dự án bằng VSCode
-3. mở terminal và vào thư mục frontend, cài đặt node-modules bằng cách chạy lệnh: `npm install`
-4. bước này có thể sẽ chạy ra kết quả là tìm thấy 1 lỗ hổng bảo mật, làm theo hướng dẫn để fix hoặc chạy `npm audit fix` để sửa 1 phần, hoặc `npm audit fix --force` để sửa all (recommend).
-5. điều hướng sang thư mục backend, tạo môi trường python ảo bằng lệnh: `python -m venv venv`
-6. kích hoạt môi trường python ảo: `venv/Scripts/activate`
-7. cài đặt thư viện cần thiết từ file requirements: `pip install -r requirements.txt`
-8. điều hướng tới thư mục frontend, chạy lệnh `npm run all` để khởi động localhost.
-   => truy cập liên kết tương ứng để xem kết quả trên trình duyệt
+3. Mở terminal và vào thư mục frontend để cài đặt các thư viện UI và phụ thuộc: `cd frontend`
+4. Cài đặt node-modules bằng cách chạy lệnh: `npm install`
+5. Bước này có thể sẽ chạy ra kết quả là tìm thấy 1 lỗ hổng bảo mật, nếu không thấy lỗi gì vui lòng bỏ qua bước này và chuyển tới bước 6. Nếu có thông báo lỗi, làm theo hướng dẫn để fix hoặc chạy `npm audit fix` để sửa 1 phần, hoặc `npm audit fix --force` để sửa all (recommend).
+6. Điều hướng từ thu mục frontend sang thư mục backend: `cd ../backend`
+7. Tạo môi trường python ảo bằng lệnh:  `python -m venv venv`
+8. Kích hoạt môi trường python ảo, sau khi kích hoạt sẽ hiển thị môi trường đang sử dụng màu xanh (venv)): `venv/Scripts/activate`
+9. Cài đặt các thư viện cần thiết từ file requirements: `pip install -r requirements.txt`
+10. Khởi động kết nối tới mongoDB qua extension **MongoDB for VS Code**
+11. Trong terminal của dự án, tiếp tục điều hướng từ thư mục backend tới thư mục frontend để chạy dự án: `cd ../frontend`
+12. Chạy lệnh `npm run all` để khởi động localhost (ở đây là `http://localhost:3000`).
+    => truy cập liên kết tương ứng để xem kết quả trên trình duyệt

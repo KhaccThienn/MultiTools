@@ -5,8 +5,7 @@
 
 @font-face {
   font-family: "PoppinsCustom";
-  src: url("../../public/fonts/DESIGNERVN-POPPINS-REGULAR.TTF")
-    format("truetype");
+  src: url("../../public/fonts/DESIGNERVN-POPPINS-REGULAR.TTF") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -59,12 +58,12 @@
   max-width: 1280px;
   margin: 0 auto;
   z-index: 1000;
+  /* position: relative; */
 }
 
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 1em;
 }
 
 .navbar-links {
@@ -76,7 +75,7 @@
 }
 
 .navbar-links .li-item {
-  position: relative;
+  /* position: relative; */
   display: flex;
   align-items: center;
   /* gap: 0.2em; */
@@ -88,9 +87,17 @@
   font-size: 1em;
 }
 
+.drop-down-icon {
+  transition: transform 0.3s;
+}
+
+.li-item:hover .drop-down-icon {
+  transform: rotate(180deg);
+}
+
 .navbar-links .li-item:hover span,
 .navbar-links .li-item:hover .drop-down-icon {
-  color: #ff6347;
+  color: #ef7c00;
 }
 
 /* ListMenu với position absolute */
@@ -99,48 +106,59 @@
   list-style-type: none;
   background-color: #fff7ed;
   padding: 10px;
-  margin-top: 10px;
   position: absolute;
   left: 0;
   top: 100%;
-  display: none;
+  display: flex;
   z-index: 10;
-  border-radius: 0.2em;
-  border: 1px solid #c9c9c9;
+  /* border-radius: 0.2em; */
+  /* border-bottom: 1px solid #c9c9c9; */
+  width: 100vw;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5%;
+  row-gap: 5em;
+  padding: 3%;
+  box-shadow: 0 10px 20px -4px rgba(0, 0, 0, 0.1);
 }
 
 /* Hiển thị ListMenu khi được mở */
 
-.navbar-links li:hover::after {
+.navbar-links>li:hover::after {
   content: "";
-  width: 130px;
-  height: 30px;
+  width: 100vw;
+  height: 50px;
   display: block;
   position: absolute;
-  top: 100%;
+  top: 60%;
+  transition: all 0.3s;
 }
 
-.navbar-links li:hover .list-menu {
+/* .navbar-links li:hover .list-menu {
   display: block;
-}
+} */
 
-.list-menu li {
-  /* padding: 5px; */
+/* .list-menu li {
+  padding: 5px;
   color: white;
   width: 100%;
-}
+} */
 
 .list-menu li a {
   color: #333;
   text-decoration: none;
   font-size: 0.9em;
   white-space: nowrap;
+  padding: 1em 2em;
+  border-radius: 0.5em;
+  transition: all 0.3s ease;
+  background-color: #ffffffd7;
+  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.1);
 }
 
 .list-menu li:hover a {
-  color: #ff6347;
-  /* text-decoration: underline; */
-  border-bottom: 1px solid #ff6347;
+  background: linear-gradient(90deg, #4fe5f36c, #4fe5f36c, #fff7ed98);
 }
 
 .sign-buttons {
@@ -246,7 +264,7 @@
 }
 
 .navbar-user-section {
-  min-width: 200px;
+  /* min-width: 200px; */
   position: relative;
   display: flex;
   justify-content: right;
@@ -259,14 +277,23 @@
   cursor: pointer;
 }
 
+.avt-drop-icon {
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  margin-left: 0.5em;
+}
+
+.avt-drop-icon.rotate {
+  transform: rotate(180deg);
+}
+
 /*css cho avatar popup */
 .avatar-popup {
-  width: 250px;
   min-height: 300px;
   position: absolute;
-  top: 60px;
-  right: -50px;
-  background-color: #fef2f2;
+  top: 150%;
+  left: 0;
+  background-color: #fff7ed;
   border: 1px solid #ddd;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   padding: 10px;
@@ -299,7 +326,8 @@
 .dark-mode {
   display: flex;
   padding: 10px;
-  justify-content: space-between;
+  gap: 2em;
+  /* justify-content: space-between; */
 }
 
 .dark-mode i {
@@ -448,8 +476,9 @@
 /* tool bar bên dưới slideshow */
 .tool-bar {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  gap: 5%;
+  row-gap: 2em;
+  justify-content: center;
   background-color: #f0f0f0;
   padding: 2em;
   margin: 2em 0;
@@ -458,6 +487,8 @@
 }
 
 .tool-item {
+  text-decoration: none;
+  color: black;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -613,19 +644,19 @@
   font-weight: bold;
 }
 
-.step-header > p {
+.step-header>p {
   color: #666;
   font-size: 0.9em;
 }
 
-.step-detail > div {
+.step-detail>div {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   gap: 1em;
 }
 
-.step-detail > div > h3 {
+.step-detail>div>h3 {
   font-size: 1em;
   font-weight: bold;
 }
@@ -778,14 +809,12 @@
   padding: 5em;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(
-    120deg,
-    #0c0036,
-    #0d003b,
-    #0f0043,
-    #0f0043,
-    #160067
-  );
+  background: linear-gradient(120deg,
+      #0c0036,
+      #0d003b,
+      #0f0043,
+      #0f0043,
+      #160067);
 }
 
 .footer-detail .footer-elements {
@@ -1005,9 +1034,9 @@
   width: 80%;
   height: 250px;
   background: #333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .select__convert {
@@ -1019,11 +1048,11 @@
   align-items: center;
 }
 
-.selected-file{
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1em;
+.selected-file {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
 }

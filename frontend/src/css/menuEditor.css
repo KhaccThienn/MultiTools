@@ -25,8 +25,16 @@
 }
 
 .menu-right {
+    border: none;
     width: 85%;
     z-index: 10;
+    background-size: 3px 3px;
+    background-image:
+        linear-gradient(45deg, #ccc 25%, transparent 25%),
+        linear-gradient(-45deg, #ccc 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #ccc 75%),
+        linear-gradient(-45deg, transparent 75%, #ccc 75%);
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
 }
 
 
@@ -247,7 +255,7 @@
     margin-bottom: 1em;
 }
 
-.box_remove{
+.box_remove {
     gap: 10px;
 }
 
@@ -485,7 +493,7 @@ select:focus {
     background-color: #0067ac;
 }
 
-.box__option{
+.box__option {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -514,32 +522,44 @@ select:focus {
     margin: 0.5em 1em;
     padding: 0.5em;
     font-weight: bold;
-    overflow-y: auto; /* Chỉ thêm thanh cuộn theo chiều dọc */
-    max-height: 360px; /* Giới hạn chiều cao để kích hoạt thanh cuộn khi nội dung quá dài */
-    scroll-behavior: smooth; /* Thêm hiệu ứng cuộn mượt mà */
-    scroll-padding-top: 0; /* Đảm bảo nội dung hiển thị từ đầu */
+    overflow-y: auto;
+    /* Chỉ thêm thanh cuộn theo chiều dọc */
+    max-height: 360px;
+    /* Giới hạn chiều cao để kích hoạt thanh cuộn khi nội dung quá dài */
+    scroll-behavior: smooth;
+    /* Thêm hiệu ứng cuộn mượt mà */
+    scroll-padding-top: 0;
+    /* Đảm bảo nội dung hiển thị từ đầu */
 }
 
 /* CSS tùy chỉnh thanh cuộn cho WebKit (Chrome, Safari, và các trình duyệt WebKit khác) */
 .box--basic::-webkit-scrollbar {
-    width: 5px; /* Thu nhỏ chiều rộng của thanh cuộn */
+    width: 5px;
+    /* Thu nhỏ chiều rộng của thanh cuộn */
 }
 
 .box--basic::-webkit-scrollbar-track {
-    background: #3a3a3a; /* Màu nền của thanh cuộn */
-    border-radius: 0.5em; /* Làm tròn các góc của thanh cuộn */
+    background: #3a3a3a;
+    /* Màu nền của thanh cuộn */
+    border-radius: 0.5em;
+    /* Làm tròn các góc của thanh cuộn */
 }
 
 .box--basic::-webkit-scrollbar-thumb {
-    background-color: #6a6a6a; /* Màu của thanh cuộn */
-    border-radius: 0.5em; /* Làm tròn các góc của thanh kéo */
-    border: 1px solid #4e4e4e; /* Viền quanh thanh kéo để dễ nhìn hơn */
+    background-color: #6a6a6a;
+    /* Màu của thanh cuộn */
+    border-radius: 0.5em;
+    /* Làm tròn các góc của thanh kéo */
+    border: 1px solid #4e4e4e;
+    /* Viền quanh thanh kéo để dễ nhìn hơn */
 }
 
 /* CSS cho các trình duyệt không phải WebKit */
 .box--basic {
-    scrollbar-width: thin; /* Thu nhỏ thanh cuộn trong Firefox */
-    scrollbar-color: #6a6a6a #3a3a3a; /* Màu thanh kéo và nền cho Firefox */
+    scrollbar-width: thin;
+    /* Thu nhỏ thanh cuộn trong Firefox */
+    scrollbar-color: #6a6a6a #3a3a3a;
+    /* Màu thanh kéo và nền cho Firefox */
 }
 
 
@@ -645,12 +665,12 @@ input[type="range"] {
 
 /* Paint */
 
-.grid__tool{
+.grid__tool {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
 }
 
-.box__tool{
+.box__tool {
     padding: 12px 30px;
     margin: 5px 3px;
     background-color: #383a3e;
@@ -658,15 +678,15 @@ input[type="range"] {
     cursor: pointer;
 }
 
-.box__tool:hover{
+.box__tool:hover {
     opacity: 0.9;
 }
 
-.box__tool--active{
+.box__tool--active {
     background-color: #2490d9;
 }
 
-.box__color{
+.box__color {
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -676,7 +696,7 @@ input[type="range"] {
     cursor: pointer;
 }
 
-.input__color{
+.input__color {
     background-color: #383a3e;
     height: 42px;
     width: 85%;
@@ -684,7 +704,7 @@ input[type="range"] {
     cursor: pointer;
 }
 
-.input__number{
+.input__number {
     background-color: #383a3e;
     height: 42px;
     width: 85%;
@@ -696,43 +716,57 @@ input[type="range"] {
 .filter-grid {
     display: flex;
     gap: 10px;
-    justify-content: center; /* Đảm bảo các phần tử bắt đầu từ đầu */
-    flex-wrap: wrap; /* Cho phép các phần tử xuống dòng khi không đủ chỗ */
-    align-items: flex-start; /* Căn giữa các phần tử theo chiều dọc */
+    justify-content: center;
+    /* Đảm bảo các phần tử bắt đầu từ đầu */
+    flex-wrap: wrap;
+    /* Cho phép các phần tử xuống dòng khi không đủ chỗ */
+    align-items: flex-start;
+    /* Căn giữa các phần tử theo chiều dọc */
     margin-top: 10px;
     height: 400px;
-    overflow-y: auto; /* Kích hoạt cuộn ngang */
-    scroll-behavior: smooth; /* Tạo hiệu ứng cuộn mượt mà */
-    padding-bottom: 10px; /* Tạo khoảng cách bên dưới cho thanh cuộn */
+    overflow-y: auto;
+    /* Kích hoạt cuộn ngang */
+    scroll-behavior: smooth;
+    /* Tạo hiệu ứng cuộn mượt mà */
+    padding-bottom: 10px;
+    /* Tạo khoảng cách bên dưới cho thanh cuộn */
 }
 
-.filter-grid > * {
-    flex: 0 0 auto; /* Ngăn các phần tử con co giãn, đảm bảo chúng chiếm kích thước cố định */
+.filter-grid>* {
+    flex: 0 0 auto;
+    /* Ngăn các phần tử con co giãn, đảm bảo chúng chiếm kích thước cố định */
 }
 
 /* Tùy chỉnh thanh cuộn ngang cho WebKit (Chrome, Safari) */
 .filter-grid::-webkit-scrollbar {
-    height: 8px; /* Chiều cao của thanh cuộn ngang */
+    height: 8px;
+    /* Chiều cao của thanh cuộn ngang */
 }
 
 .filter-grid::-webkit-scrollbar-track {
-    background: #ddd; /* Màu nền của thanh cuộn */
+    background: #ddd;
+    /* Màu nền của thanh cuộn */
 }
 
 .filter-grid::-webkit-scrollbar-thumb {
-    background-color: #888; /* Màu của thanh kéo cuộn */
-    border-radius: 10px; /* Bo tròn các góc của thanh kéo */
-    border: 2px solid transparent; /* Tạo khoảng cách giữa thanh kéo và track */
+    background-color: #888;
+    /* Màu của thanh kéo cuộn */
+    border-radius: 10px;
+    /* Bo tròn các góc của thanh kéo */
+    border: 2px solid transparent;
+    /* Tạo khoảng cách giữa thanh kéo và track */
 }
 
 /* Firefox và các trình duyệt khác */
 .filter-grid {
-    scrollbar-width: thin; /* Thu nhỏ thanh cuộn trong Firefox */
-    scrollbar-color: #888 #ddd; /* Màu của thanh kéo và nền cho Firefox */
+    scrollbar-width: thin;
+    /* Thu nhỏ thanh cuộn trong Firefox */
+    scrollbar-color: #888 #ddd;
+    /* Màu của thanh kéo và nền cho Firefox */
 }
 
-  
-  .filter-item {
+
+.filter-item {
     width: 100px;
     height: 100px;
     background-color: #eee;
@@ -740,13 +774,13 @@ input[type="range"] {
     cursor: pointer;
     text-align: center;
     position: relative;
-  }
-  
-  .filter-item:hover {
+}
+
+.filter-item:hover {
     border-color: #888;
-  }
-  
-  .filter-item .filter-preview {
+}
+
+.filter-item .filter-preview {
     position: absolute;
     top: 0;
     left: 0;
@@ -756,43 +790,43 @@ input[type="range"] {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  .filter-item span {
+}
+
+.filter-item span {
     position: absolute;
     bottom: 5px;
     left: 0;
     width: 100%;
     font-size: 12px;
     text-align: center;
-  }
-  
-  .sub-filters {
+}
+
+.sub-filters {
     margin-top: 10px;
     display: flex;
     gap: 5px;
     flex-wrap: wrap;
-  }
-  
-  .sub-filter-item {
+}
+
+.sub-filter-item {
     padding: 5px;
     background-color: #ccc;
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
-  }
-  
-  .sub-filter-item:hover {
-    background-color: #bbb;
-  }
+}
 
-  .filter-intensity-slider {
+.sub-filter-item:hover {
+    background-color: #bbb;
+}
+
+.filter-intensity-slider {
     margin: 10px 0;
-  }
-  
-  .filter-item.selected {
+}
+
+.filter-item.selected {
     border: 2px solid #007bff;
-  }
+}
 
 
 .custom_range_slider {
@@ -818,37 +852,38 @@ input[type="range"] {
 .custom_range_slider input[type="range"]:focus+.bubble {
     display: inline-block;
 }
-  
-  
+
+
 .background-options {
     margin: 10px 20px;
-    
-  }
-  
-  .background-settings {
-    display: flex;
-    flex-direction: column;
-    margin-top: 5px;
-  }
-  
-  .background-settings select,
-  .background-settings input {
-    margin-bottom: 5px;
-  }
-  
-  .background-settings button {
-    align-self: flex-start;
-  }
-
-.auto_complete{
-    display: flex;
-    /* width: 100%; */
-    /* flex-wrap: wrap; */
-    gap: 1rem; /* gap-4 */
 
 }
 
-.auto_complete_item{
+.background-settings {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+}
+
+.background-settings select,
+.background-settings input {
+    margin-bottom: 5px;
+}
+
+.background-settings button {
+    align-self: flex-start;
+}
+
+.auto_complete {
+    display: flex;
+    /* width: 100%; */
+    /* flex-wrap: wrap; */
+    gap: 1rem;
+    /* gap-4 */
+
+}
+
+.auto_complete_item {
     display: flex;
     width: 100%;
     flex-wrap: wrap;

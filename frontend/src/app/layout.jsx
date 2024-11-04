@@ -1,6 +1,7 @@
-import Head from 'next/head';
-import './globals.css';
-
+/* app/layout.jsx */
+import Head from "next/head";
+import "./globals.css";
+import CustomThemeProvider from "@/components/CustomThemeProvider";
 
 export const metadata = {
   title: "MultiTools | Công cụ chỉnh sửa đa năng",
@@ -16,7 +17,7 @@ export default function RootLayout({ children }) {
         <meta name="description" content={metadata.description} />
       </Head>
       <body>
-        {children}
+        <CustomThemeProvider>{children}</CustomThemeProvider>
       </body>
     </html>
   );

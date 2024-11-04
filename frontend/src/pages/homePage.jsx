@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+/* pages/homePage.jsx */
+import { useState, useEffect, useRef, useContext } from "react";
+import ThemeContext from "@/constants/themes/ThemeContext";
 import Navbar from "@/components/Navbar";
 import Slideshow from "@/components/SlideShow";
 import "../css/app.css";
@@ -15,6 +17,7 @@ import { PiSelectionBackgroundDuotone } from "react-icons/pi";
 import { MdOutlineFilterVintage } from "react-icons/md";
 
 export default function HomePage() {
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const contentRef = useRef(null);
@@ -91,49 +94,51 @@ export default function HomePage() {
   return (
     <>
       <div className={`head ${showNavbar ? "show" : "hide"}`}>
-        {/* */}
-        <Navbar />
+        <Navbar toggleTheme={toggleTheme} theme={theme}/>
       </div>
       <div className="content" ref={contentRef}>
         <Slideshow />
 
         <div ref={addToRefs} className="tool-bar fade-in-section">
-          <a href="/ImageEditorPage"></a>
-          <div
+          <a
             className="tool-item"
-            onClick={() => (window.location.href = "/ImageEditorPage")}
+            href="/ImageEditorPage"
           >
             <RiImageEditLine />
             Chỉnh sửa ảnh
-          </div>
-          <div
+          </a>
+          <a
             className="tool-item"
-            onClick={() => (window.location.href = "/VideoEditorPage")}
+            href="/VideoEditorPage"
+            // onClick={() => (window.location.href = "/VideoEditorPage")}
           >
             <PiVideo />
             Chỉnh sửa video
-          </div>
-          <div
+          </a>
+          <a
             className="tool-item"
-            onClick={() => (window.location.href = "/ConvertPage")}
+            href="/ConvertPage"
+            // onClick={() => (window.location.href = "/ConvertPage")}
           >
             <SiConvertio />
             Chuyển đổi định dạng
-          </div>
-          <div
+          </a>
+          <a
             className="tool-item"
-            onClick={() => (window.location.href = "/ImageEditorPage")}
+            href="/ImageEditorPage"
+            // onClick={() => (window.location.href = "/ImageEditorPage")}
           >
             <PiSelectionBackgroundDuotone />
             Xóa nền
-          </div>
-          <div
+          </a>
+          <a
             className="tool-item"
-            onClick={() => (window.location.href = "/ImageEditorPage")}
+            href="/ImageEditorPage"
+            // onClick={() => {}}
           >
             <MdOutlineFilterVintage />
             Thêm bộ lọc
-          </div>
+          </a>
         </div>
 
         <div ref={addToRefs} className="fade-in-section">
@@ -141,9 +146,10 @@ export default function HomePage() {
             image={images.container1}
             rotate={0}
             colorbg="#b5c1ff"
-            onClick={() => {
-              window.location.href = "/ImageEditorPage";
-            }}
+            href={"/ImageEditorPage"}
+            // onClick={() => {
+            //   window.location.href = "/ImageEditorPage";
+            // }}
           >
             <div className="container-content">
               <h2>Chỉnh sửa ảnh nhanh chóng và dễ dàng</h2>
@@ -162,9 +168,10 @@ export default function HomePage() {
             image={images.container2}
             rotate={1}
             colorbg="##e2e2e2"
-            onClick={() => {
-              window.location.href = "/ImageEditorPage";
-            }}
+            href={"/ImageEditorPage"}
+            // onClick={() => {
+            //   window.location.href = "/ImageEditorPage";
+            // }}
           >
             <div className="container-content">
               <h2>Công cụ xóa nền AI</h2>
@@ -181,7 +188,8 @@ export default function HomePage() {
             image={images.container3}
             rotate={0}
             colorbg="#fdd1ee"
-            onClick={() => {}}
+            href={"/ImageEditorPage"}
+            // onClick={() => {}}
           >
             <div className="container-content">
               <h2>Công cụ xóa vật thể trong ảnh</h2>
@@ -200,9 +208,8 @@ export default function HomePage() {
             image={images.container4}
             rotate={1}
             colorbg="##e2e2e2"
-            onClick={() => {
-
-            }}
+            href={"/VideoEditorPage"}
+            // onClick={() => {}}
           >
             <div className="container-content">
               <h2>Công cụ chỉnh sửa và biên tập video</h2>
@@ -220,9 +227,10 @@ export default function HomePage() {
             image={images.container5}
             rotate={0}
             colorbg="#6EE7B7"
-            onClick={() => {
-              window.location.href = "/ConvertPage";
-            }}
+            href={"/ConvertPage"}
+            // onClick={() => {
+            //   window.location.href = "/ConvertPage";
+            // }}
           >
             <div className="container-content">
               <h2>Trình chuyển đổi trực tuyến</h2>
