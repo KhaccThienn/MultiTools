@@ -6,14 +6,19 @@ import { ImageContext } from "@/context/ImageContext";
 import "../css/menuEditor.css";
 
 function Crop() {
-  const { cropBoxData, updateCropBoxData, resetCropBoxData, handleCrop, handleAspectRatioChange } =
-    useContext(ImageContext);
+  const {
+    cropBoxData,
+    updateCropBoxData,
+    resetCropBoxData,
+    handleCrop,
+    handleAspectRatioChange,
+  } = useContext(ImageContext);
 
   const handleResizeCropBox = (e) => {
     const { id, value } = e.target;
     updateCropBoxData(id, value);
   };
-  
+
   // Hàm xử lý xoay trái
   const handleRotateLeft = () => {
     updateCropBoxData("rotate", cropBoxData.rotate - 90);
@@ -43,15 +48,13 @@ function Crop() {
 
   const handleAspectRatio = (value) => {
     updateCropBoxData("aspectRatio", value);
-  }
+  };
 
   useEffect(() => {
     if (cropBoxData.aspectRatio !== undefined) {
       handleAspectRatioChange();
     }
   }, [cropBoxData.aspectRatio]);
-
-  
 
   return (
     <section id="crop" className="tool-drawer">
@@ -72,68 +75,33 @@ function Crop() {
           <div className="group group1">
             <div className="split">
               <label htmlFor="crop-width">Chiều rộng</label>
-              <input type="number" id="crop-width" value={cropBoxData.width.toFixed(2)} onChange={(e) => updateCropBoxData('width', Number(e.target.value))} />
+              <input
+                type="number"
+                id="crop-width"
+                value={cropBoxData.width.toFixed(2)}
+                onChange={(e) =>
+                  updateCropBoxData("width", Number(e.target.value))
+                }
+              />
             </div>
             <div className="split">
               <label htmlFor="crop-heigh">Chiều cao</label>
-              <input type="number" id="crop-height" value={cropBoxData.height.toFixed(2)}  onChange={(e) => updateCropBoxData('height', Number(e.target.value))} />
+              <input
+                type="number"
+                id="crop-height"
+                value={cropBoxData.height.toFixed(2)}
+                onChange={(e) =>
+                  updateCropBoxData("height", Number(e.target.value))
+                }
+              />
             </div>
 
-            {/* <div className="select-crop-frame">
-                    <label
-                      className="toggle-check-label"
-                      htmlFor="toggle-check"
-                    >
-                      Chọn khung hình
-                    </label>
-                    <label className="switch">
-                      <input
-                        type="checkbox"
-                        className="toggle-check-input"
-                        id="toggle-check"
-                      />
-                      <span className="slider round"></span>
-                    </label>
-                  </div> */}
-
             <div className="toggle-select-frame">
-              {/* <div className="switch-field stretch">
-                      <input
-                        type="radio"
-                        id="crop-aspect-ratio"
-                        name="crop-aspect-mode"
-                        value="ratio"
-                        defaultChecked
-                      />
-                      <label htmlFor="crop-aspect-ratio">Tỉ lệ</label>
-                      <input
-                        type="radio"
-                        id="crop-aspect-size"
-                        name="crop-aspect-mode"
-                        value="size"
-                      />
-                      <label htmlFor="crop-aspect-size">Kích thước</label>
-                    </div> */}
-              {/* <div className="split">
-                      Chiều rộng
-                      <input
-                        type="number"
-                        id="crop-aspect-width"
-                        defaultValue="1"
-                      />
-                    </div> */}
-              {/* <div className="split">
-                      Chiều cao
-                      <input
-                        type="number"
-                        id="crop-aspect-height"
-                        defaultValue="1"
-                      />
-                    </div> */}
               <label className="select-label">Tỉ lệ mẫu</label>
               <div className="select">
-                <select id="select-frame-menu" 
-                onChange={(e) => handleAspectRatio(e.target.value)} // Gọi hàm khi thay đổi option
+                <select
+                  id="select-frame-menu"
+                  onChange={(e) => handleAspectRatio(e.target.value)} // Gọi hàm khi thay đổi option
                 >
                   <option value="0:0" selected>
                     Không
@@ -241,7 +209,10 @@ function Crop() {
               </li>
               <li id="flip-horizontal" className="rotate-flip">
                 <label htmlFor="rotate-flip-icon">Lật ngang</label>
-                <div className="rotate-flip-icon" onClick={handleFlipHorizontal}>
+                <div
+                  className="rotate-flip-icon"
+                  onClick={handleFlipHorizontal}
+                >
                   <PiFlipHorizontalBold />
                 </div>
               </li>
@@ -255,8 +226,12 @@ function Crop() {
           </div>
           <div className="bottom-content">
             <div className="action-btn">
-              <button id="crop-action-cancel" onClick={resetCropBoxData}>Hủy</button>
-              <button id="crop-action-apply" onClick={handleCrop}>Áp dụng</button>
+              <button id="crop-action-cancel" onClick={resetCropBoxData}>
+                Hủy
+              </button>
+              <button id="crop-action-apply" onClick={handleCrop}>
+                Áp dụng
+              </button>
             </div>
           </div>
         </div>

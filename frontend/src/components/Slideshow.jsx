@@ -6,11 +6,11 @@ import Image from "next/image";
 
 const Slideshow = () => {
   const slides = [
-    { image: images.banner1, title: "Slide 1" },
-    { image: images.banner2, title: "Slide 2" },
-    { image: images.banner3, title: "Slide 3" },
-    { image: images.banner4, title: "Slide 4" },
-    { image: images.banner5, title: "Slide 5" },
+    { image: images.banner1, title: "Slide 1", link: "/" },
+    { image: images.banner2, title: "Slide 2", link: "/ImageEditorPage" },
+    { image: images.banner3, title: "Slide 3", link: "/VideoEditorPage" },
+    { image: images.banner4, title: "Slide 4", link: "/ConvertPage" },
+    { image: images.banner5, title: "Slide 5", link: "/ImageEditorPage" },
   ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -45,7 +45,7 @@ const Slideshow = () => {
         }}
       >
         {slides.map((slide, index) => (
-          <Link className="slide" href="/" key={index}>
+          <Link className="slide" href={slide.link} key={index}>
             <Image
               src={slide.image}
               alt={slide.title}

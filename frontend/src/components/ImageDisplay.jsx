@@ -4,6 +4,7 @@ import "cropperjs/dist/cropper.css"; // Import CSS của cropperjs
 import { ImageContext } from "@/context/ImageContext";
 import { TransformComponent } from "react-zoom-pan-pinch"; // Sử dụng TransformComponent cho zoom
 import { ZoomableContent } from "@/context/ZoomContext";
+import ImageUploader from "@/components/ImageUploader";
 
 const ImageDisplay = ({ imageSrc, mode, altText = "Image" }) => {
   const {

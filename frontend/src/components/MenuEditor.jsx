@@ -23,6 +23,7 @@ import {
   MdFaceRetouchingNatural,
   MdPhotoSizeSelectLarge,
   MdKeyboardArrowRight,
+  MdOutlineGeneratingTokens, 
 } from "react-icons/md";
 import { TbBackground } from "react-icons/tb";
 import "../css/menuEditor.css";
@@ -41,10 +42,10 @@ const menuItems = [
   { id: "removebg", name: "Xóa nền", icon: <TbBackground /> },
   { id: "adjust", name: "Điều chỉnh màu", icon: <HiAdjustmentsHorizontal /> },
   { id: "filter", name: "Bộ lọc", icon: <RiColorFilterLine /> },
-  { id: "liquify", name: "Biến dạng hình ảnh", icon: <PiSpiralFill /> },
-  { id: "retouch", name: "Tinh chỉnh", icon: <MdFaceRetouchingNatural /> },
+  // { id: "liquify", name: "Biến dạng hình ảnh", icon: <PiSpiralFill /> },
+  { id: "retouch", name: "Làm mịn", icon: <MdFaceRetouchingNatural /> },
   { id: "paint", name: "Vẽ", icon: <FaPaintBrush /> },
-  { id: "text-to-image", name: "Image AI", icon: <IoMdImage/> },
+  { id: "text-to-image", name: "Tạo ảnh AI", icon: <MdOutlineGeneratingTokens /> },
 ];
 
 export default function MenuEditor({

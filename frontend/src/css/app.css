@@ -36,6 +36,7 @@
   right: 0;
   transition: transform 0.3s ease-in-out;
   z-index: 1000;
+  box-shadow: 0px 10px 20px -4px rgba(0, 0, 0, 0.2);
 }
 
 .head.hide {
@@ -60,6 +61,11 @@
   z-index: 1000;
   /* position: relative; */
 }
+.logo-container,
+.sign-buttons {
+  flex-shrink: 0;
+  flex-basis: auto;
+}
 
 .logo-container {
   display: flex;
@@ -70,21 +76,25 @@
   list-style: none;
   list-style-type: none;
   display: flex;
-  gap: 2em;
+  /* gap: 2em; */
   cursor: pointer;
+  flex-shrink: 0;
+  margin: 0 auto;
+  flex-grow: 1;
 }
 
 .navbar-links .li-item {
   /* position: relative; */
   display: flex;
   align-items: center;
+  padding: 0 3%;
   /* gap: 0.2em; */
 }
 
 .navbar-links .li-item span {
   color: #333;
   text-decoration: none;
-  font-size: 1em;
+  margin-right: 5px;
 }
 
 .drop-down-icon {
@@ -229,7 +239,7 @@
   justify-content: space-between;
   position: absolute;
   top: 0;
-  left: 5%;
+  left: 9%;
   height: 100%;
   transition: transform 0.4s ease;
 }
@@ -289,15 +299,16 @@
 
 /*css cho avatar popup */
 .avatar-popup {
-  min-height: 300px;
+  min-width: 15em;
+  min-height: 14em;
   position: absolute;
-  top: 150%;
-  left: 0;
+  top: 145%;
+  left: -10em;
   background-color: #fff7ed;
   border: 1px solid #ddd;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   padding: 10px;
-  z-index: 1000;
+  z-index: 50;
 }
 
 .popup-menu {
@@ -326,8 +337,8 @@
 .dark-mode {
   display: flex;
   padding: 10px;
-  gap: 2em;
-  /* justify-content: space-between; */
+  /* gap: 2em; */
+  justify-content: space-between;
 }
 
 .dark-mode i {
@@ -474,14 +485,48 @@
 }
 
 /* tool bar bên dưới slideshow */
+.box-tool-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 1em 0;
+  width: 100%;
+}
+
+.box-tool-bar>h2 {
+  font-size: 1.5em;
+  font-weight: 500;
+  padding: 0.5em 0;
+  text-align: center;
+  background: linear-gradient(to right, #ec5c38, #9810c6, #9810c6, #ec5c38);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.main-title-home {
+  font-size: 1.8em;
+  font-weight: 500;
+  padding: 0.5em 0 1em 0;
+  width: 70%;
+  text-align: center;
+  margin: 0 auto;
+  background: linear-gradient(to right, #30CFD0, #5610c6, #5610c6, #30CFD0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
 .tool-bar {
+  width: 100%;
   display: flex;
   gap: 5%;
   row-gap: 2em;
   justify-content: center;
-  background-color: #f0f0f0;
   padding: 2em;
-  margin: 2em 0;
   flex-wrap: wrap;
   background: linear-gradient(90deg, #8fe34a6c, #ffc77d77);
 }

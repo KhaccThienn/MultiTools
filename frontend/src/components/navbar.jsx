@@ -1,6 +1,6 @@
 /* components/navbar.jsx */
 "use client";
-import React, { useEffect, useContext  } from "react";
+import React, { useEffect, useContext } from "react";
 import "../css/app.css";
 import ThemeContext from "@/constants/themes/ThemeContext";
 import images from "@/constants/images";
@@ -40,10 +40,8 @@ function Navbar() {
 
   // Kiểm tra token đăng nhập
   useEffect(() => {
-
     checkLoginStatus();
   }, []);
-  
 
   const navbarItems = [
     {
@@ -222,7 +220,7 @@ function Navbar() {
             onMouseEnter={() => handleMouseEnter(navbarItem.id)}
             onMouseLeave={handleMouseLeave}
           >
-            <span style={{ marginRight: "5px" }}>{navbarItem.title}</span>
+            <span>{navbarItem.title}</span>
             <IoIosArrowDown className="drop-down-icon" />
             {activeMenu === navbarItem.id && (
               <ListMenu

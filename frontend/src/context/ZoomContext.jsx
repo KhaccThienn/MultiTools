@@ -13,9 +13,8 @@ export const ZoomProvider = ({ children }) => {
   }, []);
 
 
-  // Chỉ render `TransformWrapper` khi client đã "mount"
   if (!isClient) {
-    return null; // Hoặc bạn có thể render một spinner ở đây
+    return null; 
   }
 
   return (
@@ -37,6 +36,7 @@ export const ZoomProvider = ({ children }) => {
           }}
         >
           {children}
+          {/* {isClient ? children : null} */}
         </ZoomContext.Provider>
       )}
     </TransformWrapper>

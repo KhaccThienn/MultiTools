@@ -644,7 +644,7 @@ const Paint = () => {
       <section id="paint" className="tool-drawer">
         <div className="tool-name" style={{ justifyContent: "center" }}>
           <div></div>
-          Cắt ảnh
+          Vẽ
         </div>
         <div className="splitter"></div>
 
@@ -724,7 +724,7 @@ const Paint = () => {
             </div>
           </div>
         )}
-{/*   
+        {/*   
   <div className="undo-redo-section">
         <button className="toolbar-button" onClick={undoE} >
           <span className="zoom-text">HOÀN TÁC</span>

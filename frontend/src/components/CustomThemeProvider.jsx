@@ -1,3 +1,4 @@
+/* components/CustomThemeProvider.jsx */
 "use client";
 import { useState, useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';

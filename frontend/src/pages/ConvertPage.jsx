@@ -27,16 +27,6 @@ export default function ConvertPage() {
     }
   };
 
-  // const scrollToContainer = (index) => {
-  //   if (containerRefs.current[index]) {
-  //     const { top } = containerRefs.current[index].getBoundingClientRect();
-  //     window.scrollTo({
-  //       top: window.scrollY + top,
-  //       behavior: "smooth",
-  //     });
-  //   }
-  // };
-
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };

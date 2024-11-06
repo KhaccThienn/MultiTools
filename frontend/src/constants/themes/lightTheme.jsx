@@ -1,10 +1,3 @@
-// /* constants/themes/lightTheme.jsx */
-// export const lightTheme = {
-//   navbarBg: '#FFEDD5',
-//   text:'#000',
-//   };
-  
-
 /* constants/themes/lightTheme.jsx */
 export const lightTheme = {
   body: '#FFFFFF',         // Màu nền cho body

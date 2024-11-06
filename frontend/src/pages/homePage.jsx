@@ -31,16 +31,6 @@ export default function HomePage() {
     }
   };
 
-  // const scrollToContainer = (index) => {
-  //   if (containerRefs.current[index]) {
-  //     const { top } = containerRefs.current[index].getBoundingClientRect();
-  //     window.scrollTo({
-  //       top: window.scrollY + top,
-  //       behavior: "smooth",
-  //     });
-  //   }
-  // };
-
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -94,54 +84,57 @@ export default function HomePage() {
   return (
     <>
       <div className={`head ${showNavbar ? "show" : "hide"}`}>
-        <Navbar toggleTheme={toggleTheme} theme={theme}/>
+        <Navbar toggleTheme={toggleTheme} theme={theme} />
       </div>
       <div className="content" ref={contentRef}>
         <Slideshow />
 
-        <div ref={addToRefs} className="tool-bar fade-in-section">
-          <a
-            className="tool-item"
-            href="/ImageEditorPage"
-          >
-            <RiImageEditLine />
-            Chỉnh sửa ảnh
-          </a>
-          <a
-            className="tool-item"
-            href="/VideoEditorPage"
-            // onClick={() => (window.location.href = "/VideoEditorPage")}
-          >
-            <PiVideo />
-            Chỉnh sửa video
-          </a>
-          <a
-            className="tool-item"
-            href="/ConvertPage"
-            // onClick={() => (window.location.href = "/ConvertPage")}
-          >
-            <SiConvertio />
-            Chuyển đổi định dạng
-          </a>
-          <a
-            className="tool-item"
-            href="/ImageEditorPage"
-            // onClick={() => (window.location.href = "/ImageEditorPage")}
-          >
-            <PiSelectionBackgroundDuotone />
-            Xóa nền
-          </a>
-          <a
-            className="tool-item"
-            href="/ImageEditorPage"
-            // onClick={() => {}}
-          >
-            <MdOutlineFilterVintage />
-            Thêm bộ lọc
-          </a>
+        <div ref={addToRefs} className="box-tool-bar fade-in-section">
+          <h2>Khám phá các tính năng thông dụng</h2>
+          <div className="tool-bar">
+            <a className="tool-item" href="/ImageEditorPage">
+              <RiImageEditLine />
+              Chỉnh sửa ảnh
+            </a>
+            <a
+              className="tool-item"
+              href="/VideoEditorPage"
+              // onClick={() => (window.location.href = "/VideoEditorPage")}
+            >
+              <PiVideo />
+              Chỉnh sửa video
+            </a>
+            <a
+              className="tool-item"
+              href="/ConvertPage"
+              // onClick={() => (window.location.href = "/ConvertPage")}
+            >
+              <SiConvertio />
+              Chuyển đổi định dạng
+            </a>
+            <a
+              className="tool-item"
+              href="/ImageEditorPage"
+              // onClick={() => (window.location.href = "/ImageEditorPage")}
+            >
+              <PiSelectionBackgroundDuotone />
+              Xóa nền
+            </a>
+            <a
+              className="tool-item"
+              href="/ImageEditorPage"
+              // onClick={() => {}}
+            >
+              <MdOutlineFilterVintage />
+              Thêm bộ lọc
+            </a>
+          </div>
         </div>
 
         <div ref={addToRefs} className="fade-in-section">
+          <h2 className="main-title-home">
+            MultiTools - Trình chỉnh sửa và thiết kế đa phương tiện với đầy đủ những tính năng từ cơ bản đến nâng cao!
+          </h2>
           <Container
             image={images.container1}
             rotate={0}
