@@ -2,13 +2,18 @@
 
 import base64
 from io import BytesIO
+import logging
+import os
+import tempfile
+import threading
+import time
 from tkinter import Image
-from flask import Blueprint, request, send_file, jsonify
-from .utils import change_background, generate_image_from_text, resize_image, crop_image, remove_object, process_crop, remove_background
-
+import uuid
+from flask import Blueprint,request, send_file, jsonify,current_app,send_from_directory, after_this_request
+from .utils import change_background, convert_image, download_and_convert_playlist_to_mp3, generate_image_from_text, generate_subtitles, resize_image, crop_image, remove_object, process_crop, remove_background
+import shutil
 # Sử dụng Blueprint để tổ chức các route
 bp = Blueprint('main', __name__)
-
 @bp.route('/resize', methods=['POST'])
 def resize_route():
     file = request.files['image']
@@ -110,3 +115,104 @@ def text_to_image_route():
         return jsonify({"image": base64_image})
     else:
         return jsonify({"error": "Failed to generate image"}), 500
+
+def delete_file_after_delay(file_path, delay):
+    """Deletes the specified file after a delay (in seconds)."""
+    time.sleep(delay)
+    if os.path.exists(file_path):
+        try:
+            os.remove(file_path)
+            print(f"File {file_path} deleted after {delay} seconds.")
+        except Exception as e:
+            print(f"Error deleting file {file_path}: {e}")
+
+@bp.route('/download', methods=['POST'])
+def download_playlist():
+    data = request.get_json()
+    url = data.get('url')
+    output_folder = './assets/audios'
+    
+    if not url:
+        return jsonify({'error': 'Thiếu URL playlist'}), 400
+
+    os.makedirs(output_folder, exist_ok=True)
+    temp_folder = tempfile.mkdtemp(dir=output_folder)
+
+    try:
+        download_and_convert_playlist_to_mp3(url, temp_folder)
+        zip_file_path = shutil.make_archive(temp_folder, 'zip', temp_folder)
+        zip_file_name = os.path.basename(zip_file_path)
+        shutil.rmtree(temp_folder)
+
+        # Start a thread to delete the zip file after 1 hour (3600 seconds)
+        threading.Thread(target=delete_file_after_delay, args=(zip_file_path, 60), daemon=True).start()
+
+        return jsonify({'download_link': f'{zip_file_name}'})
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return jsonify({'error': 'Failed to process playlist'}), 500
+
+@bp.route('/download/<filename>')
+def download_file(filename):
+    file_path = f'D:\\Projects\\multi_tools\\backend\\assets\\audios\\{filename}'
+    if os.path.exists(file_path):
+        return send_file(file_path, as_attachment=True)
+    else:
+        return jsonify({'error': 'File not found'}), 404
+
+
+# routes.py
+
+@bp.route('/generate-subtitles', methods=['POST'])
+def generate_subtitles_route():
+    """
+    API route để tạo phụ đề cho video.
+    """
+    temp_dir = tempfile.mkdtemp()
+    try:
+        video_path = None
+        if 'video' in request.files:
+            video_file = request.files['video']
+            if video_file.filename == '':
+                return jsonify({'error': 'Không có tệp video được chọn'}), 400
+            # Lưu tệp video tạm thời
+            video_path = os.path.join(temp_dir, video_file.filename)
+            video_file.save(video_path)
+        elif 'video_url' in request.form:
+            video_url = request.form['video_url']
+            # Tải video từ URL
+            video_response = requests.get(video_url, stream=True)
+            if video_response.status_code != 200:
+                return jsonify({'error': 'Không thể tải video từ URL'}), 400
+            video_path = os.path.join(temp_dir, 'video.mp4')
+            with open(video_path, 'wb') as f:
+                for chunk in video_response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+        else:
+            return jsonify({'error': 'Thiếu tệp video hoặc URL'}), 400
+
+        # Gọi hàm generate_subtitles từ utils.py
+        subtitles_path = generate_subtitles(video_path, temp_dir)
+
+        if subtitles_path:
+            # Đảm bảo xóa thư mục tạm sau khi phản hồi được gửi
+            @after_this_request
+            def remove_temp_dir(response):
+                try:
+                    shutil.rmtree(temp_dir)
+                except Exception as e:
+                    logging.error(f"Lỗi khi xóa thư mục tạm {temp_dir}: {e}")
+                return response
+
+            # Gửi tệp phụ đề cho client 
+            return send_file(
+                subtitles_path,
+                as_attachment=True,
+                download_name='subtitles.vtt',  # Thay 'attachment_filename' bằng 'download_name'
+                mimetype='text/vtt'  # Đảm bảo đặt mimetype đúng cho VTT
+            )
+        else:
+            return jsonify({'error': 'Lỗi khi tạo phụ đề'}), 500
+    except Exception as e:
+        logging.error(f"Lỗi khi xử lý yêu cầu tạo phụ đề: {e}")
+        return jsonify({'error': 'Lỗi máy chủ'}), 500

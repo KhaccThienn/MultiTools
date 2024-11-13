@@ -1,5 +1,10 @@
 # app/utils.py
 
+from concurrent.futures import ThreadPoolExecutor
+import os
+import shutil
+import subprocess
+import tempfile
 from PIL import Image, ImageFilter
 import io
 import cv2
@@ -300,4 +305,242 @@ def generate_image_from_text(text):
         return base64_image
     except Exception as e:
         print(f"Error generating image: {e}")
+        return None
+    
+def delete_file(filepath):
+    try:
+        # Use appropriate command based on OS
+        if os.name == 'nt':  # Windows
+            subprocess.run(['del', '/f', filepath], check=True, shell=True)
+        else:  # Unix/Linux/MacOS
+            subprocess.run(['rm', '-f', filepath], check=True)
+    except Exception as e:
+        print(f"Error deleting file {filepath}: {e}")
+
+import yt_dlp
+
+def download_and_convert_playlist_to_mp3(playlist_url, output_folder):
+    # Create a temporary folder inside the provided output folder
+    temp_folder = tempfile.mkdtemp(dir=output_folder)
+    
+    failed_videos = []  # List to keep track of failed videos
+
+    def progress_hook(d):
+        if d['status'] == 'downloading':
+            print(f"Downloading: {d['_percent_str']} complete, speed: {d['_speed_str']}, ETA: {d['_eta_str']}")
+        elif d['status'] == 'finished':
+            print("Download complete, starting conversion...")
+        elif d['status'] == 'processing':
+            print(f"Processing: {d.get('_percent_str', 'N/A')}")
+        elif d['status'] == 'error':
+            video_title = d.get('filename', 'Unknown')
+            print(f"Error downloading or processing video: {video_title}")
+            failed_videos.append(video_title)
+
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'outtmpl': os.path.join(temp_folder, '%(title)s.%(ext)s'),  # Save to temp folder
+        'progress_hooks': [progress_hook],
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+        'ignoreerrors': True,  # Continue on download errors
+        'quiet': False,        # Display download information
+    }
+
+    files_to_delete = []
+    
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            print(f"Downloading playlist: {playlist_url}")
+            ydl.download([playlist_url])
+            print("All videos downloaded and converted to MP3.")
+        
+        # Move MP3 files to the output folder and collect non-MP3 files for deletion
+        for file in os.listdir(temp_folder):
+            src_path = os.path.join(temp_folder, file)
+            dest_path = os.path.join(output_folder, file)
+            if file.lower().endswith('.mp3'):
+                try:
+                    shutil.move(src_path, dest_path)
+                    print(f"Moved {file} to {output_folder}")
+                except Exception as e:
+                    print(f"Error moving file {file}: {e}")
+            else:
+                files_to_delete.append(src_path)
+        
+        # Delete non-MP3 files concurrently
+        if files_to_delete:
+            with ThreadPoolExecutor() as executor:
+                executor.map(delete_file, files_to_delete)
+    
+    except Exception as e:
+        print(f"Error downloading playlist: {e}")
+        raise e  # Re-raise exception to handle in the route
+    
+    finally:
+        # Optionally, handle failed videos (e.g., log them)
+        if failed_videos:
+            print("\nFailed Videos:")
+            for v in failed_videos:
+                print(f"- {v}")
+        else:
+            print("\nNo failed videos.")
+        
+        # Clean up the temporary folder
+        try:
+            shutil.rmtree(temp_folder)
+            print(f"Temporary folder {temp_folder} deleted.")
+        except Exception as e:
+            print(f"Error deleting temporary folder {temp_folder}: {e}")
+
+
+import requests
+from tqdm import tqdm
+import os
+from tkinter import Tk, filedialog
+
+def download_file_with_folder_selection(url, default_filename):
+    # Open a folder selection dialog
+    root = Tk()
+    root.withdraw()  # Hide the root window
+    output_folder = filedialog.askdirectory(title="Select Output Folder")
+    
+    if not output_folder:
+        print("No folder selected. Download canceled.")
+        return
+    
+    # Construct the output file path
+    output_path = os.path.join(output_folder, default_filename)
+
+    try:
+        # Make a GET request to fetch the file
+        with requests.get(url, stream=True) as response:
+            response.raise_for_status()  # Raise an error for bad responses (4xx, 5xx)
+            
+            # Get the total file size from headers
+            total_size = int(response.headers.get('content-length', 0))
+            
+            # Open the output file in write-binary mode
+            with open(output_path, 'wb') as file:
+                # Use tqdm to show download progress
+                with tqdm(total=total_size, unit='B', unit_scale=True, desc='Downloading') as progress_bar:
+                    for chunk in response.iter_content(chunk_size=1024):  # Download in chunks of 1KB
+                        file.write(chunk)
+                        progress_bar.update(len(chunk))  # Update the progress bar with the chunk size
+
+        print(f"Download complete: {output_path}")
+
+    except requests.RequestException as e:
+        print(f"Error occurred: {e}")
+
+
+
+def convert_image(input_path, output_path, output_format):
+    """
+    Converts an image from one format to another.
+    
+    Parameters:
+    - input_path (str): Path to the input image file.
+    - output_path (str): Path to save the converted image.
+    - output_format (str): Desired output format (e.g., 'PNG', 'JPEG').
+    """
+    try:
+        with Image.open(input_path) as img:
+            img = img.convert("RGB")  # Ensuring compatibility for formats like JPEG
+            img.save(output_path, format=output_format)
+        return output_path
+    except Exception as e:
+        print(f"Error converting image: {e}")
+        return None
+    
+import os
+import speech_recognition as sr
+from moviepy.editor import VideoFileClip, AudioFileClip
+import tempfile
+import logging
+import math
+
+logging.basicConfig(level=logging.DEBUG)
+
+def format_time(seconds):
+    """
+    Chuyển đổi thời gian tính bằng giây thành định dạng VTT (hh:mm:ss.ms)
+    """
+    import datetime
+    td = datetime.timedelta(seconds=seconds)
+    total_seconds = td.total_seconds()
+    hours = int(total_seconds // 3600)
+    minutes = int((total_seconds % 3600) // 60)
+    seconds = int(total_seconds % 60)
+    milliseconds = int((total_seconds - int(total_seconds)) * 1000)
+    return f"{hours:02}:{minutes:02}:{seconds:02}.{milliseconds:03}"
+
+def generate_subtitles(video_file_path, temp_dir):
+    """
+    Tạo phụ đề từ video bằng cách nhận dạng giọng nói.
+
+    Parameters:
+    - video_file_path: Đường dẫn tới tệp video.
+    - temp_dir: Thư mục tạm để lưu các tệp trung gian.
+
+    Returns:
+    - subtitles_path: Đường dẫn tới tệp phụ đề (định dạng .vtt).
+    """
+    try:
+        logging.debug(f"Processing video file: {video_file_path}")
+
+        # Lấy độ dài video
+        video = VideoFileClip(video_file_path)
+        duration = video.duration
+
+        recognizer = sr.Recognizer()
+
+        segment_length = 5  # Độ dài mỗi đoạn âm thanh (giây)
+        num_segments = math.ceil(duration / segment_length)
+
+        subtitles = []
+        index = 1
+
+        for i in range(num_segments):
+            start_time = i * segment_length
+            end_time = min((i + 1) * segment_length, duration)
+
+            # Trích xuất đoạn âm thanh
+            audio_segment_path = os.path.join(temp_dir, f"audio_{i}.wav")
+            audio_segment = video.subclip(start_time, end_time)
+            audio_segment.audio.write_audiofile(audio_segment_path, codec='pcm_s16le')
+
+            # Nhận dạng giọng nói
+            with sr.AudioFile(audio_segment_path) as source:
+                audio_data = recognizer.record(source)
+                try:
+                    text = recognizer.recognize_google(audio_data, language='vi-VN')
+                except sr.UnknownValueError:
+                    text = "[Không nhận diện được]"
+                except sr.RequestError as e:
+                    logging.error(f"Lỗi khi nhận dạng giọng nói: {e}")
+                    text = "[Lỗi nhận dạng]"
+
+            start_time_str = format_time(start_time)
+            end_time_str = format_time(end_time)
+
+            subtitles.append(f"{index}\n{start_time_str} --> {end_time_str}\n{text}\n")
+            index += 1
+
+            # Xóa tệp âm thanh tạm
+            os.remove(audio_segment_path)
+
+        # Tạo tệp phụ đề (VTT)
+        vtt_path = os.path.join(temp_dir, 'subtitles.vtt')
+        with open(vtt_path, 'w', encoding='utf-8') as vtt_file:
+            vtt_file.write("WEBVTT\n\n")
+            vtt_file.write('\n'.join(subtitles))
+
+        logging.debug(f"Subtitles created at: {vtt_path}")
+        return vtt_path
+    except Exception as e:
+        logging.error(f"Lỗi khi tạo phụ đề: {e}")
         return None

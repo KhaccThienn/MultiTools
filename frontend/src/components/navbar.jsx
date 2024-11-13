@@ -101,19 +101,14 @@ function Navbar() {
       title: "Chuyển định dạng",
       menuItems: [
         {
-          item_name: "Hình ảnh",
+          item_name: "File",
           containerIndex: 4,
           item_link: "/ConvertPage",
         },
         {
-          item_name: "Tài liệu",
-          containerIndex: 5,
-          item_link: "/ConvertPage",
-        },
-        {
-          item_name: "Âm thanh",
+          item_name: "Youtube to MP3",
           containerIndex: 6,
-          item_link: "/ConvertPage",
+          item_link: "/ConvertYoutubePage",
         },
       ],
     },

@@ -10,3 +10,8 @@ pillow==10.4.0
 Werkzeug==3.0.4
 opencv-python
 rembg
+fastapi
+uvicorn
+yt-dlp
+flask-socketio 
+eventlet

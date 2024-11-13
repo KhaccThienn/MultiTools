@@ -23,7 +23,7 @@ export default function TextToImage() {
   };
 
   return (
-    <>
+    <section className="tool-drawer">
       <input
         type="text"
         value={text}
@@ -43,6 +43,6 @@ export default function TextToImage() {
           </>
         )}
       </div>
-    </>
+    </section>
   );
 }
