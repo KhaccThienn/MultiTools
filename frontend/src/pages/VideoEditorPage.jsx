@@ -16,26 +16,25 @@ export default function VideoEditorPage() {
   };
 
   return (
-
-      <VideoProvider>
-        <div style={{ display: "flex", flexDirection: "column", height: "100vh", flex: 1 }}>
-          {/* Menu + Display */}
-          <div style={{ display: "flex", height: "90vh" }}>
-            {/* Menu */}
-            <div style={{ width: "22em", backgroundColor: "#2e2e2e" }}>
-              <MenuVideoEditor onMode={handleMode} />
-            </div>
-            {/* Display */}
-            <div style={{ flex: 1, backgroundColor: "#2e2e2e", position: "relative", overflow: "hidden" }}>
-              <VideoDisplay mode={mode} />
-            </div>
+    <VideoProvider>
+      <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+        {/* Menu + Display */}
+        <div style={{ display: "flex", flex: 1 }}>
+          {/* Menu */}
+          <div style={{ width: "22em", backgroundColor: "#2e2e2e" }}>
+            <MenuVideoEditor onMode={handleMode} />
           </div>
-          {/* Footer */}
-          <div style={{ display: "flex", flex: 1, backgroundColor: "#292c31" }}>
-            <VideoUpload />
-            <FooterVideoEditor />
+          {/* Display */}
+          <div style={{ flex: 1, backgroundColor: "#2e2e2e", position: "relative", overflow: "hidden" }}>
+            <VideoDisplay mode={mode} />
           </div>
         </div>
-      </VideoProvider>
+        {/* Footer */}
+        <div style={{ display: "flex", height: "10vh", backgroundColor: "#292c31" }}>
+          <VideoUpload />
+          <FooterVideoEditor />
+        </div>
+      </div>
+    </VideoProvider>
   );
 }

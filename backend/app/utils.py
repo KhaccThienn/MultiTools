@@ -517,7 +517,7 @@ def generate_subtitles(video_file_path, temp_dir):
             with sr.AudioFile(audio_segment_path) as source:
                 audio_data = recognizer.record(source)
                 try:
-                    text = recognizer.recognize_google(audio_data, language='vi-VN')
+                    text = recognizer.recognize_google(audio_data, language='en-US')
                 except sr.UnknownValueError:
                     text = "[Không nhận diện được]"
                 except sr.RequestError as e:
@@ -544,3 +544,228 @@ def generate_subtitles(video_file_path, temp_dir):
     except Exception as e:
         logging.error(f"Lỗi khi tạo phụ đề: {e}")
         return None
+    
+import logging
+import sys
+import codecs
+
+
+# Create a StreamHandler
+stream_handler = logging.StreamHandler(sys.stdout)
+stream_handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+stream_handler.setFormatter(formatter)
+
+# Tạo một FileHandler với encoding UTF-8
+file_handler = logging.FileHandler('app.log', encoding='utf-8')
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(formatter)
+
+# Cấu hình logging với cả StreamHandler và FileHandler
+logging.basicConfig(
+    level=logging.DEBUG,
+    handlers=[stream_handler, file_handler]
+)
+
+logging.debug("This is a UTF-8 encoded debug message.")
+
+
+import os
+import wave
+import json
+import logging
+from vosk import Model, KaldiRecognizer
+from pydub import AudioSegment
+
+def transcribe_audio_vosk(audio_file_path, recognizers):
+    """
+    Transcribe audio using Vosk recognizers for multiple languages.
+
+    Parameters:
+    - audio_file_path: Path to the audio file.
+    - recognizers: Dictionary mapping language codes to KaldiRecognizer instances.
+
+    Returns:
+    - text: Transcribed text.
+    - detected_language: Detected language code.
+    """
+    logging.debug(f"Bắt đầu nhận dạng cho file: {audio_file_path}")
+
+    wf = wave.open(audio_file_path, "rb")
+
+    # Đảm bảo tệp âm thanh có định dạng đúng
+    if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getframerate() not in [8000, 16000]:
+        logging.debug(f"Đang chuyển đổi định dạng âm thanh cho file: {audio_file_path}")
+        audio = AudioSegment.from_file(audio_file_path)
+        audio = audio.set_frame_rate(16000).set_channels(1).set_sample_width(2)
+        audio.export(audio_file_path, format="wav")
+        wf = wave.open(audio_file_path, "rb")
+        logging.debug(f"Chuyển đổi định dạng âm thanh hoàn tất cho file: {audio_file_path}")
+
+    # Biến để lưu kết quả tốt nhất
+    best_text = ""
+    best_confidence = 0
+    detected_language = "unknown"
+
+    for lang_code, recognizer in recognizers.items():
+        logging.debug(f"Đang sử dụng mô hình ngôn ngữ: {lang_code}")
+        wf.rewind()  # Đặt lại con trỏ tệp
+
+        results = []
+        while True:
+            data = wf.readframes(4000)
+            if len(data) == 0:
+                break
+            if recognizer.AcceptWaveform(data):
+                res = json.loads(recognizer.Result())
+                results.append(res)
+        res = json.loads(recognizer.FinalResult())
+        results.append(res)
+
+        # Kết hợp văn bản đã nhận dạng
+        text = ' '.join([res.get('text', '') for res in results])
+
+        # Tính toán độ tin cậy
+        words = [word for res in results for word in res.get('result', [])]
+        confidences = [word.get('conf', 0) for word in words]
+        avg_confidence = sum(confidences) / len(confidences) if confidences else 0
+
+        logging.debug(f"Ngôn ngữ: {lang_code}, Văn bản: \"{text}\", Độ tin cậy trung bình: {avg_confidence}")
+
+        if avg_confidence > best_confidence:
+            best_confidence = avg_confidence
+            best_text = text
+            detected_language = lang_code
+            logging.debug(f"Cập nhật ngôn ngữ tốt nhất thành: {detected_language} với độ tin cậy: {best_confidence}")
+
+    logging.info(f"Ngôn ngữ được phát hiện: {detected_language}, Văn bản đã nhận dạng: \"{best_text}\"")
+    return best_text.strip(), detected_language
+
+
+def generate_subtitles_premium(video_file_path, temp_dir):
+    try:
+        logging.debug(f"Đang xử lý tệp video: {video_file_path}")
+
+        # Trích xuất âm thanh từ video
+        video = VideoFileClip(video_file_path)
+        audio = video.audio
+        audio_path = os.path.join(temp_dir, "audio.wav")
+        audio.write_audiofile(audio_path, codec='pcm_s16le')
+        logging.debug(f"Âm thanh đã được trích xuất tại: {audio_path}")
+
+        # Tải âm thanh bằng pydub
+        audio_segment = AudioSegment.from_wav(audio_path)
+
+        duration_ms = len(audio_segment)  # Thời lượng tính bằng mili giây
+        segment_length_ms = 5000  # 5 giây tính bằng mili giây
+
+        subtitles = []
+        index = 1
+
+        # Tải mô hình một lần và tạo recognizers
+        model_paths = {
+            # 'vi': 'D:\\Projects\\multi_tools\\backend\\models\\vosk-model-small-vn-0.4',
+            'en': 'D:\\Projects\\multi_tools\\backend\\models\\vosk-model-small-en-us-0.15',
+            # Thêm các ngôn ngữ khác nếu cần
+        }
+
+        recognizers = {}
+        for lang_code, model_path in model_paths.items():
+            if not os.path.exists(model_path):
+                logging.error(f"Mô hình cho ngôn ngữ {lang_code} tại {model_path} không tồn tại.")
+                continue
+            try:
+                logging.debug(f"Đang tải mô hình ngôn ngữ: {lang_code} từ {model_path}")
+                model = Model(model_path)
+                recognizer = KaldiRecognizer(model, 16000)
+                recognizer.SetWords(True)
+                recognizers[lang_code] = recognizer
+                logging.debug(f"Mô hình ngôn ngữ {lang_code} đã được tải thành công.")
+            except Exception as e:
+                logging.error(f"Không thể tải mô hình cho ngôn ngữ {lang_code}: {e}")
+
+        for start_ms in range(0, duration_ms, segment_length_ms):
+            end_ms = min(start_ms + segment_length_ms, duration_ms)
+            audio_chunk = audio_segment[start_ms:end_ms]
+
+            chunk_filename = os.path.join(temp_dir, f"chunk_{index}.wav")
+            audio_chunk.export(chunk_filename, format="wav")
+            logging.debug(f"Đã xuất chunk {index}: {format_time(start_ms / 1000.0)} - {format_time(end_ms / 1000.0)} tại {chunk_filename}")
+
+            # Nhận dạng giọng nói và phát hiện ngôn ngữ
+            try:
+                text, detected_language = transcribe_audio_vosk(chunk_filename, recognizers)
+                # Dịch văn bản sang tiếng Anh
+                # translated_text = translate_text(text, target_language='en')
+                # logging.info(f"Chunk {index}: ({detected_language}) \"{text}\" | (en) \"{translated_text}\"")
+            except Exception as e:
+                logging.error(f"Lỗi khi nhận dạng giọng nói ở chunk {index}: {e}")
+                text = "[Lỗi nhận dạng]"
+                translated_text = ""
+                detected_language = "unknown"
+
+            # Tính toán thời gian
+            start_time_sec = start_ms / 1000.0
+            end_time_sec = end_ms / 1000.0
+
+            start_time_str = format_time(start_time_sec)
+            end_time_str = format_time(end_time_sec)
+
+            # Thêm vào phụ đề
+            subtitles.append(f"{index}\n{start_time_str} --> {end_time_str}\n"
+                             f"({detected_language}) {text}\n"
+                           )
+            index += 1
+
+            # Xóa tệp âm thanh tạm
+            os.remove(chunk_filename)
+            logging.debug(f"Đã xóa tệp tạm: {chunk_filename}")
+
+        # Tạo tệp phụ đề
+        vtt_path = os.path.join(temp_dir, 'subtitles.vtt')
+        with open(vtt_path, 'w', encoding='utf-8') as vtt_file:
+            vtt_file.write("WEBVTT\n\n")
+            vtt_file.write('\n'.join(subtitles))
+        logging.debug(f"Tệp phụ đề đã được tạo tại: {vtt_path}")
+
+        # Xóa tệp âm thanh tạm
+        os.remove(audio_path)
+        logging.debug(f"Đã xóa tệp âm thanh tạm: {audio_path}")
+
+        logging.debug(f"Phụ đề đã được tạo thành công tại: {vtt_path}")
+        return vtt_path
+    except Exception as e:
+        logging.error(f"Lỗi khi tạo phụ đề: {e}")
+        return None
+
+import subprocess
+
+def merge_video_with_subtitles(video_path, subtitles_filename, output_path):
+    current_working_directory = os.getcwd()
+    logging.info(f"Current working directory: {current_working_directory}")
+    try:
+        # Đảm bảo rằng đường dẫn phụ đề được định dạng đúng cho ffmpeg trên Windows
+        # Thay thế backslashes bằng forward slashes hoặc sử dụng raw strings
+
+        # Sử dụng video filter 'subtitles=subtitles_path'
+        command = [
+            "ffmpeg",
+            "-i", video_path,
+            "-vf", f"subtitles={subtitles_filename}",
+            "-c:a", "copy",  # Sao chép luồng âm thanh mà không re-encode
+            output_path
+        ]
+
+        logging.debug(f"Executing command: {' '.join(command)}")
+        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        
+        if result.returncode != 0:
+            logging.error(f"FFmpeg stderr: {result.stderr}")
+            return False, result.stderr
+        
+        logging.info(f"FFmpeg stdout: {result.stdout}")
+        return True, "Merge completed successfully"
+    except Exception as e:
+        logging.exception(f"Exception during merging: {e}")
+        return False, str(e)
+    

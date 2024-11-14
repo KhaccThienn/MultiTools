@@ -4,10 +4,13 @@ import React, { useState, useContext } from 'react';
 import { VideoContext } from '@/context/VideoContext';
 import axios from 'axios';
 import "../css/app.css";
-import { FaTimes } from 'react-icons/fa';
+import { FaSpinner, FaTimes } from 'react-icons/fa';
+import { MdOutlineGeneratingTokens } from 'react-icons/md';
+import InputFile from '@/components/InputFile';
+import AddFile from '@/components/AddFile';
 
-const AddSubtitlesComponent = () => {
-  const { currentVideo, setSubtitlesFile } = useContext(VideoContext);
+const AddSubtitles = () => {
+  const { currentVideo, setSubtitlesFile, handleApplySubtitles,isProcessing  } = useContext(VideoContext);
   const [subtitleFile, setSubtitleFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [options, setOptions] = useState("normal");
@@ -25,48 +28,57 @@ const AddSubtitlesComponent = () => {
       alert('Vui lòng tải lên video trước');
       return;
     }
-
+  
     setLoading(true);
     setError(null);
-
+  
     const formData = new FormData();
-
+  
     try {
-      if (currentVideo.startsWith('http')) {
-        // Nếu currentVideo là URL của tệp video trên máy chủ
-        formData.append('video_url', currentVideo);
-      } else {
-        // Nếu currentVideo là Blob URL, chuyển đổi thành tệp
+      if (currentVideo instanceof File) {
+        // Nếu currentVideo là đối tượng File
+        formData.append('video', currentVideo);
+      } else if (typeof currentVideo === 'string' && currentVideo.startsWith('blob:')) {
+        // Nếu currentVideo là blob URL, chuyển đổi thành tệp
         const response = await fetch(currentVideo);
         const blob = await response.blob();
         const videoFile = new File([blob], 'video.mp4', { type: blob.type });
         formData.append('video', videoFile);
+      } else if (typeof currentVideo === 'string' && currentVideo.startsWith('http')) {
+        // Nếu currentVideo là URL của tệp video trên máy chủ
+        formData.append('video_url', currentVideo);
+      } else {
+        alert('Định dạng video không hợp lệ');
+        return;
       }
-
+  
       // Chọn endpoint dựa trên option
-      const endpoint = selectedOption === "premium" 
-        ? 'http://localhost:5000/generate-subtitles' 
-        : 'http://localhost:5000/generate-subtitles-normal';
-
+      const endpoint =
+        selectedOption === 'premium'
+          ? 'http://localhost:5000/generate-subtitles-premium'
+          : 'http://localhost:5000/generate-subtitles';
+  
       const res = await axios.post(endpoint, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        // Loại bỏ 'Content-Type' header để Axios tự thiết lập
         responseType: 'blob', // Để nhận tệp VTT dưới dạng Blob
       });
-
+  
       const contentType = res.headers['content-type'];
-
-      if (contentType.includes('text/vtt') || contentType.includes('application/x-subrip') || contentType.includes('text/plain')) {
+  
+      if (
+        contentType.includes('text/vtt') ||
+        contentType.includes('application/x-subrip') ||
+        contentType.includes('text/plain')
+      ) {
         // Xử lý phản hồi là tệp phụ đề
         const subtitlesBlob = new Blob([res.data], { type: contentType });
-        const subtitlesURL = URL.createObjectURL(subtitlesBlob);
-        setSubtitlesFile(subtitlesURL);
+        const subtitlesFile = new File([subtitlesBlob], 'subtitles.vtt', { type: contentType });
+        setSubtitlesFile(subtitlesFile);
         alert('Đã tạo phụ đề thành công');
       } else if (contentType.includes('application/json')) {
         // Xử lý phản hồi là JSON (có thể là lỗi)
-        const text = await res.data.text();
-        const errorData = JSON.parse(text);
+        const errorText = await res.data.text();
+        const errorData = JSON.parse(errorText);
         console.error('Lỗi khi tạo phụ đề:', errorData.error);
         alert('Đã xảy ra lỗi khi tạo phụ đề: ' + (errorData.error || 'Unknown error'));
         setError(errorData.error || 'Unknown error');
@@ -78,13 +90,14 @@ const AddSubtitlesComponent = () => {
       }
     } catch (error) {
       console.error('Lỗi khi tạo phụ đề:', error);
-
+  
       if (error.response) {
         // Server trả về phản hồi lỗi
         const contentType = error.response.headers['content-type'];
         if (contentType && contentType.includes('application/json')) {
           try {
-            const errorData = JSON.parse(await error.response.data.text());
+            const errorText = await error.response.data.text();
+            const errorData = JSON.parse(errorText);
             alert('Đã xảy ra lỗi khi tạo phụ đề: ' + (errorData.error || 'Unknown error'));
             setError(errorData.error || 'Unknown error');
           } catch (e) {
@@ -104,17 +117,16 @@ const AddSubtitlesComponent = () => {
       setLoading(false);
     }
   };
-
+  
   const handleAddSubtitleFile = () => {
     if (!subtitleFile) {
       alert('Vui lòng chọn tệp phụ đề');
       return;
     }
 
-    const subtitlesURL = URL.createObjectURL(subtitleFile);
-    setSubtitlesFile(subtitlesURL);
+    setSubtitlesFile(subtitleFile); // Lưu trữ đối tượng File
     alert('Đã thêm tệp phụ đề');
-  };
+  }
 
   const handleOptionClick = (option) => () => {
     setOptions(option);
@@ -135,46 +147,55 @@ const AddSubtitlesComponent = () => {
         </button>
       </div>
       <div className="splitter"></div>
-      
-      {error && <div className="error-message">{error}</div>}
 
-      <div style={{ marginBottom: '10px' }}>
-        <button 
-          onClick={handleOptionClick("normal")} 
-          disabled={loading}
-          className={`subtitle-button ${options === "normal" ? "active" : ""}`}
-        >
-          {loading && options === "normal" ? 'Đang tạo phụ đề...' : 'Tạo phụ đề thông thường'}
-        </button>
-      </div>
-      
-      <div style={{ marginBottom: '20px' }}>
-        <button 
-          onClick={handleOptionClick("premium")} 
-          disabled={loading}
-          className={`subtitle-button ${options === "premium" ? "active" : ""}`}
-        >
-          {loading && options === "premium" ? 'Đang tạo phụ đề...' : 'Tạo phụ đề tự động'}
-        </button>
+      <div className="box--basic" onClick={handleOptionClick("normal")}>
+        {loading ? (
+          <>
+            <FaSpinner className="removebg-icon spinner" /> Đang tạo...
+          </>
+        ) : (
+          <>
+            <MdOutlineGeneratingTokens className="removebg-icon" /> Tạo phụ đề V1
+          </>
+        )}
       </div>
 
-      <div>
-        <label htmlFor="subtitle-upload">
-          Chọn tệp phụ đề:
-          <input
-            type="file"
-            id="subtitle-upload"
-            accept=".srt,.vtt"
-            onChange={handleSubtitleUpload}
-            style={{ marginLeft: '10px' }}
-          />
-        </label>
-        <button onClick={handleAddSubtitleFile} style={{ marginLeft: '10px' }} disabled={!subtitleFile}>
-          Thêm tệp phụ đề
-        </button>
+      <div className="box--basic" onClick={handleOptionClick("premium")}>
+        {loading ? (
+          <>
+            <FaSpinner className="removebg-icon spinner" /> Đang tạo...
+          </>
+        ) : (
+          <>
+            <MdOutlineGeneratingTokens className="removebg-icon" /> Tạo phụ đề V2
+          </>
+        )}
       </div>
+      <div className="bottom-content">
+        <div className="action-btn">
+          <button id="crop-action-cancel" onClick={{}}>
+            Hủy
+          </button>
+          {
+            isProcessing ? (
+              <button id="crop-action-apply" disabled style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}>
+                <FaSpinner className="removebg-icon spinner" /> Áp dụng
+              </button>
+            ) : (
+              <button id="crop-action-apply" onClick={handleApplySubtitles}>
+                Áp dụng
+              </button>
+            )
+          }
+        </div>
+      </div>
+
     </div>
   );
 };
 
-export default AddSubtitlesComponent;
+export default AddSubtitles;

@@ -1,0 +1,34 @@
+/* VideoDisplay.module.css */
+
+.videoContainer {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    flex: 1;
+
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: #2e2e2e;
+  }
+  
+  .videoElement {
+    height: 500px;
+    object-fit: contain; /* Giữ tỷ lệ khung hình gốc */
+    filter: 
+      brightness(var(--brightness)) 
+      contrast(var(--contrast)) 
+      saturate(var(--saturation)) 
+      hue-rotate(var(--hue)deg) 
+      grayscale(var(--grey_scale)) 
+      sepia(var(--sepia)) 
+      invert(var(--invert)) 
+      blur(var(--blur));
+    transition: filter 0.3s ease; /* Smooth transition for filter changes */
+  }
+  
+  .placeholder {
+    color: #fff;
+    font-size: 1.2em;
+  }
+  

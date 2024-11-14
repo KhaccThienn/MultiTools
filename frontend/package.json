@@ -14,6 +14,7 @@
         "all": "concurrently \"npm run frontend\" \"npm run python-backend\" \"npm run nodejs-backend\""
     },
     "dependencies": {
+        "@ffmpeg/core": "^0.12.6",
         "@ffmpeg/ffmpeg": "^0.12.10",
         "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
         "@fortawesome/fontawesome-free": "^6.6.0",

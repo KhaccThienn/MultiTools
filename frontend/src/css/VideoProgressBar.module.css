@@ -1,0 +1,126 @@
+/* VideoProgressBar.module.css */
+
+.controlsContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  user-select: none; /* Prevent text selection during drag */
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+
+}
+
+.rewindButton,
+.playPauseButton,
+.forwardButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin: 0 10px;
+  font-size: 16px;
+  color: #fff; /* Adjust based on your design */
+}
+
+.progressAndThumbnailsContainer {
+  position: relative;
+  width: 100%;
+}
+
+.progressBarContainer {
+  position: relative;
+  width: 100%;
+  height: 60px; /* Increased height to accommodate thumbnails and thumb */
+  background-color: #333;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.thumbnailsBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.thumbnailImage {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: auto;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+  pointer-events: none; /* Prevent thumbnails from capturing mouse events */
+}
+
+.thumbnailImage:hover {
+  opacity: 1;
+}
+
+.progressIndicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+  pointer-events: none;
+  transition: width 0.1s linear;
+}
+
+.dragging {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  background-color: #fff;
+  border: 2px solid #333;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  z-index: 2;
+}
+
+.thumb:hover {
+  background-color: #e0e0e0;
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+.thumbnailPreview {
+  position: absolute;
+  bottom: 100%;
+  transform: translateX(-50%);
+  margin-bottom: 10px;
+  display: none;
+  pointer-events: none; /* Prevent interference with mouse events */
+}
+
+.thumbnailPreview.visible {
+  display: block;
+}
+
+.thumbnailPreview img {
+  width: 160px;
+  height: 90px;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.timeDisplay {
+  margin-top: 5px;
+  text-align: center;
+  color: #fff;
+  font-size: 14px;
+}
