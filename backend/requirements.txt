@@ -15,3 +15,5 @@ uvicorn
 yt-dlp
 flask-socketio 
 eventlet
+SpeechRecognition
+moviepy
