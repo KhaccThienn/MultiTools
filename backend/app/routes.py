@@ -10,8 +10,9 @@ import time
 from tkinter import Image
 import uuid
 from flask import Blueprint,request, send_file, jsonify,current_app,send_from_directory, after_this_request
-from .utils import change_background, convert_image, download_and_convert_playlist_to_mp3, generate_image_from_text, generate_subtitles, generate_subtitles_premium, resize_image, crop_image, remove_object, process_crop, remove_background
+from .utils import apply_video_adjustments, change_background, convert_image, download_and_convert_playlist_to_mp3, download_soundcloud, download_youtube_mp4, generate_image_from_text, generate_subtitles, generate_subtitles_premium, resize_image, crop_image, remove_object, process_crop, remove_background
 import shutil
+import json  # Import json module
 # Sử dụng Blueprint để tổ chức các route
 bp = Blueprint('main', __name__)
 @bp.route('/resize', methods=['POST'])
@@ -145,12 +146,46 @@ def download_playlist():
         shutil.rmtree(temp_folder)
 
         # Start a thread to delete the zip file after 1 hour (3600 seconds)
-        threading.Thread(target=delete_file_after_delay, args=(zip_file_path, 60), daemon=True).start()
+        threading.Thread(target=delete_file_after_delay, args=(zip_file_path, 3600), daemon=True).start()
 
         return jsonify({'download_link': f'{zip_file_name}'})
     except Exception as e:
         print(f"Error occurred: {e}")
         return jsonify({'error': 'Failed to process playlist'}), 500
+
+@bp.route('/dowload-youtube-mp4', methods=['POST'])
+def download_youtube_mp4_route():
+    data = request.get_json()
+    url = data.get('url')
+    output_folder = './assets/videos'
+
+    if not url:
+        return jsonify({'error': 'Thiếu URL video'}), 400
+
+    os.makedirs(output_folder, exist_ok=True)
+    temp_folder = tempfile.mkdtemp(dir=output_folder)
+
+    try:
+        download_youtube_mp4(url, temp_folder)
+        zip_file_path = shutil.make_archive(temp_folder, 'zip', temp_folder)
+        zip_file_name = os.path.basename(zip_file_path)
+        shutil.rmtree(temp_folder)
+
+        # Start a thread to delete the zip file after 1 hour (3600 seconds)
+        threading.Thread(target=delete_file_after_delay, args=(zip_file_path, 3600), daemon=True).start()
+
+        return jsonify({'download_link': f'{zip_file_name}'})
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return jsonify({'error': 'Failed to process playlist'}), 500
+
+@bp.route('/download-youtube-mp4/<filename>')
+def download_youtube_mp4_file(filename):
+    file_path = f'D:\\Projects\\multi_tools\\backend\\assets\\videos\\{filename}'
+    if os.path.exists(file_path):
+        return send_file(file_path, as_attachment=True)
+    else:
+        return jsonify({'error': 'File not found'}), 404
 
 @bp.route('/download/<filename>')
 def download_file(filename):
@@ -160,8 +195,42 @@ def download_file(filename):
     else:
         return jsonify({'error': 'File not found'}), 404
 
+@bp.route('/download-soundcloud', methods=['POST'])
+def download_soundcloud_mp3_route():
+    data = request.get_json()
+    url = data.get('url')
+    output_folder = './assets/soundcloud'
 
-# routes.py
+    if not url:
+        return jsonify({'error': 'Thiếu URL media'}), 400
+
+    os.makedirs(output_folder, exist_ok=True)
+
+    try:
+        # Tải xuống SoundCloud media
+        temp_folder = download_soundcloud(url, output_folder)
+        
+        # Tạo một tệp zip từ các tệp đã tải xuống
+        zip_file_path = shutil.make_archive(temp_folder, 'zip', temp_folder)
+        zip_file_name = os.path.basename(zip_file_path)
+        shutil.rmtree(temp_folder)  # Xóa thư mục tạm sau khi tạo zip
+
+        # Bắt đầu một luồng để xóa tệp zip sau 1 giờ (3600 giây)
+        threading.Thread(target=delete_file_after_delay, args=(zip_file_path, 3600), daemon=True).start()
+
+        # Trả về đường dẫn tải xuống (có thể cần thêm URL server để tạo đường dẫn đầy đủ)
+        return jsonify({'download_link': zip_file_name})
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return jsonify({'error': 'Failed to process the download request'}), 500
+
+@bp.route('/download-soundcloud/<filename>')
+def serve_soundcloud_zip(filename):
+    file_path = f'D:\\Projects\\multi_tools\\backend\\assets\\soundcloud\\{filename}'
+    if os.path.exists(file_path):
+        return send_file(file_path, as_attachment=True)
+    else:
+        return jsonify({'error': 'File not found'}), 404
 
 @bp.route('/generate-subtitles', methods=['POST'])
 def generate_subtitles_route():
@@ -366,3 +435,41 @@ def merge_video():
         except Exception as e:
             logging.exception(f"Error sending file: {e}")
             return jsonify({"error": "Failed to send merged video file", "details": str(e)}), 500
+        
+
+@bp.route('/apply-adjustment', methods=['POST'])
+def apply_adjustment_route():
+    if 'video' not in request.files or 'adjustmentData' not in request.form:
+        return jsonify({'error': 'Thiếu video hoặc dữ liệu điều chỉnh'}), 400
+
+    video_file = request.files['video']
+    adjustment_data = json.loads(request.form['adjustmentData'])
+
+    output_folder = './assets/adjusted_videos'
+    os.makedirs(output_folder, exist_ok=True)
+
+    temp_input_path = tempfile.mktemp(suffix='.mp4', dir=output_folder)
+    temp_output_path = tempfile.mktemp(suffix='.mp4', dir=output_folder)
+
+    try:
+        # Lưu video vào thư mục tạm
+        video_file.save(temp_input_path)
+        print(f"Received video: {temp_input_path}")
+
+        # Áp dụng các điều chỉnh
+        apply_video_adjustments(temp_input_path, adjustment_data, temp_output_path)
+
+        # Đọc video đã chỉnh sửa và trả về cho frontend
+        return send_from_directory(directory=output_folder, filename=os.path.basename(temp_output_path), as_attachment=True)
+    except Exception as e:
+        print(f"Error applying adjustments: {e}")
+        return jsonify({'error': 'Failed to apply adjustments'}), 500
+    finally:
+        # Xóa tệp tạm input
+        if os.path.exists(temp_input_path):
+            os.remove(temp_input_path)
+            print(f"Deleted temp input file: {temp_input_path}")
+        
+        # Không xóa tệp output vì frontend cần nó
+        # Nếu bạn muốn xóa sau khi gửi, bạn có thể sử dụng threading
+        # threading.Thread(target=delete_file_after_delay, args=(temp_output_path, 3600), daemon=True).start()

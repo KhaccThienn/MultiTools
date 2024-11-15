@@ -212,14 +212,16 @@ const VideoDisplay = ({ mode }) => {
             controls={false} // Hide default controls to use custom controls
             className={styles.videoElement}
             style={{
-              "--brightness": `${adjustmentData.brightness}%`,
-              "--contrast": `${adjustmentData.contrast}%`,
-              "--saturation": `${adjustmentData.saturation}%`,
-              "--hue": `${adjustmentData.hue}`,
-              "--grey_scale": `${adjustmentData.grey_scale}%`,
-              "--sepia": `${adjustmentData.sepia}%`,
-              "--invert": `${adjustmentData.invert}%`,
-              "--blur": `${adjustmentData.blur}px`,
+              filter: `
+                  brightness(${adjustmentData.brightness}%)
+                  saturate(${adjustmentData.saturation}%)
+                  contrast(${adjustmentData.contrast}%)
+                  hue-rotate(${adjustmentData.hue}deg)
+                  grayscale(${adjustmentData.grey_scale}%)
+                  sepia(${adjustmentData.sepia}%)
+                  invert(${adjustmentData.invert}%)
+                  blur(${adjustmentData.blur}px)
+                `,
             }}
           >
             {subtitlesUrl && (

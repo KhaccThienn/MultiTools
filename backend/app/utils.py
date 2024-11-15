@@ -318,6 +318,111 @@ def delete_file(filepath):
         print(f"Error deleting file {filepath}: {e}")
 
 import yt_dlp
+def download_youtube_mp4(playlist_url, output_folder):
+    # Create a temporary folder for storing downloads
+    temp_folder = tempfile.mkdtemp(dir=output_folder)
+    failed_videos = []
+
+    def progress_hook(d):
+        # Handle download status messages
+        if d['status'] == 'downloading':
+            print(f"Downloading: {d['_percent_str']} complete, speed: {d.get('_speed_str', 'N/A')}, ETA: {d.get('_eta_str', 'N/A')}")
+        elif d['status'] == 'finished':
+            print("Download complete.")
+        elif d['status'] == 'error':
+            video_title = d.get('filename', 'Unknown')
+            print(f"Error downloading or processing video: {video_title}")
+            failed_videos.append(video_title)
+
+    # YouTube downloader options for MP4 download
+    ydl_opts = {
+        'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4',  # Prioritize MP4 video format
+        'outtmpl': os.path.join(temp_folder, '%(title)s.%(ext)s'),  # Save to temp folder
+        'progress_hooks': [progress_hook],
+        'merge_output_format': 'mp4',  # Ensure output is in MP4 if possible
+        'ignoreerrors': True,  # Continue on download errors
+        'quiet': False,       # Show download info
+    }
+
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            print(f"Starting download of playlist: {playlist_url}")
+            ydl.download([playlist_url])
+            print("All videos downloaded.")
+
+    except Exception as e:
+        print(f"Error downloading playlist: {e}")
+        raise e  # Re-raise the exception to be handled elsewhere
+
+    finally:
+        # Display failed downloads
+        if failed_videos:
+            print("\nFailed Videos:")
+            for v in failed_videos:
+                print(f"- {v}")
+        else:
+            print("\nNo failed videos.")
+
+def download_soundcloud(media_url, output_folder):
+    """
+    Tải xuống âm thanh từ SoundCloud và chuyển đổi sang MP3.
+    
+    :param media_url: URL của media SoundCloud.
+    :param output_folder: Thư mục để lưu tệp tải xuống.
+    :return: Đường dẫn tới thư mục tạm chứa các tệp đã tải xuống.
+    """
+    # Tạo thư mục tạm để lưu trữ các tệp tải xuống
+    temp_folder = tempfile.mkdtemp(dir=output_folder)
+    failed_tracks = []
+
+    def progress_hook(d):
+        # Xử lý các thông báo trạng thái tải xuống
+        if d['status'] == 'downloading':
+            print(f"Downloading: {d['_percent_str']} complete, speed: {d.get('_speed_str', 'N/A')}, ETA: {d.get('_eta_str', 'N/A')}")
+        elif d['status'] == 'finished':
+            print("Download complete, starting conversion...")
+        elif d['status'] == 'error':
+            track_title = d.get('filename', 'Unknown')
+            print(f"Error downloading or processing track: {track_title}")
+            failed_tracks.append(track_title)
+
+    # Tùy chọn cho yt-dlp để tải âm thanh từ SoundCloud
+    ydl_opts = {
+        'format': 'bestaudio/best',  # Tải âm thanh chất lượng tốt nhất có sẵn
+        'outtmpl': os.path.join(temp_folder, '%(title)s.%(ext)s'),  # Lưu vào thư mục tạm
+        'progress_hooks': [progress_hook],
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+        'ignoreerrors': True,  # Tiếp tục tải xuống ngay cả khi có lỗi
+        'quiet': False,        # Hiển thị thông tin tải xuống
+    }
+
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            print(f"Starting download of SoundCloud media: {media_url}")
+            ydl.download([media_url])
+            print("All tracks downloaded and converted to MP3.")
+    except Exception as e:
+        print(f"Error downloading SoundCloud media: {e}")
+        raise e  # Ném lại exception để xử lý ở route
+    finally:
+        # Hiển thị các track tải xuống thất bại
+        if failed_tracks:
+            print("\nFailed Tracks:")
+            for t in failed_tracks:
+                print(f"- {t}")
+        else:
+            print("\nNo failed tracks.")
+
+        # Không xóa thư mục tạm theo yêu cầu của người dùng
+        # Nếu bạn muốn xóa, hãy bỏ comment dòng dưới
+        # shutil.rmtree(temp_folder)
+        # print(f"Temporary folder {temp_folder} deleted.")
+
+    return temp_folder
 
 def download_and_convert_playlist_to_mp3(playlist_url, output_folder):
     # Create a temporary folder inside the provided output folder
@@ -769,3 +874,72 @@ def merge_video_with_subtitles(video_path, subtitles_filename, output_path):
         logging.exception(f"Exception during merging: {e}")
         return False, str(e)
     
+
+
+def apply_video_adjustments(input_video_path, adjustment_data, output_video_path):
+    """
+    Sử dụng FFmpeg để áp dụng các bộ lọc video dựa trên adjustment_data.
+    adjustment_data là một dictionary với các khóa:
+    brightness, contrast, saturation, hue, grey_scale, sepia, invert, blur
+    """
+    # Tạo các bộ lọc FFmpeg dựa trên adjustment_data
+    filters = []
+
+    # Brightness: brightness filter (-1 to 1, where 0 is normal)
+    brightness = (adjustment_data.get('brightness', 100) - 100) / 100  # Convert percentage to range (-1 to 1)
+    filters.append(f"eq=brightness={brightness}")
+
+    # Contrast: contrast filter (0.0 to 4.0, where 1.0 is normal)
+    contrast = adjustment_data.get('contrast', 100) / 100
+    filters.append(f"eq=contrast={contrast}")
+
+    # Saturation: hue filter with saturation
+    saturation = adjustment_data.get('saturation', 100) / 100
+    filters.append(f"hue=s={saturation}")
+
+    # Hue: hue filter (degrees)
+    hue = adjustment_data.get('hue', 0)
+    filters.append(f"hue=h={hue}")
+
+    # Grayscale: format filter
+    grey_scale = adjustment_data.get('grey_scale', 0)
+    if grey_scale > 0:
+        filters.append(f"format=gray")
+    
+    # Sepia: colorchannelmixer to apply sepia
+    sepia = adjustment_data.get('sepia', 0)
+    if sepia > 0:
+        # Sepia effect using colorchannelmixer
+        filters.append(f"colorchannelmixer=.393:.769:.189:0:.349:.686:.168:0:.272:.534:.131")
+
+    # Invert: negate filter
+    invert = adjustment_data.get('invert', 0)
+    if invert > 0:
+        filters.append("negate")
+
+    # Blur: boxblur filter
+    blur = adjustment_data.get('blur', 0)
+    if blur > 0:
+        filters.append(f"boxblur={blur}")
+
+    # Combine all filters
+    filter_complex = ",".join(filters)
+
+    # Construct FFmpeg command
+    command = [
+        'ffmpeg',
+        '-i', input_video_path,
+        '-vf', filter_complex,
+        '-c:a', 'copy',  # Copy audio without re-encoding
+        output_video_path
+    ]
+
+    print("FFmpeg command:", " ".join(command))
+
+    # Execute FFmpeg command
+    try:
+        subprocess.run(command, check=True)
+        print(f"Video adjusted successfully: {output_video_path}")
+    except subprocess.CalledProcessError as e:
+        print(f"FFmpeg error: {e}")
+        raise e

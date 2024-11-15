@@ -3,55 +3,73 @@
 import nextConnect from 'next-connect';
 import multer from 'multer';
 import ffmpeg from 'fluent-ffmpeg';
-import ffmpegStatic from 'ffmpeg-static';
+import { promisify } from 'util';
 import fs from 'fs';
 import path from 'path';
 
-ffmpeg.setFfmpegPath(ffmpegStatic);
-
-const upload = multer({ dest: '/tmp' });
-
-const apiRoute = nextConnect({
-  onError(error, req, res) {
-    res.status(500).json({ error: `An error occurred: ${error.message}` });
-  },
-  onNoMatch(req, res) {
-    res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
-  },
+// Sử dụng Multer để xử lý multipart/form-data
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: './public/uploads', // Thư mục lưu tệp tải lên
+    filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
+  }),
 });
 
-apiRoute.use(upload.single('file'));
+// Biến middleware để sử dụng với nextConnect
+const uploadMiddleware = upload.single('file');
 
-apiRoute.post(async (req, res) => {
+const handler = nextConnect();
+
+// Sử dụng middleware upload
+handler.use(uploadMiddleware);
+
+handler.post(async (req, res) => {
   const { format } = req.body;
-  const inputFile = req.file.path;
-  const outputFile = `/tmp/output.${format}`;
+  const file = req.file;
 
-  ffmpeg(inputFile)
-    .output(outputFile)
-    .on('end', () => {
-      res.setHeader('Content-Type', 'application/octet-stream');
-      res.setHeader('Content-Disposition', `attachment; filename=converted.${format}`);
-      const fileStream = fs.createReadStream(outputFile);
-      fileStream.pipe(res);
+  if (!file) {
+    return res.status(400).json({ error: 'Không tìm thấy tệp để chuyển đổi.' });
+  }
 
-      // Clean up temporary files
-      fileStream.on('close', () => {
-        fs.unlinkSync(inputFile);
-        fs.unlinkSync(outputFile);
-      });
-    })
-    .on('error', (err) => {
-      fs.unlinkSync(inputFile);
-      res.status(500).json({ error: `Conversion error: ${err.message}` });
-    })
-    .run();
+  // Xác định đường dẫn tệp nguồn và tệp đích
+  const inputPath = path.join(process.cwd(), 'public', 'uploads', file.filename);
+  const outputFilename = `${path.parse(file.filename).name}.${format}`;
+  const outputPath = path.join(process.cwd(), 'public', 'uploads', outputFilename);
+
+  try {
+    // Sử dụng Fluent-FFmpeg để chuyển đổi tệp
+    await new Promise((resolve, reject) => {
+      ffmpeg(inputPath)
+        .toFormat(format)
+        .on('end', resolve)
+        .on('error', reject)
+        .save(outputPath);
+    });
+
+    // Đọc tệp đã chuyển đổi
+    const fileBuffer = fs.readFileSync(outputPath);
+
+    // Đặt header để tải xuống tệp
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Disposition', `attachment; filename=${outputFilename}`);
+
+    // Gửi tệp cho client
+    res.send(fileBuffer);
+
+    // Tùy chọn: Xóa tệp gốc và tệp đã chuyển đổi sau khi hoàn thành
+    fs.unlinkSync(inputPath);
+    fs.unlinkSync(outputPath);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Đã xảy ra lỗi trong quá trình chuyển đổi.' });
+  }
 });
 
-export default apiRoute;
-
+// Đặt cấu hình API route để không sử dụng body parser mặc định
 export const config = {
   api: {
-    bodyParser: false, // Disable built-in body parser for file uploads
+    bodyParser: false,
   },
 };
+
+export default handler;

@@ -45,10 +45,61 @@ export const VideoProvider = ({ children }) => {
     });
   };
 
-  const handleAdjustment = () => {
-    // Since adjustments are applied via CSS variables, this function might not be needed
-    console.log("Adjustments applied:", adjustmentData);
-    // If you need to perform additional actions when applying adjustments, add them here
+  // Hàm handleAdjustment để áp dụng các điều chỉnh cho video
+  const handleAdjustment = async () => {
+    if (!currentVideo) {
+      console.error("Không có video để chỉnh sửa");
+      return;
+    }
+
+    // Log giá trị của bộ lọc để kiểm tra trước khi áp dụng
+    console.log("Giá trị bộ lọc hiện tại:", adjustmentData);
+
+    const formData = new FormData();
+    formData.append("video", currentVideo);
+    formData.append("adjustmentData", JSON.stringify(adjustmentData));
+
+    try {
+      setIsProcessing(true);
+      const response = await fetch("http://localhost:5000/apply-adjustment", {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        // Nhận video đã chỉnh sửa từ backend
+        const blob = await response.blob();
+        const adjustedVideoFile = new File([blob], 'adjusted_video.mp4', { type: blob.type });
+
+        // Cập nhật lịch sử video
+        const updatedHistory = [...history.slice(0, currentIndex + 1), adjustedVideoFile];
+        setHistory(updatedHistory);
+        setCurrentIndex(updatedHistory.length - 1);
+
+        // Reset dữ liệu điều chỉnh
+        setAdjustmentData({
+          brightness: 100,
+          contrast: 100,
+          saturation: 100,
+          hue: 0,
+          grey_scale: 0,
+          sepia: 0,
+          invert: 0,
+          blur: 0,
+        });
+
+        alert("Đã áp dụng điều chỉnh thành công!");
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to apply adjustments:", errorData);
+        alert("Đã xảy ra lỗi khi áp dụng điều chỉnh: " + (errorData.error || "Unknown error"));
+      }
+    } catch (error) {
+      console.error("Error applying adjustments:", error);
+      alert("Đã xảy ra lỗi khi áp dụng điều chỉnh: " + error.message);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const applyEdit = (newVideo) => {
@@ -161,6 +212,8 @@ export const VideoProvider = ({ children }) => {
         canUndo: currentIndex > 0,
         canRedo: currentIndex < history.length - 1,
         adjustmentData,
+        handleAdjustment, // Optional: may not be needed
+
         updateAdjustmentData,
         resetAdjustmentData,
         setVideoParameters,

@@ -81,9 +81,8 @@ const FilterVideo = ({ onClose }) => {
       <div className="box--basic slider-section">
         <h4 className="box__header">Màu</h4>
 
-        {/* Brightness Slider */}
         <div className="slider-group">
-          <div className="slider-labels">
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <label>Độ sáng</label>
             <label>{adjustmentData.brightness}</label>
           </div>
@@ -97,10 +96,9 @@ const FilterVideo = ({ onClose }) => {
           />
         </div>
 
-        {/* Saturation Slider */}
         <div className="slider-group">
-          <div className="slider-labels">
-            <label>Độ bão hòa màu</label>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <label>Độ tương phản</label>
             <label>{adjustmentData.saturation}</label>
           </div>
           <input
@@ -109,14 +107,12 @@ const FilterVideo = ({ onClose }) => {
             max="200"
             value={adjustmentData.saturation}
             onChange={(e) => setSaturation(e.target.value)}
-            className="slider__balance"
           />
         </div>
 
-        {/* Contrast Slider */}
         <div className="slider-group">
-          <div className="slider-labels">
-            <label>Độ tương phản</label>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <label>Độ bão hòa màu</label>
             <label>{adjustmentData.contrast}</label>
           </div>
           <input
@@ -125,13 +121,11 @@ const FilterVideo = ({ onClose }) => {
             max="200"
             value={adjustmentData.contrast}
             onChange={(e) => setContrast(e.target.value)}
-            className="slider__balance"
           />
         </div>
 
-        {/* Hue Slider */}
         <div className="slider-group">
-          <div className="slider-labels">
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <label>Sắc độ</label>
             <label>{adjustmentData.hue}</label>
           </div>
@@ -141,13 +135,11 @@ const FilterVideo = ({ onClose }) => {
             max="180"
             value={adjustmentData.hue}
             onChange={(e) => setHue(e.target.value)}
-            className="slider__balance"
           />
         </div>
 
-        {/* Grayscale Slider */}
         <div className="slider-group">
-          <div className="slider-labels">
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <label>Thang màu xám</label>
             <label>{adjustmentData.grey_scale}</label>
           </div>
@@ -157,13 +149,11 @@ const FilterVideo = ({ onClose }) => {
             max="100"
             value={adjustmentData.grey_scale}
             onChange={(e) => setGreyScale(e.target.value)}
-            className="slider__balance"
           />
         </div>
 
-        {/* Sepia Slider */}
         <div className="slider-group">
-          <div className="slider-labels">
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <label>Hiệu ứng cổ điển</label>
             <label>{adjustmentData.sepia}</label>
           </div>
@@ -173,13 +163,11 @@ const FilterVideo = ({ onClose }) => {
             max="100"
             value={adjustmentData.sepia}
             onChange={(e) => setSepia(e.target.value)}
-            className="slider__balance"
           />
         </div>
 
-        {/* Invert Slider */}
         <div className="slider-group">
-          <div className="slider-labels">
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <label>Đảo ngược màu</label>
             <label>{adjustmentData.invert}</label>
           </div>
@@ -189,13 +177,10 @@ const FilterVideo = ({ onClose }) => {
             max="100"
             value={adjustmentData.invert}
             onChange={(e) => setInvert(e.target.value)}
-            className="slider__balance"
           />
-        </div>
-
-        {/* Blur Slider */}
+          </div>
         <div className="slider-group">
-          <div className="slider-labels">
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <label>Mờ</label>
             <label>{adjustmentData.blur}</label>
           </div>
@@ -205,9 +190,8 @@ const FilterVideo = ({ onClose }) => {
             max="100"
             value={adjustmentData.blur}
             onChange={(e) => setBlur(e.target.value)}
-            className="slider__balance"
           />
-        </div>
+          </div>
       </div>
 
       <div className="bottom-content">
