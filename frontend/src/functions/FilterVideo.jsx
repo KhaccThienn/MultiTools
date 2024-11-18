@@ -4,6 +4,7 @@ import React, { useContext } from "react";
 import { FaMagic, FaMoon, FaSun, FaTimes } from "react-icons/fa";
 import "../css/menuEditor.css"; // Ensure this CSS file exists and is correctly styled
 import { VideoContext } from "@/context/VideoContext";
+import { FaSpinner } from "react-icons/fa6";
 
 const FilterVideo = ({ onClose }) => {
   const {
@@ -11,6 +12,7 @@ const FilterVideo = ({ onClose }) => {
     updateAdjustmentData,
     resetAdjustmentData,
     handleAdjustment, // Optional: may not be needed
+    isProcessing, // Optional: may not be needed
   } = useContext(VideoContext);
 
   // Handlers for individual adjustments
@@ -199,9 +201,23 @@ const FilterVideo = ({ onClose }) => {
           <button id="filter-action-cancel" onClick={resetAdjustmentData}>
             Hủy
           </button>
-          <button id="filter-action-apply" onClick={handleAdjustment}>
-            Áp dụng
-          </button>
+          {isProcessing ? (
+            <button
+              id="filter-action-apply"
+              disabled
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <FaSpinner className="removebg-icon spinner" /> Áp dụng
+            </button>
+          ) : (
+            <button id="filter-action-apply" onClick={handleAdjustment}>
+              Áp dụng
+            </button>
+          )}
         </div>
       </div>
     </div>

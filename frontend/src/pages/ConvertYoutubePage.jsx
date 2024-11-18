@@ -78,6 +78,11 @@ export default function ConvertYoutubePage() {
     if (youtubeMatch) {
       return { type: 'youtube', id: youtubeMatch[1] };
     }
+    // Handle playlists if needed
+    const playlistMatch = url.match(/[&?]list=([a-zA-Z0-9_-]+)/);
+    if (playlistMatch) {
+      return {type: 'youtube', id: `videoseries?list=${playlistMatch[1]}`}; // Return the playlist format
+    }
 
     // Kiểm tra SoundCloud
     const soundcloudMatch = url.match(

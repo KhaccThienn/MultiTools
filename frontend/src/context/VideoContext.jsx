@@ -51,7 +51,6 @@ export const VideoProvider = ({ children }) => {
       console.error("Không có video để chỉnh sửa");
       return;
     }
-
     // Log giá trị của bộ lọc để kiểm tra trước khi áp dụng
     console.log("Giá trị bộ lọc hiện tại:", adjustmentData);
 
@@ -87,7 +86,6 @@ export const VideoProvider = ({ children }) => {
           invert: 0,
           blur: 0,
         });
-
         alert("Đã áp dụng điều chỉnh thành công!");
       } else {
         const errorData = await response.json();
@@ -200,6 +198,50 @@ export const VideoProvider = ({ children }) => {
     }
   };
 
+  const trimVideoHandler = async (start, end) => {
+    if (!currentVideo) {
+      alert("Không có video để trim.");
+      return;
+    }
+  
+    console.log({ start, end });
+  
+    if (end - start < 1) {
+      alert("Khoảng trim phải ít nhất 1 giây.");
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append("video", currentVideo);
+    formData.append("trim_start", start.toString());
+    formData.append("trim_end", end.toString());
+  
+    try {
+      setIsProcessing(true);
+      const response = await fetch("http://localhost:5000/trim-video/", {
+        method: 'POST',
+        body: formData,
+        // Do NOT set 'Content-Type' header when sending FormData
+      });
+
+      if (response.ok) {       
+        const blob = await response.blob();
+        const trimmedVideoFile = new File([blob], `trimmed_${currentVideo.name}`, { type: blob.type });
+        applyEdit(trimmedVideoFile);
+        alert("Đã cắt video thành công!");
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to trim video:", errorData);
+        alert("Đã xảy ra lỗi khi cắt video: " + (errorData.error || "Unknown error"));
+      }
+    } catch (error) {
+      console.error("Error trimming video:", error);
+      alert("Đã xảy ra lỗi khi cắt video: " + error.message);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   return (
     <VideoContext.Provider
       value={{
@@ -225,6 +267,7 @@ export const VideoProvider = ({ children }) => {
         handleApplySubtitles, // Add handleApplySubtitles to context
         isProcessing, // Add processing state
         progress, // Add progress state
+        trimVideo: trimVideoHandler, // Rename to avoid conflict
       }}
     >
       {children}

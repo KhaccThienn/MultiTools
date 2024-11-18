@@ -10,7 +10,7 @@ import time
 from tkinter import Image
 import uuid
 from flask import Blueprint,request, send_file, jsonify,current_app,send_from_directory, after_this_request
-from .utils import apply_video_adjustments, change_background, convert_image, download_and_convert_playlist_to_mp3, download_soundcloud, download_youtube_mp4, generate_image_from_text, generate_subtitles, generate_subtitles_premium, resize_image, crop_image, remove_object, process_crop, remove_background
+from .utils import apply_video_adjustments, change_background, convert_image, download_and_convert_playlist_to_mp3, download_soundcloud, download_youtube_mp4, generate_image_from_text, generate_subtitles, generate_subtitles_premium, resize_image, crop_image, remove_object, process_crop, remove_background, trim_video
 import shutil
 import json  # Import json module
 # Sử dụng Blueprint để tổ chức các route
@@ -435,41 +435,236 @@ def merge_video():
         except Exception as e:
             logging.exception(f"Error sending file: {e}")
             return jsonify({"error": "Failed to send merged video file", "details": str(e)}), 500
-        
+
+import ffmpeg
+import logging
+
+# Setup Logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)      
 
 @bp.route('/apply-adjustment', methods=['POST'])
 def apply_adjustment_route():
+    """
+    API route to apply adjustments to a video.
+
+    Expects:
+    - 'video' in request.files: The video file to be adjusted.
+    - 'adjustmentData' in request.form: JSON string containing adjustment parameters.
+
+    Returns:
+    - Adjusted video file as a downloadable attachment.
+    """
+    logger.info("Received request to /apply-adjustment")
+
+    # Validate presence of 'video' and 'adjustmentData'
     if 'video' not in request.files or 'adjustmentData' not in request.form:
+        logger.error("Missing 'video' or 'adjustmentData' in the request")
         return jsonify({'error': 'Thiếu video hoặc dữ liệu điều chỉnh'}), 400
 
     video_file = request.files['video']
-    adjustment_data = json.loads(request.form['adjustmentData'])
+    adjustment_data_str = request.form['adjustmentData']
 
-    output_folder = './assets/adjusted_videos'
+    # Validate filename
+    if video_file.filename == '':
+        logger.error("No selected video file")
+        return jsonify({'error': 'No selected video file'}), 400
+
+    # Parse adjustment data
+    try:
+        adjustment_data = json.loads(adjustment_data_str)
+        logger.debug(f"Adjustment data received: {adjustment_data}")
+    except json.JSONDecodeError as e:
+        logger.error(f"Invalid JSON for 'adjustmentData': {str(e)}")
+        return jsonify({'error': 'Invalid JSON for adjustmentData'}), 400
+
+    # Define absolute output folder
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Adjust based on project structure
+    output_folder = os.path.join(BASE_DIR, 'assets', 'adjusted_videos')
     os.makedirs(output_folder, exist_ok=True)
+    logger.debug(f"Output folder set to: {output_folder}")
 
-    temp_input_path = tempfile.mktemp(suffix='.mp4', dir=output_folder)
-    temp_output_path = tempfile.mktemp(suffix='.mp4', dir=output_folder)
+    # Generate unique filenames
+    file_id = str(uuid.uuid4())
+    # Extract file extension from original filename
+    _, ext = os.path.splitext(secure_filename(video_file.filename))
+    input_filename = f"{file_id}_input{ext}"
+    output_filename = f"{file_id}_adjusted.mp4"
+    input_path = os.path.join(output_folder, input_filename)
+    output_path = os.path.join(output_folder, output_filename)
+
+    logger.debug(f"Input Path: {input_path}")
+    logger.debug(f"Output Path: {output_path}")
 
     try:
-        # Lưu video vào thư mục tạm
-        video_file.save(temp_input_path)
-        print(f"Received video: {temp_input_path}")
+        # Save the uploaded video to the temporary input path
+        video_file.save(input_path)
+        logger.info(f"Saved original video to {input_path}")
 
-        # Áp dụng các điều chỉnh
-        apply_video_adjustments(temp_input_path, adjustment_data, temp_output_path)
+        # Apply video adjustments
+        apply_video_adjustments(input_path, adjustment_data, output_path)
+        logger.info(f"Applied adjustments and saved adjusted video to {output_path}")
 
-        # Đọc video đã chỉnh sửa và trả về cho frontend
-        return send_from_directory(directory=output_folder, filename=os.path.basename(temp_output_path), as_attachment=True)
+        # Define the cleanup function before sending the file
+        @after_this_request
+        def cleanup(response):
+            try:
+                if os.path.exists(output_path):
+                    os.remove(output_path)
+                    logger.info(f"Deleted adjusted video at {output_path}")
+                else:
+                    logger.warning(f"Adjusted video file not found for deletion: {output_path}")
+            except Exception as e:
+                logger.error(f"Failed to delete adjusted video: {str(e)}")
+            return response
+
+        # Send the adjusted video back to the client
+        logger.info(f"Sending adjusted video {output_path} to client")
+        return send_file(
+            output_path,
+            mimetype='video/mp4',
+            as_attachment=True,
+            download_name=f"adjusted_{video_file.filename}"
+        )
+
     except Exception as e:
-        print(f"Error applying adjustments: {e}")
-        return jsonify({'error': 'Failed to apply adjustments'}), 500
+        logger.exception(f"Error applying adjustments: {str(e)}")
+        return jsonify({'error': 'Failed to apply adjustments', 'details': str(e)}), 500
+
     finally:
-        # Xóa tệp tạm input
-        if os.path.exists(temp_input_path):
-            os.remove(temp_input_path)
-            print(f"Deleted temp input file: {temp_input_path}")
-        
-        # Không xóa tệp output vì frontend cần nó
-        # Nếu bạn muốn xóa sau khi gửi, bạn có thể sử dụng threading
-        # threading.Thread(target=delete_file_after_delay, args=(temp_output_path, 3600), daemon=True).start()
+        # Clean up the temporary input file
+        try:
+            if os.path.exists(input_path):
+                os.remove(input_path)
+                logger.info(f"Deleted temp input file: {input_path}")
+            else:
+                logger.warning(f"Temp input file not found for deletion: {input_path}")
+        except Exception as e:
+            logger.error(f"Failed to delete temp input file: {str(e)}")
+
+
+
+
+
+# Determine the absolute path to the 'assets/temp_trimmed_videos' directory
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Goes up two levels from 'routes.py'
+OUTPUT_FOLDER = os.path.join(BASE_DIR, 'assets', 'temp_trimmed_videos')
+os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
+@bp.route('/trim-video/', methods=['POST'])
+def trim_video_route():
+    """
+    Endpoint to trim video.
+
+    Requirements:
+    - video: Original video file (multipart/form-data)
+    - trim_start: Start time in seconds (form-data)
+    - trim_end: End time in seconds (form-data)
+
+    Returns:
+    - Trimmed video file
+    """
+    logger.info("Received request to /trim-video/")
+
+    # Validate presence of 'video' in files
+    if 'video' not in request.files:
+        logger.error("No video part in the request")
+        return jsonify({"error": "No video part in the request"}), 400
+
+    video_file = request.files['video']
+
+    # Validate filename
+    if video_file.filename == '':
+        logger.error("No selected file")
+        return jsonify({"error": "No selected file"}), 400
+
+    # Parse trim_start and trim_end
+    try:
+        trim_start = float(request.form.get('trim_start', 0))
+        trim_end = float(request.form.get('trim_end', 0))
+        logger.debug(f"Trim parameters - Start: {trim_start}, End: {trim_end}")
+    except ValueError:
+        logger.error("Invalid trim_start or trim_end value")
+        return jsonify({"error": "Invalid trim_start or trim_end value"}), 400
+
+    # Validate trim times
+    if trim_start < 0 or trim_end <= trim_start:
+        logger.error("Invalid trim_start and trim_end values")
+        return jsonify({"error": "Invalid trim_start and trim_end values"}), 400
+
+    # Check if the uploaded file is a video
+    if not video_file.content_type.startswith("video/"):
+        logger.error("Uploaded file is not a video")
+        return jsonify({"error": "Uploaded file is not a video"}), 400
+
+    # Generate unique filenames
+    file_id = str(uuid.uuid4())
+    input_filename = secure_filename(f"{file_id}_input{os.path.splitext(video_file.filename)[1]}")
+    output_filename = secure_filename(f"{file_id}_trimmed.mp4")
+    input_path = os.path.join(OUTPUT_FOLDER, input_filename)
+    output_path = os.path.join(OUTPUT_FOLDER, output_filename)
+
+    logger.debug(f"Input Path: {input_path}")
+    logger.debug(f"Output Path: {output_path}")
+
+    # Save the original video to the temporary directory
+    try:
+        video_file.save(input_path)
+        logger.info(f"Saved original video to {input_path}")
+    except Exception as e:
+        logger.exception(f"Failed to save uploaded video: {str(e)}")
+        return jsonify({"error": f"Failed to save uploaded video: {str(e)}"}), 500
+
+    # Perform the trimming operation
+    try:
+        trim_video(input_path, output_path, trim_start, trim_end)
+        logger.info(f"Trimmed video saved to {output_path}")
+    except ffmpeg.Error as e:
+        error_message = e.stderr.decode()
+        logger.error(f"FFmpeg trimming failed: {error_message}")
+        # Cleanup input file
+        try:
+            os.remove(input_path)
+            logger.debug(f"Removed original video at {input_path}")
+        except Exception as cleanup_error:
+            logger.error(f"Failed to delete original video: {cleanup_error}")
+        return jsonify({"error": f"FFmpeg trimming failed: {error_message}"}), 500
+    except Exception as e:
+        logger.exception(f"Unexpected error during trimming: {str(e)}")
+        # Cleanup input file
+        try:
+            os.remove(input_path)
+            logger.debug(f"Removed original video at {input_path}")
+        except Exception as cleanup_error:
+            logger.error(f"Failed to delete original video: {cleanup_error}")
+        return jsonify({"error": "Error trimming video"}), 500
+
+    # Remove the original video after trimming
+    try:
+        os.remove(input_path)
+        logger.info(f"Removed original video at {input_path}")
+    except Exception as e:
+        logger.error(f"Failed to delete original video: {str(e)}")
+
+    # Define the cleanup function before sending the file
+    @after_this_request
+    def cleanup(response):
+        try:
+            os.remove(output_path)
+            logger.info(f"Removed trimmed video at {output_path}")
+        except Exception as e:
+            logger.error(f"Failed to delete trimmed video: {str(e)}")
+        return response
+
+    # Send the trimmed video back to the client
+    try:
+        logger.info(f"Sending trimmed video {output_path} to client")
+        return send_file(
+            output_path,
+            mimetype='video/mp4',
+            as_attachment=True,
+            download_name=f"trimmed_{video_file.filename}"  # Use 'download_name' for Flask >=2.0
+        )
+    except Exception as e:
+        logger.exception(f"Failed to send trimmed video: {str(e)}")
+        return jsonify({"error": "Failed to send trimmed video", "details": str(e)}), 500

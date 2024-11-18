@@ -202,7 +202,7 @@ const VideoDisplay = ({ mode }) => {
   }, [videoUrl]);
 
   return (
-<div ref={videoDisplayRef} className={styles.videoContainer}>
+    <div ref={videoDisplayRef} className={styles.videoContainer}>
       {videoUrl ? (
         <div className={styles.videoWrapper}>
           {/* Visible Video for User */}

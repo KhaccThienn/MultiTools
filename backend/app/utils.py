@@ -874,56 +874,81 @@ def merge_video_with_subtitles(video_path, subtitles_filename, output_path):
         logging.exception(f"Exception during merging: {e}")
         return False, str(e)
     
-
-
 def apply_video_adjustments(input_video_path, adjustment_data, output_video_path):
     """
     Sử dụng FFmpeg để áp dụng các bộ lọc video dựa trên adjustment_data.
     adjustment_data là một dictionary với các khóa:
     brightness, contrast, saturation, hue, grey_scale, sepia, invert, blur
     """
-    # Tạo các bộ lọc FFmpeg dựa trên adjustment_data
+    # Initialize logging
+    logger = logging.getLogger(__name__)
+    
+    # Helper functions to safely parse float and int
+    def parse_float(value, default=0.0):
+        try:
+            return float(value)
+        except (ValueError, TypeError):
+            logger.warning(f"Failed to parse float from value: {value}. Using default: {default}")
+            return default
+
+    def parse_int(value, default=0):
+        try:
+            return int(value)
+        except (ValueError, TypeError):
+            logger.warning(f"Failed to parse int from value: {value}. Using default: {default}")
+            return default
+
+    # Create FFmpeg filters based on adjustment_data
     filters = []
 
     # Brightness: brightness filter (-1 to 1, where 0 is normal)
-    brightness = (adjustment_data.get('brightness', 100) - 100) / 100  # Convert percentage to range (-1 to 1)
+    brightness_raw = adjustment_data.get('brightness', '100')
+    brightness = (parse_float(brightness_raw, 100) - 100) / 100  # Convert percentage to range (-1 to 1)
     filters.append(f"eq=brightness={brightness}")
 
     # Contrast: contrast filter (0.0 to 4.0, where 1.0 is normal)
-    contrast = adjustment_data.get('contrast', 100) / 100
+    contrast_raw = adjustment_data.get('contrast', '100')
+    contrast = parse_float(contrast_raw, 100) / 100
     filters.append(f"eq=contrast={contrast}")
 
     # Saturation: hue filter with saturation
-    saturation = adjustment_data.get('saturation', 100) / 100
+    saturation_raw = adjustment_data.get('saturation', '100')
+    saturation = parse_float(saturation_raw, 100) / 100
     filters.append(f"hue=s={saturation}")
 
     # Hue: hue filter (degrees)
-    hue = adjustment_data.get('hue', 0)
+    hue_raw = adjustment_data.get('hue', '0')
+    hue = parse_float(hue_raw, 0)
     filters.append(f"hue=h={hue}")
 
     # Grayscale: format filter
-    grey_scale = adjustment_data.get('grey_scale', 0)
+    grey_scale_raw = adjustment_data.get('grey_scale', '0')
+    grey_scale = parse_int(grey_scale_raw, 0)
     if grey_scale > 0:
-        filters.append(f"format=gray")
-    
+        filters.append("format=gray")
+
     # Sepia: colorchannelmixer to apply sepia
-    sepia = adjustment_data.get('sepia', 0)
+    sepia_raw = adjustment_data.get('sepia', '0')
+    sepia = parse_int(sepia_raw, 0)
     if sepia > 0:
         # Sepia effect using colorchannelmixer
-        filters.append(f"colorchannelmixer=.393:.769:.189:0:.349:.686:.168:0:.272:.534:.131")
+        filters.append("colorchannelmixer=.393:.769:.189:0:.349:.686:.168:0:.272:.534:.131")
 
     # Invert: negate filter
-    invert = adjustment_data.get('invert', 0)
+    invert_raw = adjustment_data.get('invert', '0')
+    invert = parse_int(invert_raw, 0)
     if invert > 0:
         filters.append("negate")
 
     # Blur: boxblur filter
-    blur = adjustment_data.get('blur', 0)
+    blur_raw = adjustment_data.get('blur', '0')
+    blur = parse_float(blur_raw, 0)
     if blur > 0:
         filters.append(f"boxblur={blur}")
 
     # Combine all filters
     filter_complex = ",".join(filters)
+    logger.debug(f"FFmpeg filter_complex: {filter_complex}")
 
     # Construct FFmpeg command
     command = [
@@ -934,12 +959,38 @@ def apply_video_adjustments(input_video_path, adjustment_data, output_video_path
         output_video_path
     ]
 
-    print("FFmpeg command:", " ".join(command))
+    logger.info(f"Executing FFmpeg command: {' '.join(command)}")
 
     # Execute FFmpeg command
     try:
-        subprocess.run(command, check=True)
-        print(f"Video adjusted successfully: {output_video_path}")
+        subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        logger.info(f"Video adjusted successfully: {output_video_path}")
     except subprocess.CalledProcessError as e:
-        print(f"FFmpeg error: {e}")
+        stderr_output = e.stderr.decode()
+        logger.error(f"FFmpeg error: {stderr_output}")
+        raise e
+
+import ffmpeg
+import os
+
+def trim_video(input_path: str, output_path: str, start_time: float, end_time: float) -> None:
+    """
+    Cắt video từ start_time đến end_time và lưu vào output_path.
+
+    :param input_path: Đường dẫn đến file video gốc
+    :param output_path: Đường dẫn để lưu video đã được cắt
+    :param start_time: Thời gian bắt đầu trim (giây)
+    :param end_time: Thời gian kết thúc trim (giây)
+    """
+    try:
+        (
+            ffmpeg
+            .input(input_path, ss=start_time, to=end_time)
+            .output(output_path, codec="copy")
+            .overwrite_output()
+            .run()
+        )
+        logging.debug(f"Video đã được cắt thành công: {output_path}")
+    except ffmpeg.Error as e:
+        print(f"FFmpeg error: {e.stderr.decode()}")
         raise e
