@@ -152,6 +152,7 @@ export default function ConvertYoutubePage() {
 
   return (
     <div>
+      <title>MultiTools | Công cụ chỉnh sửa đa năng</title>
       {loading && <Loader />}
       <div className={`head ${showNavbar ? "show" : "hide"}`}>
         <Navbar toggleTheme={toggleTheme} theme={theme} />

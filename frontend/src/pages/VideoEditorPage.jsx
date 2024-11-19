@@ -17,6 +17,7 @@ export default function VideoEditorPage() {
 
   return (
     <VideoProvider>
+      <title>MultiTools | Công cụ chỉnh sửa đa năng</title>
       <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
         {/* Menu + Display */}
         <div style={{ display: "flex", flex: 1 }}>

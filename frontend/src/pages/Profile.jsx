@@ -40,6 +40,7 @@ export default function Profile() {
 
   return (
     <div className="profile-page">
+      <title>MultiTools | Công cụ chỉnh sửa đa năng</title>
       <div className="home-button" onClick={handleHomeClick}>
         <FcHome />
       </div>
