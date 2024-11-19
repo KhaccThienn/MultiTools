@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "../css/profile.css";
 
@@ -6,6 +6,13 @@ const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [isNewPasswordValid, setIsNewPasswordValid] = useState(null);
+  const [newPasswordError, setNewPasswordError] = useState("");
+
+  const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(null);
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -13,23 +20,49 @@ const ChangePassword = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // Kiểm tra mật khẩu mới real-time
+  useEffect(() => {
+    if (newPassword.trim() === "") {
+      setIsNewPasswordValid(null);
+      setNewPasswordError("");
+    } else {
+      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+      if (!passwordRegex.test(newPassword)) {
+        setIsNewPasswordValid(false);
+        setNewPasswordError(
+          "Mật khẩu mới phải có tối thiểu 6 ký tự bao gồm cả chữ và số."
+        );
+      } else if (newPassword === oldPassword) {
+        setIsNewPasswordValid(false);
+        setNewPasswordError("Mật khẩu mới không được trùng với mật khẩu cũ.");
+      } else {
+        setIsNewPasswordValid(true);
+        setNewPasswordError("");
+      }
+    }
+  }, [newPassword, oldPassword]);
+
+  // Kiểm tra xác nhận mật khẩu real-time
+  useEffect(() => {
+    if (confirmPassword.trim() === "") {
+      setIsConfirmPasswordValid(null);
+      setConfirmPasswordError("");
+    } else {
+      if (confirmPassword !== newPassword) {
+        setIsConfirmPasswordValid(false);
+        setConfirmPasswordError("Xác nhận mật khẩu không khớp.");
+      } else {
+        setIsConfirmPasswordValid(true);
+        setConfirmPasswordError("");
+      }
+    }
+  }, [confirmPassword, newPassword]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (newPassword.length < 6) {
-      setErrorMessage("Mật khẩu mới cần có ít nhất 6 ký tự.");
-      setSuccessMessage("");
-      return;
-    }
-
-    if (newPassword === oldPassword) {
-      setErrorMessage("Mật khẩu mới không được trùng với mật khẩu cũ.");
-      setSuccessMessage("");
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setErrorMessage("Mật khẩu mới và xác nhận mật khẩu không khớp.");
+    if (!oldPassword || !isNewPasswordValid || !isConfirmPasswordValid) {
+      setErrorMessage("Vui lòng nhập đầy đủ và chính xác thông tin.");
       setSuccessMessage("");
       return;
     }
@@ -48,19 +81,16 @@ const ChangePassword = () => {
 
     const responseData = await response.json();
 
-    // if (response.ok) {
-    //   setSuccessMessage(responseData.message || "Đổi mật khẩu thành công!");
-    //   setErrorMessage("");
-    // } else {
-    //   setErrorMessage(responseData.error || "Đổi mật khẩu thất bại.");
-    //   setSuccessMessage("");
-    // }
-
     if (response.ok) {
       setSuccessMessage("Đổi mật khẩu thành công!");
       setErrorMessage("");
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setIsNewPasswordValid(null);
+      setIsConfirmPasswordValid(null);
     } else {
-      setErrorMessage("Đổi mật khẩu thất bại.");
+      setErrorMessage(responseData.error || "Đổi mật khẩu thất bại.");
       setSuccessMessage("");
     }
   };
@@ -77,6 +107,7 @@ const ChangePassword = () => {
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
               required
+              placeholder="Nhập mật khẩu cũ"
             />
             <span onClick={() => setShowOldPassword(!showOldPassword)}>
               {showOldPassword ? <FaEyeSlash /> : <FaEye />}
@@ -85,18 +116,29 @@ const ChangePassword = () => {
         </div>
 
         <div className="form-group">
-          <label>Mật khẩu mới (cần ít nhất 6 ký tự):</label>
+          <label>Mật khẩu mới (cần ít nhất 6 ký tự bao gồm cả chữ và số):</label>
           <div className="password-input">
             <input
               type={showNewPassword ? "text" : "password"}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
+              placeholder="Nhập mật khẩu mới"
+              className={
+                isNewPasswordValid === false
+                  ? "invalid"
+                  : isNewPasswordValid === true
+                  ? "valid"
+                  : ""
+              }
             />
             <span onClick={() => setShowNewPassword(!showNewPassword)}>
               {showNewPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
+          {newPasswordError && (
+            <p className="error-message">{newPasswordError}</p>
+          )}
         </div>
 
         <div className="form-group">
@@ -107,11 +149,22 @@ const ChangePassword = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
+              placeholder="Xác nhận mật khẩu mới"
+              className={
+                isConfirmPasswordValid === false
+                  ? "invalid"
+                  : isConfirmPasswordValid === true
+                  ? "valid"
+                  : ""
+              }
             />
             <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
               {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
+          {confirmPasswordError && (
+            <p className="error-message">{confirmPasswordError}</p>
+          )}
         </div>
 
         {errorMessage && <p className="error-message">{errorMessage}</p>}

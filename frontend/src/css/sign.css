@@ -157,7 +157,7 @@ body .signin-modal .large-signin-box .signin .signinBox h2 i {
     border: 1px solid #ccc;
     border-radius: 5px;
     outline: none;
-} 
+}
 
 .show-pass-icon {
     position: absolute;
@@ -622,4 +622,44 @@ body .signup-modal .large-signup-box .signup .social-signup button i {
 
 body .signup-modal .large-signup-box .signup .social-signup button:hover {
     opacity: 0.8;
+}
+
+
+.input-with-icon, .password-input-container {
+    width: 100%;
+}
+
+.valid {
+    border-color: green;
+}
+
+.invalid {
+    border-color: red;
+}
+
+.valid-icon {
+    color: green;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.invalid-icon {
+    color: red;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    
+    transform: translateY(-50%);
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin: 5px 0 0;
 }

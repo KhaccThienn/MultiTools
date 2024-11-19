@@ -1,18 +1,14 @@
+"use client"; 
 
-'use client'; // Đảm bảo rằng component này chạy trên client side
-
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import { useEffect, useState } from 'react';
-import '../css/sign.css';
-import images from "@/constants/images"; 
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import { useEffect, useState } from "react";
+import "../css/sign.css";
+import images from "@/constants/images";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { signInWithPopup } from 'firebase/auth';
-import { googleProvider, auth } from '@/auth/firebase';
-
-
+import { signInWithPopup } from "firebase/auth";
+import { googleProvider, auth } from "@/auth/firebase";
 
 const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
-
   const [isLogin, setIsLogin] = useState(isSignin);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -31,22 +27,35 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
     images.otter,
   ];
 
+  const [isUsernameValid, setIsUsernameValid] = useState(null);
+  const [usernameError, setUsernameError] = useState("");
 
-  
-    const resetInputs = () => {
-      setUsername("");
-      setIsLogin(true); // move to signin
-    };
+  const [isEmailValid, setIsEmailValid] = useState(null);
+  const [emailError, setEmailError] = useState("");
 
+  const [isPasswordValid, setIsPasswordValid] = useState(null);
+  const [passwordError, setPasswordError] = useState("");
+
+  const resetInputs = () => {
+    setUsername("");
+    setPassword("");
+    setEmail("");
+    setIsUsernameValid(null);
+    setUsernameError("");
+    setIsEmailValid(null);
+    setEmailError("");
+    setIsPasswordValid(null);
+    setPasswordError("");
+  };
 
   const toggleToSignup = () => {
-    resetInputs(); // reset input
-    setIsLogin(false); // move to signup
+    resetInputs(); 
+    setIsLogin(false); 
   };
 
   const toggleToSignin = () => {
-    resetInputs(); // reset input
-    setIsLogin(true); // move to signin
+    resetInputs();
+    setIsLogin(true); 
   };
 
   //Random Avt
@@ -84,7 +93,10 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
 
   // Logic for sign-up
   const handleSignup = async () => {
-    console.log("Đã gọi hàm handleSignup");
+    if (!isUsernameValid || !isEmailValid || !isPasswordValid) {
+      alert("Vui lòng nhập đầy đủ và chính xác thông tin.");
+      return;
+    }
     const randomAvatar = getRandomAvatar();
     try {
       const response = await fetch("http://localhost:4000/register", {
@@ -135,40 +147,154 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
     };
   }, [closeModal]);
 
+  // Kiểm tra tên đăng nhập real-time
+  useEffect(() => {
+    if (!isLogin) {
+      const delayDebounceFn = setTimeout(async () => {
+        if (username.trim() === "") {
+          setIsUsernameValid(null);
+          setUsernameError("");
+        } else {
+          try {
+            const response = await fetch(
+              "http://localhost:4000/check-username",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username }),
+              }
+            );
+
+            const data = await response.json();
+            if (response.ok) {
+              if (data.exists) {
+                setIsUsernameValid(false);
+                setUsernameError("Tên đăng nhập đã tồn tại.");
+              } else {
+                setIsUsernameValid(true);
+                setUsernameError("");
+              }
+            } else {
+              setIsUsernameValid(false);
+              setUsernameError("Có lỗi xảy ra khi kiểm tra tên đăng nhập.");
+            }
+          } catch (error) {
+            console.error("Error checking username:", error);
+            setIsUsernameValid(false);
+            setUsernameError("Có lỗi xảy ra khi kiểm tra tên đăng nhập.");
+          }
+        }
+      }, 500);
+
+      return () => clearTimeout(delayDebounceFn);
+    }
+  }, [username, isLogin]);
+
+  // Kiểm tra email real-time
+  useEffect(() => {
+    if (!isLogin) {
+      const delayDebounceFn = setTimeout(async () => {
+        if (email.trim() === "") {
+          setIsEmailValid(null);
+          setEmailError("");
+        } else {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            setIsEmailValid(false);
+            setEmailError("Email không hợp lệ.");
+          } else {
+            try {
+              const response = await fetch(
+                "http://localhost:4000/check-email",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ email }),
+                }
+              );
+
+              const data = await response.json();
+              if (response.ok) {
+                if (data.exists) {
+                  setIsEmailValid(false);
+                  setEmailError("Email đã được sử dụng.");
+                } else {
+                  setIsEmailValid(true);
+                  setEmailError("");
+                }
+              } else {
+                setIsEmailValid(false);
+                setEmailError("Có lỗi xảy ra khi kiểm tra email.");
+              }
+            } catch (error) {
+              console.error("Error checking email:", error);
+              setIsEmailValid(false);
+              setEmailError("Có lỗi xảy ra khi kiểm tra email.");
+            }
+          }
+        }
+      }, 500);
+
+      return () => clearTimeout(delayDebounceFn);
+    }
+  }, [email, isLogin]);
+
+  // Kiểm tra mật khẩu
+  useEffect(() => {
+    if (!isLogin) {
+      if (password.trim() === "") {
+        setIsPasswordValid(null);
+        setPasswordError("");
+      } else {
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+        if (!passwordRegex.test(password)) {
+          setIsPasswordValid(false);
+          setPasswordError(
+            "Mật khẩu phải có tối thiểu 6 ký tự bao gồm cả chữ và số."
+          );
+        } else {
+          setIsPasswordValid(true);
+          setPasswordError("");
+        }
+      }
+    }
+  }, [password, isLogin]);
+
   const signInWithGoogle = async () => {
     try {
       // Sign in with Google
       const result = await signInWithPopup(auth, googleProvider);
       console.log("Google sign-in result:", result); // Debugging
-      
+
       const user = result.user;
-  
+
       // Get the Firebase ID token for the current user
       const token = await auth.currentUser.getIdToken();
-  
+
       if (!token) {
-        console.error('Failed to retrieve Firebase ID token.');
-        alert('Đã xảy ra lỗi trong quá trình xác thực.');
+        console.error("Failed to retrieve Firebase ID token.");
+        alert("Đã xảy ra lỗi trong quá trình xác thực.");
         return;
       }
-  
+
       console.log("Firebase ID token:", token); // Debugging
-  
+
       // Store token and user info in localStorage
-      localStorage.setItem('token', token); // Store Firebase token
-      localStorage.setItem('username', user.displayName); // Store username
-      localStorage.setItem('avatar', user.photoURL); // Store avatar URL
-      alert('Đăng nhập thành công với Google!');
+      localStorage.setItem("token", token); // Store Firebase token
+      localStorage.setItem("username", user.displayName); // Store username
+      localStorage.setItem("avatar", user.photoURL); // Store avatar URL
+      alert("Đăng nhập thành công với Google!");
       onLoginSuccess();
-  
     } catch (error) {
       console.error("Error during Google sign-in:", error);
-      alert('Đã xảy ra lỗi khi đăng nhập với Google.');
+      alert("Đã xảy ra lỗi khi đăng nhập với Google.");
     }
   };
-  
-   
-  
+
   return (
     <>
       {isLogin ? (
@@ -225,9 +351,9 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
                   <button className="google-signin" onClick={signInWithGoogle}>
                     <i className="fab fa-google"></i> Đăng nhập với Google
                   </button>
-                  <button className="facebook-signin">
+                  {/* <button className="facebook-signin">
                     <i className="fab fa-facebook"></i> Đăng nhập với Facebook
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
@@ -246,18 +372,44 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
                   Đăng ký
                   <i className="fa-solid fa-heart"></i>
                 </h2>
-                <input
-                  type="text"
-                  placeholder="Tên đăng nhập"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)} // update input value
-                />
+                <div className="input-with-icon">
+                  <input
+                    type="text"
+                    placeholder="Tên đăng nhập"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className={
+                      isUsernameValid === false
+                        ? "invalid"
+                        : isUsernameValid === true
+                        ? "valid"
+                        : ""
+                    }
+                  />
+                  {isUsernameValid === true && (
+                    <i className="fa fa-check-circle valid-icon"></i>
+                  )}
+                  {isUsernameValid === false && (
+                    <i className="fa fa-times-circle invalid-icon"></i>
+                  )}
+                </div>
+                {usernameError && (
+                  <p className="error-message">{usernameError}</p>
+                )}
+
                 <div className="password-input-container">
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="Mật khẩu"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    className={
+                      isPasswordValid === false
+                        ? "invalid"
+                        : isPasswordValid === true
+                        ? "valid"
+                        : ""
+                    }
                   />
                   {showPassword ? (
                     <AiFillEyeInvisible
@@ -271,12 +423,33 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
                     />
                   )}
                 </div>
-                <input
-                  type="text"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)} // update input value
-                />
+                {passwordError && (
+                  <p className="error-message">{passwordError}</p>
+                )}
+
+                <div className="input-with-icon">
+                  <input
+                    type="text"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)} 
+                    className={
+                      isEmailValid === false
+                        ? "invalid"
+                        : isEmailValid === true
+                        ? "valid"
+                        : ""
+                    }
+                  />
+                  {isEmailValid === true && (
+                    <i className="fa fa-check-circle valid-icon"></i>
+                  )}
+                  {isEmailValid === false && (
+                    <i className="fa fa-times-circle invalid-icon"></i>
+                  )}
+                </div>
+                {emailError && <p className="error-message">{emailError}</p>}
+
                 <input type="submit" value="Đăng ký" onClick={handleSignup} />
                 <div className="signup-group">
                   <p>
@@ -291,12 +464,12 @@ const Sign = ({ isSignin, closeModal, onLoginSuccess }) => {
                   <span>Hoặc</span>
                 </div>
                 <div className="social-signup">
-                  <button className="google-signup" >
+                  <button className="google-signup">
                     <i className="fab fa-google"></i> Đăng ký với Google
                   </button>
-                  <button className="facebook-signup">
+                  {/* <button className="facebook-signup">
                     <i className="fab fa-facebook"></i> Đăng ký với Facebook
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>

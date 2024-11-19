@@ -100,6 +100,38 @@ app.post('/login', async(req, res) => {
     res.json({ token, avatar });
 });
 
+// Kiểm tra tên đăng nhập đã tồn tại hay chưa
+app.post('/check-username', async (req, res) => {
+  const { username } = req.body;
+  try {
+      const user = await User.findOne({ username: username });
+      if (user) {
+          res.json({ exists: true });
+      } else {
+          res.json({ exists: false });
+      }
+  } catch (error) {
+      console.error('Error checking username:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Kiểm tra email đã tồn tại hay chưa
+app.post('/check-email', async (req, res) => {
+  const { email } = req.body;
+  try {
+      const user = await User.findOne({ email: email });
+      if (user) {
+          res.json({ exists: true });
+      } else {
+          res.json({ exists: false });
+      }
+  } catch (error) {
+      console.error('Error checking email:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Route cập nhật thông tin người dùng
 app.post('/updateUserInfo', async (req, res) => {
     const authHeader = req.headers.authorization;
