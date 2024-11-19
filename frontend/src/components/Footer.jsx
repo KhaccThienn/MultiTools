@@ -39,10 +39,11 @@ const Footer = () => {
           </div>
           <div className="links-section">
             <h3>Sản phẩm</h3>
-            <a href="">MultiTools Image Editor</a>
-            <a href="">MultiTools Video Editor</a>
-            <a href="">MultiTools Converter</a>
-            <a href="">MultiTools AI Generator</a>
+            <a href="/ImageEditorPage">MultiTools Image Editor</a>
+            <a href="/VideoEditorPage">MultiTools Video Editor</a>
+            <a href="/ConvertPage">MultiTools Converter</a>
+            <a href="/ImageEditorPage">MultiTools AI Generator</a>
+            <a href="/ConvertYoutubePage">MultiTools Youtube to mp3/mp4</a>
           </div>
           <div className="links-section">
             <h3>Trợ giúp</h3>

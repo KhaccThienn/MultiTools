@@ -99,7 +99,6 @@ export default function HomePage() {
             <a
               className="tool-item"
               href="/VideoEditorPage"
-              // onClick={() => (window.location.href = "/VideoEditorPage")}
             >
               <PiVideo />
               Chỉnh sửa video
@@ -107,7 +106,6 @@ export default function HomePage() {
             <a
               className="tool-item"
               href="/ConvertPage"
-              // onClick={() => (window.location.href = "/ConvertPage")}
             >
               <SiConvertio />
               Chuyển đổi định dạng
@@ -115,18 +113,30 @@ export default function HomePage() {
             <a
               className="tool-item"
               href="/ImageEditorPage"
-              // onClick={() => (window.location.href = "/ImageEditorPage")}
             >
               <PiSelectionBackgroundDuotone />
-              Xóa nền
+              Xóa nền ảnh
             </a>
             <a
               className="tool-item"
               href="/ImageEditorPage"
-              // onClick={() => {}}
             >
               <MdOutlineFilterVintage />
               Thêm bộ lọc
+            </a>
+            <a
+              className="tool-item"
+              href="/ImageEditorPage"
+            >
+              <MdOutlineFilterVintage />
+              Chuyển văn bản thành hình ảnh
+            </a>
+            <a
+              className="tool-item"
+              href="/ConvertYoutubePage"
+            >
+              <MdOutlineFilterVintage />
+              Tải mp3/mp4 từ Youtube/SoundCloud
             </a>
           </div>
         </div>

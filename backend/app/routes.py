@@ -10,6 +10,7 @@ import time
 from tkinter import Image
 import uuid
 from flask import Blueprint,request, send_file, jsonify,current_app,send_from_directory, after_this_request
+import requests
 from .utils import apply_video_adjustments, change_background, convert_image, download_and_convert_playlist_to_mp3, download_soundcloud, download_youtube_mp4, generate_image_from_text, generate_subtitles, generate_subtitles_premium, resize_image, crop_image, remove_object, process_crop, remove_background, trim_video
 import shutil
 import json  # Import json module
@@ -131,7 +132,9 @@ def delete_file_after_delay(file_path, delay):
 def download_playlist():
     data = request.get_json()
     url = data.get('url')
-    output_folder = './assets/audios'
+    # output_folder = './assets/audios'
+    output_folder = os.path.join(current_app.root_path, 'assets', 'audios')
+
     
     if not url:
         return jsonify({'error': 'Thiếu URL playlist'}), 400
@@ -157,7 +160,8 @@ def download_playlist():
 def download_youtube_mp4_route():
     data = request.get_json()
     url = data.get('url')
-    output_folder = './assets/videos'
+    # output_folder = './assets/videos'
+    output_folder = os.path.join(current_app.root_path, 'assets', 'videos')
 
     if not url:
         return jsonify({'error': 'Thiếu URL video'}), 400
@@ -181,7 +185,8 @@ def download_youtube_mp4_route():
 
 @bp.route('/download-youtube-mp4/<filename>')
 def download_youtube_mp4_file(filename):
-    file_path = f'D:\\Projects\\multi_tools\\backend\\assets\\videos\\{filename}'
+    # file_path = f'D:\\Projects\\multi_tools\\backend\\assets\\videos\\{filename}'
+    file_path = os.path.join(current_app.root_path, 'assets', 'videos', filename)
     if os.path.exists(file_path):
         return send_file(file_path, as_attachment=True)
     else:
@@ -189,7 +194,8 @@ def download_youtube_mp4_file(filename):
 
 @bp.route('/download/<filename>')
 def download_file(filename):
-    file_path = f'D:\\Projects\\multi_tools\\backend\\assets\\audios\\{filename}'
+    # file_path = f'D:\\Projects\\multi_tools\\backend\\assets\\audios\\{filename}'
+    file_path = os.path.join(current_app.root_path, 'assets', 'audios', filename)
     if os.path.exists(file_path):
         return send_file(file_path, as_attachment=True)
     else:
@@ -199,7 +205,8 @@ def download_file(filename):
 def download_soundcloud_mp3_route():
     data = request.get_json()
     url = data.get('url')
-    output_folder = './assets/soundcloud'
+    # output_folder = './assets/soundcloud'
+    output_folder = os.path.join(current_app.root_path, 'assets', 'soundcloud')
 
     if not url:
         return jsonify({'error': 'Thiếu URL media'}), 400
@@ -226,7 +233,8 @@ def download_soundcloud_mp3_route():
 
 @bp.route('/download-soundcloud/<filename>')
 def serve_soundcloud_zip(filename):
-    file_path = f'D:\\Projects\\multi_tools\\backend\\assets\\soundcloud\\{filename}'
+    # file_path = f'D:\\Projects\\multi_tools\\backend\\assets\\soundcloud\\{filename}'
+    file_path = os.path.join(current_app.root_path, 'assets', 'soundcloud', filename)
     if os.path.exists(file_path):
         return send_file(file_path, as_attachment=True)
     else:

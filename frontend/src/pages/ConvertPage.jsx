@@ -153,7 +153,7 @@ export default function ConvertPage() {
 
   return (
     <>
-      <title>MultiTools | Công cụ chỉnh sửa đa năng</title>
+      <title>MultiTools | Công cụ chuyển đổi định dạng</title>
       <div className={`head ${showNavbar ? "show" : "hide"}`}>
         <Navbar toggleTheme={toggleTheme} theme={theme} />
       </div>
@@ -166,8 +166,8 @@ export default function ConvertPage() {
           }}
         >
           <h1 className="convert__box-title">
-            Chuyển định dạng với mọi loại tệp:
-          </h1>
+            Chuyển đổi định dạng với mọi loại tệp:
+          </h1> <br />
 
           <button
             onClick={toggleDropdown}
@@ -223,10 +223,10 @@ export default function ConvertPage() {
               textAlign: "center",
             }}
             >
-            Chuyển đổi hình ảnh, âm thanh và video sang các định dạng khác nhau
-            mà bạn chọn. Chọn loại tệp bạn muốn chuyển đổi, tải lên tệp của bạn,
+            Chuyển đổi hình ảnh, âm thanh và video sang các định dạng khác nhau một cách dễ dàng. 
+            {/* Chọn loại tệp bạn muốn chuyển đổi, tải lên tệp của bạn,
             chọn định dạng đầu ra và nhấn nút "Tải xuống" để chuyển đổi và tải
-            xuống tệp đã chọn.
+            xuống tệp đã chọn. */}
             </h1>
           </div>
         <div className="convert__box">

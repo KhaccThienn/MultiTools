@@ -152,7 +152,7 @@ export default function ConvertYoutubePage() {
 
   return (
     <div>
-      <title>MultiTools | Công cụ chỉnh sửa đa năng</title>
+      <title>MultiTools | Công cụ tải mp3/mp4 từ Youtube/SoundCloud</title>
       {loading && <Loader />}
       <div className={`head ${showNavbar ? "show" : "hide"}`}>
         <Navbar toggleTheme={toggleTheme} theme={theme} />
@@ -165,7 +165,7 @@ export default function ConvertYoutubePage() {
               value={links}
               onChange={handleLinksChange}
               type="text"
-              placeholder="Tìm kiếm hoặc nhập link..."
+              placeholder="URL Youtube hoặc Soundcloud..."
               className="convert__box-input"
             />
             <button type="submit" className="convert__box-submit" disabled={loading}>

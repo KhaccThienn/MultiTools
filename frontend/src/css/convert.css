@@ -1,7 +1,12 @@
 .convert__body {
-  margin-top: 150px;
+  /* margin-top: 150px; */
   text-align: center;
-  margin-bottom: 200px;
+  /* margin-bottom: 200px; */
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .convert__box {
@@ -84,7 +89,7 @@
     text-transform: uppercase;
     cursor: pointer;
     color: #fa8072;
-    transition: all 1000ms;
+    transition: all 500ms;
     font-size: 15px;
     position: relative;
     overflow: hidden;
@@ -110,7 +115,7 @@
     background-color: #fa8072;
     transform: skewX(45deg);
     z-index: -1;
-    transition: width 1000ms;
+    transition: width 500ms;
   }
   
   .convert__box-button:hover::before {

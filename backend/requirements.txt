@@ -17,3 +17,6 @@ flask-socketio
 eventlet
 SpeechRecognition
 moviepy
+vosk
+pydub
+ffmpeg-python
