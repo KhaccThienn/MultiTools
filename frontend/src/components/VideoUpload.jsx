@@ -2,6 +2,7 @@
 
 import React, { useContext } from "react";
 import { VideoContext } from "@/context/VideoContext";
+import { LuFileVideo } from "react-icons/lu";
 
 const VideoUpload = () => {
   const { setInitialVideo } = useContext(VideoContext);
@@ -9,10 +10,8 @@ const VideoUpload = () => {
   const handleVideoUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const videoUrl = URL.createObjectURL(file);
-
-      // Cập nhật video trong VideoContext
-      setInitialVideo(videoUrl);
+      // Truyền đối tượng File thay vì blob URL
+      setInitialVideo(file);
     }
   };
 
@@ -25,9 +24,12 @@ const VideoUpload = () => {
           padding: "12px 16px",
           cursor: "pointer",
           fontSize: "16px",
+          display: "flex",
+          alignItems: "center",
+          gap: "5px",
         }}
       >
-        <i className="fa-regular fa-video" style={{ padding: "0 5px" }}></i>
+       <LuFileVideo/>
         Thêm video
       </label>
       <input

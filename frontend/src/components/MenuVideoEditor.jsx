@@ -14,12 +14,12 @@ import {
 } from 'react-icons/md';
 import '../css/menuEditor.css';
 import { VideoContext } from '@/context/VideoContext';
-import AddSubtitlesComponent from '@/functions/AddSubtitlesComponent';
+import AddSubtitles from '@/functions/AddSubtitles';
+import TrimVideo from '@/functions/TrimVideo';
+import FilterVideo from '@/functions/FilterVideo';
 
 const menuItems = [
-  { id: 'trim', name: 'Cắt video', icon: <FaCut /> },
   { id: 'filters', name: 'Bộ lọc', icon: <HiAdjustmentsHorizontal /> },
-  { id: 'text', name: 'Thêm văn bản', icon: <MdTextFields /> },
   { id: 'subtitles', name: 'Thêm phụ đề', icon: <MdSubtitles /> },
   // Thêm các công cụ khác nếu cần
 ];
@@ -77,11 +77,9 @@ export default function MenuVideoEditor({ onMode }) {
       </div>
 
       <div className="menu-right">
-        {/* Hiển thị các thành phần chỉnh sửa tương ứng với menu đã chọn */}
-        {/* {selectedMenu === "trim" && <TrimComponent />}
-        {selectedMenu === "filters" && <FiltersComponent />}
-        {selectedMenu === "text" && <AddTextComponent />} */}
-        {selectedMenu === "subtitles" && <AddSubtitlesComponent />}
+        {selectedMenu === "filters" && <FilterVideo />}
+        {/* {selectedMenu === "text" && <AddTextComponent />} */}
+        {selectedMenu === "subtitles" && <AddSubtitles />}
       </div>
     </section>
   );

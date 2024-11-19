@@ -153,6 +153,7 @@ export default function ConvertPage() {
 
   return (
     <>
+      <title>MultiTools | Công cụ chỉnh sửa đa năng</title>
       <div className={`head ${showNavbar ? "show" : "hide"}`}>
         <Navbar toggleTheme={toggleTheme} theme={theme} />
       </div>

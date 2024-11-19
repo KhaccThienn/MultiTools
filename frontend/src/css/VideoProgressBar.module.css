@@ -1,0 +1,165 @@
+/* VideoProgressBar.module.css */
+
+.controlsContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  user-select: none; /* Prevent text selection during drag */
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.rewindButton,
+.playPauseButton,
+.forwardButton,
+.trimButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin: 0 10px;
+  font-size: 16px;
+  color: #fff; /* Adjust based on your design */
+}
+
+.trimButton {
+  color: white;
+  padding: 0.4em 1.2em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-radius: 0.5em;
+  background-color: #2490d9;
+
+}
+
+.trimButton:hover {
+  background-color: #0067ac;
+}
+
+.trimButton:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.progressAndTrimContainer {
+  position: relative;
+  width: 100%;
+  max-width: 800px; /* Adjust as needed */
+  margin: 0 auto; /* Center the container */
+}
+
+.progressBarContainer {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  background-color: #ccc;
+  cursor: pointer;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.thumbnailsBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.thumbnailImage {
+  position: absolute;
+  top: 0;
+  height: 50px;
+  object-fit: cover;
+}
+
+.trimRegion {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background-color: rgba(0, 123, 255, 0.2); /* Semi-transparent blue for trim region */
+  z-index: 2;
+}
+
+.progressIndicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: rgba(0, 123, 255, 0.6);
+  z-index: 3;
+  transition: width 0.1s linear;
+}
+
+.dragging {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.thumb {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  background-color: #fff;
+  border: 2px solid rgb(0, 123, 255);
+  border-radius: 50%;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+}
+
+.thumb:hover {
+  background-color: #e0e0e0;
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+.trimHandle {
+  position: absolute;
+  top: -4px; /* Adjust as needed */
+  width: 12px;
+  height: 48px;
+  background-color: #ffc107; /* Amber color for visibility */
+  cursor: ew-resize;
+  transform: translateX(-50%);
+  z-index: 5; /* Ensure it's above other elements */
+  border-radius: 4px;
+}
+
+.trimHandle:hover {
+  background-color: #e0a800;
+}
+
+.thumbnailPreview {
+  position: absolute;
+  bottom: 100%;
+  transform: translateX(-50%);
+  margin-bottom: 10px;
+  display: none;
+  pointer-events: none; /* Prevent interference with mouse events */
+  z-index: 6;
+  width: 160px;
+  height: 90px;
+  border: 1px solid #ccc;
+  background-color: #000;
+}
+
+.thumbnailPreview.visible {
+  display: block;
+}
+
+.thumbnailPreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.timeDisplay {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #333;
+  text-align: center;
+}

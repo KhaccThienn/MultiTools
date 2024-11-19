@@ -4,7 +4,7 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "next dev",
+        "dev": "next dev ",
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
@@ -14,6 +14,7 @@
         "all": "concurrently \"npm run frontend\" \"npm run python-backend\" \"npm run nodejs-backend\""
     },
     "dependencies": {
+        "@ffmpeg/core": "^0.12.6",
         "@ffmpeg/ffmpeg": "^0.12.10",
         "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
         "@fortawesome/fontawesome-free": "^6.6.0",
@@ -46,10 +47,12 @@
         "multer": "^1.4.5-lts.1",
         "next": "14.2.12",
         "next-connect": "^1.0.0",
+        "nouislider-react": "^3.4.2",
         "perfect-freehand": "^1.2.2",
         "react": "^18",
         "react-cropper": "^2.3.3",
         "react-dom": "^18",
+        "react-draggable": "^4.4.6",
         "react-easy-crop": "^5.1.0",
         "react-icons": "^5.3.0",
         "react-image-crop": "^11.0.7",

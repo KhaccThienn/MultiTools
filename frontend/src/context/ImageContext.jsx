@@ -108,7 +108,10 @@ export const ImageProvider = ({ children }) => {
         contrast(${adjustmentData.contrast}%)
         saturate(${adjustmentData.saturation}%)
         hue-rotate(${adjustmentData.hue}deg)
-        grayscale(${adjustmentData.grey_scale}%)`;
+        grayscale(${adjustmentData.grey_scale}%)
+        sepia(${adjustmentData.sepia}%)
+        invert(${adjustmentData.invert}%)
+        blur(${adjustmentData.blur}px)`;
       console.log("Đang áp dụng bộ lọc:", ctx.filter);
 
       // Vẽ lại hình ảnh với bộ lọc đã áp dụng
