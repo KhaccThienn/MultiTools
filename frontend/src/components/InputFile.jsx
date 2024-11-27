@@ -36,8 +36,8 @@ const InputFile = ({ setFile, type }) => {
           <div className="relative h-48 rounded-lg border-2 border-blue-500 bg-gray-50 flex justify-center items-center shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
             <div className="absolute flex flex-col items-center">
               <img alt="File Icon" className="mb-3" src={src} />
-              <span className="block text-gray-500 font-semibold">Drag &amp; drop your files here</span>
-              <span className="block text-gray-400 font-normal mt-1">or click to upload</span>
+              <span className="block text-gray-500 font-semibold">Kéo và thả tệp tại đây</span>
+              <span className="block text-gray-400 font-normal mt-1">hoặc nhấn để tải lên</span>
             </div>
             <input
               className="h-full w-full opacity-0 cursor-pointer"

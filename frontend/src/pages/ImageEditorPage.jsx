@@ -32,9 +32,10 @@ export default function ImageEditorPage() {
   };
 
   return (
+    
     <ZoomProvider>
       <ImageProvider>
-      <title>MultiTools | Công cụ chỉnh sửa đa năng</title>
+      <title>MultiTools | Công cụ chỉnh sửa hình ảnh</title>
         <div
           style={{
             display: "flex",

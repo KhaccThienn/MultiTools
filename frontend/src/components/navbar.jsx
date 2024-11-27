@@ -50,27 +50,22 @@ function Navbar() {
       menuItems: [
         {
           item_name: "Chỉnh sửa ảnh",
-          containerIndex: 0,
           item_link: "/ImageEditorPage",
         },
         {
           item_name: "Tách nền ảnh",
-          containerIndex: 1,
           item_link: "/ImageEditorPage",
         },
         {
-          item_name: "Làm nét/mờ ảnh",
-          containerIndex: 0,
+          item_name: "Thêm bộ lọc",
           item_link: "/ImageEditorPage",
         },
         {
           item_name: "Điều chỉnh màu sắc",
-          containerIndex: 1,
           item_link: "/ImageEditorPage",
         },
         {
-          item_name: "Ghép ảnh",
-          containerIndex: 1,
+          item_name: "Vẽ lên ảnh",
           item_link: "/ImageEditorPage",
         },
       ],
@@ -81,56 +76,74 @@ function Navbar() {
       menuItems: [
         {
           item_name: "Chỉnh sửa video",
-          containerIndex: 2,
+          item_link: "/VideoEditorPage",
+        },
+        {
+          item_name: "Thêm phụ đề",
+          item_link: "/VideoEditorPage",
+        },
+        {
+          item_name: "Thêm bộ lọc",
           item_link: "/VideoEditorPage",
         },
         {
           item_name: "Cắt video",
-          containerIndex: 3,
-          item_link: "/VideoEditorPage",
-        },
-        {
-          item_name: "Ghép video",
-          containerIndex: 2,
           item_link: "/VideoEditorPage",
         },
       ],
     },
     {
       id: 3,
-      title: "Chuyển định dạng",
+      title: "Chỉnh sửa audio",
       menuItems: [
         {
-          item_name: "File",
-          containerIndex: 4,
-          item_link: "/ConvertPage",
+          item_name: "Chỉnh sửa audio",
+          item_link: "/AudioEditorPage",
         },
         {
-          item_name: "Youtube to MP3",
-          containerIndex: 6,
-          item_link: "/ConvertYoutubePage",
+          item_name: "Chỉnh tốc độ",
+          item_link: "/AudioEditorPage",
+        },
+        {
+          item_name: "Chỉnh âm lượng",
+          item_link: "/AudioEditorPage",
+        },
+        {
+          item_name: "Cắt audio",
+          item_link: "/AudioEditorPage",
         },
       ],
     },
     {
       id: 4,
+      title: "Chuyển định dạng",
+      menuItems: [
+        {
+          item_name: "File",
+          item_link: "/ConvertPage",
+        },
+        {
+          item_name: "Youtube to MP3",
+          item_link: "/ConvertYoutubePage",
+        },
+      ],
+    },
+    {
+      id: 5,
       title: "Chức năng AI",
       menuItems: [
         {
           item_name: "Chuyển văn bản thành hình ảnh",
-          containerIndex: 4,
           item_link: "/ImageEditorPage",
         },
         {
           item_name: "Làm mịn da",
-          containerIndex: 5,
           item_link: "/ImageEditorPage",
         },
-        {
-          item_name: "Xóa watermark",
-          containerIndex: 6,
-          item_link: "/ImageEditorPage",
-        },
+        // {
+        //   item_name: "Xóa watermark",
+        //   item_link: "/ImageEditorPage",
+        // },
       ],
     },
   ];

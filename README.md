@@ -12,9 +12,9 @@
 
 ## Setup project
 
-### Yêu cầu: 
+### Yêu cầu:
 
-- Thiết bị đã cài đặt nodejs, python.
+- Thiết bị đã cài đặt nodejs, python, ffmpeg (công cụ nền tảng xử lý tệp âm thanh).
 - Thiết bị đã cài đặt mongoDB với port mặc định và tạo một database trống có tên `mydatabase` (nếu chưa cài, có thể tham khảo hướng dẫn trong video này: https://www.youtube.com/watch?v=RmPp69cwNgg)
 - Sử dụng VS Code để chạy dự án.
 

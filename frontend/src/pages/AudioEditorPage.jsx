@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 // pages/AudioEditorPage.js
 
 import React, { useState } from 'react';
+=======
+import React from "react";
+>>>>>>> 289da032e3cf9159025361769e31291711dea3f8
 import "../app/globals.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { AudioProvider } from '@/context/AudioContext';
@@ -18,6 +22,7 @@ export default function AudioEditorPage({ data }) { // You can receive props if 
         console.log("Mode selected:", mode);
     }
 
+<<<<<<< HEAD
     return (
         <AudioProvider>
             <Head>
@@ -59,4 +64,14 @@ export async function getStaticProps() {
 async function fetchData() {
   // Replace with your data fetching logic
   return { /* ... */ };
+=======
+export default function AudioEditorPage() {
+  return (
+    <div>
+      <title>MultiTools | Công cụ chuyển đổi định dạng</title>
+      <h1>Trình chỉnh sửa âm thanh</h1>
+      <p>Trang này sẽ chứa trình chỉnh sửa âm thanh.</p>
+    </div>
+  );
+>>>>>>> 289da032e3cf9159025361769e31291711dea3f8
 }
