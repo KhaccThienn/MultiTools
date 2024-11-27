@@ -33,7 +33,7 @@ const Download = ({ closeModal }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="videoFormat">Định dạng ảnh:</label>
+          <label htmlFor="videoFormat">Định dạng video:</label>
           <select
             id="videoFormat"
             value={videoFormat}
